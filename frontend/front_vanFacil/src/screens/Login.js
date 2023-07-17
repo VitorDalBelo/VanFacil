@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
+
+import Cores from '../../assets/cores';
 
 export default function Login() {
    const [text, onChangeText] = React.useState('Useless Text');
    const [number, onChangeNumber] = React.useState('');
 
    return (
-      <>
-         // Estes são exemplos de input de texto
+      <View style={styles.exemplo}>
          <TextInput style={styles.input} onChangeText={onChangeText} value={text} />
          <TextInput
             style={styles.input}
@@ -16,7 +17,7 @@ export default function Login() {
             placeholder="useless placeholder"
             keyboardType="default"
          />
-      </>
+      </View>
    );
 }
 
@@ -26,5 +27,8 @@ const styles = StyleSheet.create({
       margin: 12,
       borderWidth: 1,
       padding: 10,
+   },
+   exemplo: {
+      backgroundColor: Cores.gelo,
    },
 });
