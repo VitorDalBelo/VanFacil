@@ -24,16 +24,17 @@ export default function MenuBar({ nomeTela }) {
 const estilos = StyleSheet.create({
    menuBar: {
       width: '100%',
+      height: 50,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      backgroundColor: '#f0f0f0',
+      backgroundColor: cores.cinzaClaro,
       paddingVertical: 5,
-      paddingHorizontal: 15,
+      paddingHorizontal: 20,
    },
    botaoMenu: {
-      width: 40,
-      height: 40,
+      width: 33,
+      height: 33,
       alignItems: 'center',
       justifyContent: 'center',
    },

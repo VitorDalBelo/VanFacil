@@ -25,7 +25,7 @@ const larguraTela = Dimensions.get('screen').width;
 const alturaImagem = Image.resolveAssetSource(img).height;
 const larguraImagem = Image.resolveAssetSource(img).width;
 
-const alturaCard = (alturaImagem / larguraImagem) * larguraTela - 140;
+const alturaCard = ((alturaImagem - 120) / larguraImagem) * larguraTela - 140;
 
 const estilos = StyleSheet.create({
    cardRota: {
@@ -53,14 +53,14 @@ const estilos = StyleSheet.create({
    },
    imagem: {
       width: larguraTela - 40,
-      height: alturaCard,
+      height: alturaCard - 1,
    },
    textContainer: {
       position: 'absolute',
       bottom: 0,
       left: 0,
       padding: 10,
-      backgroundColor: cores.cinzaClaro,
+      backgroundColor: cores.gelo,
       width: '100%',
       height: 48,
    },

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 import cores from '../../../assets/cores';
 
@@ -30,7 +31,7 @@ function ListaRotas() {
 function BtnNovaRota(style) {
    return (
       <TouchableOpacity style={[style, estilos.botao]}>
-         <Text style={estilos.textoBotao}>+</Text>
+         <Feather name="plus" style={estilos.iconeBotao} />
       </TouchableOpacity>
    );
 }
@@ -49,10 +50,10 @@ const estilos = StyleSheet.create({
       justifyContent: 'center',
       width: 60,
       height: 60,
-      backgroundColor: cores.azul,
+      backgroundColor: cores.azulProfundo,
       borderRadius: 50,
    },
-   textoBotao: {
+   iconeBotao: {
       fontSize: 30,
       color: cores.branco,
    },
