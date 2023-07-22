@@ -1,13 +1,14 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
-import Login from './src/screens/Login';
+import { StatusBar, StyleSheet, SafeAreaView } from 'react-native';
+import M_Inicial from './src/screens/Motorista/Inicial';
+import MenuBar from './src/screens/Shared/MenuBar';
 
 export default function App() {
    return (
       <SafeAreaView style={styles.container}>
          <StatusBar style="auto" />
-         <Login />
+         <MenuBar nomeTela={'Minhas Rotas'} />
+         <M_Inicial />
       </SafeAreaView>
    );
 }
@@ -15,8 +16,8 @@ export default function App() {
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: '#ffffff',
       alignItems: 'center',
-      justifyContent: 'center',
+      //justifyContent: 'center',
    },
 });
