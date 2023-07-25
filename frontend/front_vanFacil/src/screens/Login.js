@@ -1,23 +1,19 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
+import {auth} from '../../configs/FireBaseConfigs'
 
 import Cores from '../../assets/cores';
 
 export default function Login() {
-   const [text, onChangeText] = React.useState('Useless Text');
-   const [number, onChangeNumber] = React.useState('');
-
+   const [email, setEmail] = useState();
+   const [password,setPassword] = useState('');
+   const [loading,setLoading] = useState(false);
    return (
-      <View style={styles.exemplo}>
-         <TextInput style={styles.input} onChangeText={onChangeText} value={text} />
-         <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="useless placeholder"
-            keyboardType="default"
-         />
-      </View>
+      <SafeAreaView style={styles.container}>
+         <View style={styles.exemplo}>
+            <TextInput style={styles.input} onChangeText={setEmail} value={email} />
+         </View>
+      </SafeAreaView>
    );
 }
 
@@ -30,5 +26,11 @@ const styles = StyleSheet.create({
    },
    exemplo: {
       backgroundColor: Cores.gelo,
+   },
+   container: {
+      flex: 1,
+      backgroundColor: '#ffffff',
+      alignItems: 'center',
+      //justifyContent: 'center',
    },
 });
