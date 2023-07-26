@@ -1,8 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
+
+import Texto from '../../components/Texto';
 
 import ImagemFalha from '../../../assets/icon.png';
-
 import cores from '../../../assets/cores';
 
 var img = ImagemFalha;
@@ -14,7 +15,7 @@ export default function CardRota({ imagem, nome }) {
       <TouchableOpacity style={estilos.cardRota}>
          <Image source={imagem} style={estilos.imagem} />
          <View style={estilos.textContainer}>
-            <Text style={estilos.texto}>{nome}</Text>
+            <Texto style={estilos.texto}>{nome}</Texto>
          </View>
       </TouchableOpacity>
    );

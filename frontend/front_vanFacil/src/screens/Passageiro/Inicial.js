@@ -12,7 +12,7 @@ export default function Inicial() {
    return (
       <>
          <ListaRotas />
-         <BtnNovaRota />
+         <BtnNovaRota telaMotorista={false} />
       </>
    );
 }
