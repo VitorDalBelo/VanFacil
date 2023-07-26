@@ -50,7 +50,6 @@ const estilos = StyleSheet.create({
       borderRadius: 50,
    },
    nomeTela: {
-      fontSize: 18,
-      fontWeight: 'bold',
+      fontSize: 22,
    },
 });

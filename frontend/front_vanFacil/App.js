@@ -39,7 +39,7 @@ export default function App() {
    return (
       <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
          <StatusBar style="auto" />
-         <MenuBar nomeTela={'Minhas Rotas'} />
+         <MenuBar nomeTela={'USCS - Noite'} />
          <M_Rota />
       </SafeAreaView>
    );
