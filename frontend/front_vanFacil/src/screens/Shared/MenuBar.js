@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+
+import Texto from '../../components/Texto';
 
 import FotoPerfil from '../../../assets/teste/Gataruga.png';
 import cores from '../../../assets/cores';
@@ -12,7 +14,7 @@ export default function MenuBar({ nomeTela }) {
             <Feather name="menu" style={estilos.iconeMenu} />
          </TouchableOpacity>
 
-         <Text style={estilos.nomeTela}>{nomeTela}</Text>
+         <Texto style={estilos.nomeTela}>{nomeTela}</Texto>
 
          <TouchableOpacity style={estilos.botaoPerfil}>
             <Image source={FotoPerfil} style={estilos.fotoPerfil} />

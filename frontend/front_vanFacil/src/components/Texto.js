@@ -18,6 +18,6 @@ const estilos = StyleSheet.create({
    },
    textoNegrito: {
       fontFamily: 'RubikBold',
-      fontWeight: 'bold',
+      fontWeight: 'normal',
    },
 });
