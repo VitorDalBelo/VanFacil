@@ -1,10 +1,10 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 
-import Texto from '../../components/Texto';
+import Texto from '../../../components/Texto';
 
-import ImagemFalha from '../../../assets/icon.png';
-import cores from '../../../assets/cores';
+import ImagemFalha from '../../../../assets/icon.png';
+import cores from '../../../../assets/cores';
 
 var img = ImagemFalha;
 
