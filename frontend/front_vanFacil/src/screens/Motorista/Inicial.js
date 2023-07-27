@@ -3,7 +3,7 @@ import { FlatList, StyleSheet } from 'react-native';
 
 import cores from '../../../assets/cores';
 
-import CardRota from '../Shared/CardRota';
+import CardRota from '../Shared/Inicial/CardRota';
 import BtnNovaRota from '../Shared/Inicial/BtnNovaRota';
 
 import rotas from '../../mocks/rotas';
