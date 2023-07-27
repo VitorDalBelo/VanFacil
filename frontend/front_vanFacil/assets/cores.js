@@ -8,6 +8,7 @@ const cores = {
    cinzaClaro: '#f0f8ff',
    cinzaProfundo: '#2f333e',
    cinzaEscuro: '#1d1f20',
+   vermelho: '#e33437',
 };
 
 export default cores;

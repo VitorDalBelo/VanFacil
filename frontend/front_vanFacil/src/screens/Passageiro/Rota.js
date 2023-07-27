@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useReducer, useState } from 'react';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 
 import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
@@ -8,11 +8,13 @@ import cores from '../../../assets/cores';
 
 const numConfirmados = 10;
 const numTotal = 15;
-const hora = 1;
-const minuto = 25;
-const distancia = 30;
 
 export default function Rota() {
+   const [vai, inverterVai] = useReducer((vai) => !vai, true);
+   const [volta, inverterVolta] = useReducer((volta) => !volta, true);
+
+   const estilosSwitch = funcaoEstilo(vai, volta);
+
    return (
       <>
          <MapaRotaInativa />
@@ -25,29 +27,42 @@ export default function Rota() {
             </View>
 
             <View style={estilos.linhaDetalhe}>
-               <Texto style={estilos.textoDetalhes}>Tempo Estimado:</Texto>
-               <Texto style={estilos.textoDetalhes}>
-                  {hora}:{minuto}
-               </Texto>
-            </View>
-
-            <View style={estilos.linhaDetalhe}>
-               <Texto style={estilos.textoDetalhes}>Distância Estimada:</Texto>
-               <Texto style={estilos.textoDetalhes}>{distancia} km</Texto>
-            </View>
-
-            <View style={estilos.linhaDetalhe}>
                <TouchableOpacity style={estilos.botao}>
-                  <Texto style={estilos.textoBotao}>Iniciar Rota</Texto>
+                  <Texto style={estilos.textoBotao}>Mensagem</Texto>
                </TouchableOpacity>
                <TouchableOpacity style={estilos.botao}>
-                  <Texto style={estilos.textoBotao}>Editar Rota</Texto>
+                  <Texto style={estilos.textoBotao}>Detalhes</Texto>
+               </TouchableOpacity>
+            </View>
+
+            <View style={estilos.linhaDetalhe}>
+               <TouchableOpacity
+                  style={[estilos.botao, estilosSwitch.botaoIda]}
+                  onPress={inverterVai}
+               >
+                  <Texto style={estilos.textoBotao}>{vai ? 'Vou' : 'Não vou'}</Texto>
+               </TouchableOpacity>
+               <TouchableOpacity
+                  style={[estilos.botao, estilosSwitch.botaoVolta]}
+                  onPress={inverterVolta}
+               >
+                  <Texto style={estilos.textoBotao}>{volta ? 'Volto' : 'Não volto'}</Texto>
                </TouchableOpacity>
             </View>
          </View>
       </>
    );
 }
+
+const funcaoEstilo = (vai, volta) =>
+   StyleSheet.create({
+      botaoIda: {
+         backgroundColor: vai ? cores.azulProfundo : cores.vermelho,
+      },
+      botaoVolta: {
+         backgroundColor: volta ? cores.azulProfundo : cores.vermelho,
+      },
+   });
 
 const estilos = StyleSheet.create({
    detalhesRota: {
@@ -71,7 +86,9 @@ const estilos = StyleSheet.create({
       lineHeight: 42,
    },
    botao: {
+      width: '48%',
       alignSelf: 'flex-start',
+      alignItems: 'center',
       padding: 10,
       borderRadius: 10,
       backgroundColor: cores.azulProfundo,
@@ -94,5 +111,13 @@ const estilos = StyleSheet.create({
       color: cores.branco,
       fontWeight: 'bold',
       fontSize: 18,
+      lineHeight: 30,
+   },
+   switchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+   },
+   switch: {
+      marginLeft: 5,
    },
 });

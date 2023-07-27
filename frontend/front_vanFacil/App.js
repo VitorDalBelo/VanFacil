@@ -4,9 +4,12 @@ import { StatusBar, StyleSheet, SafeAreaView } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 
 import MenuBar from './src/screens/Shared/MenuBar';
+
+// Import das telas já feitas, quando houver a navegação vai ser deletado
 import M_Inicial from './src/screens/Motorista/Inicial';
 import P_Inicial from './src/screens/Passageiro/Inicial';
 import M_Rota from './src/screens/Motorista/Rota';
+import P_Rota from './src/screens/Passageiro/Rota';
 
 import {
    useFonts,
@@ -40,7 +43,7 @@ export default function App() {
       <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
          <StatusBar style="auto" />
          <MenuBar nomeTela={'USCS - Noite'} />
-         <M_Rota />
+         <P_Rota />
       </SafeAreaView>
    );
 }
