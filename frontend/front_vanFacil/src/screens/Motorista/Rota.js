@@ -1,20 +1,21 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Texto from '../../components/Texto';
+import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
 
-import imagemMapa from '../../../assets/teste/ExemploMapa.png';
 import cores from '../../../assets/cores';
 
 const numConfirmados = 10;
 const numTotal = 15;
 const hora = 1;
 const minuto = 25;
+const distancia = 30;
 
 export default function Rota() {
    return (
       <>
-         <Mapa />
+         <MapaRotaInativa />
          <View style={estilos.detalhesRota}>
             <View style={estilos.linhaDetalhe}>
                <Texto style={estilos.textoDetalhes}>Passageiros confirmados:</Texto>
@@ -22,19 +23,19 @@ export default function Rota() {
                   {numConfirmados}/{numTotal}
                </Texto>
             </View>
+
             <View style={estilos.linhaDetalhe}>
                <Texto style={estilos.textoDetalhes}>Tempo Estimado:</Texto>
                <Texto style={estilos.textoDetalhes}>
                   {hora}:{minuto}
                </Texto>
             </View>
-            <View style={estilos.linhaDetalhe}>
-               <Texto style={estilos.textoDetalhes}>Outra info</Texto>
-            </View>
 
             <View style={estilos.linhaDetalhe}>
-               <Texto style={estilos.textoDetalhes}>Mais info</Texto>
+               <Texto style={estilos.textoDetalhes}>Distância Estimada:</Texto>
+               <Texto style={estilos.textoDetalhes}>{distancia} km</Texto>
             </View>
+
             <View style={estilos.linhaDetalhe}>
                <TouchableOpacity style={estilos.btnIniciarRota}>
                   <Texto style={estilos.textoBotao}>Iniciar Rota</Texto>
@@ -45,15 +46,6 @@ export default function Rota() {
             </View>
          </View>
       </>
-   );
-}
-
-function Mapa() {
-   return (
-      // Placeholder para a fução da API do Google Maps
-      <View>
-         <Image source={imagemMapa} />
-      </View>
    );
 }
 
