@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { StatusBar, StyleSheet, SafeAreaView } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -41,11 +42,13 @@ export default function App() {
    }
 
    return (
-      <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
-         <StatusBar style="auto" />
-         <MenuBar nomeTela={'USCS - Noite'} />
-         <M_RotaAtiva />
-      </SafeAreaView>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+         <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
+            <StatusBar style="auto" />
+            <MenuBar nomeTela={'USCS - Noite'} />
+            <M_RotaAtiva />
+         </SafeAreaView>
+      </GestureHandlerRootView>
    );
 }
 
