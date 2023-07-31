@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { StatusBar, StyleSheet, SafeAreaView } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -10,6 +11,7 @@ import M_Inicial from './src/screens/Motorista/Inicial';
 import P_Inicial from './src/screens/Passageiro/Inicial';
 import M_Rota from './src/screens/Motorista/Rota';
 import P_Rota from './src/screens/Passageiro/Rota';
+import M_RotaAtiva from './src/screens/Motorista/RotaAtiva';
 
 import {
    useFonts,
@@ -40,11 +42,13 @@ export default function App() {
    }
 
    return (
-      <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
-         <StatusBar style="auto" />
-         <MenuBar nomeTela={'USCS - Noite'} />
-         <P_Rota />
-      </SafeAreaView>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+         <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
+            <StatusBar style="auto" />
+            <MenuBar nomeTela={'USCS - Noite'} />
+            <M_RotaAtiva />
+         </SafeAreaView>
+      </GestureHandlerRootView>
    );
 }
 
