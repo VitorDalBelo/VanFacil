@@ -13,10 +13,27 @@ import cores from '../../../assets/cores';
 
 const restantes = 10;
 
-const passageiro = {
+const proximo = {
+   foto: fotoPassageiro,
    nome: 'Revert Richards',
-   distancia: 3,
+   endereco: '3 km de distância',
 };
+
+function TopoLista() {
+   return (
+      <View
+         style={[
+            estilos.linhaDetalhe,
+            {
+               backgroundColor: cores.cinzaClaro,
+               justifyContent: 'center',
+            },
+         ]}
+      >
+         <Texto style={estilos.textoDetalhes}>Lista de passageiros</Texto>
+      </View>
+   );
+}
 
 export default function RotaAtiva() {
    const bottomSheetRef = useRef(BottomSheet);
@@ -24,28 +41,25 @@ export default function RotaAtiva() {
 
    return (
       <>
-         <View style={styles.container}>
+         <View style={estilos.container}>
             <MapaRotaInativa />
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
-               <View style={estilos.detalhesRota}>
-                  <View style={estilos.linhaDetalhe}>
-                     <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                     <Texto style={estilos.textoDetalhes}>{restantes}</Texto>
-                  </View>
-                  <View style={estilos.linhaDetalhe}>
-                     <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
-                  </View>
-                  <View style={estilos.linhaDetalhe}>
-                     <ProximoPassageiro {...passageiro} />
-                  </View>
+               <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
+                  <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
+                  <Texto style={estilos.textoDetalhes}>{restantes}</Texto>
                </View>
+               <View style={estilos.linhaDetalhe}>
+                  <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
+               </View>
+               <CardPassageiro {...proximo} />
+
                <BottomSheetFlatList
+                  ListHeaderComponent={TopoLista}
                   data={listaPassageiros}
                   keyExtractor={({ ordem }) => ordem}
                   renderItem={({ item }) => {
                      return <CardPassageiro {...item} />;
                   }}
-                  contentContainerStyle={styles.contentContainer}
                />
             </BottomSheet>
          </View>
@@ -53,74 +67,24 @@ export default function RotaAtiva() {
    );
 }
 
-function ProximoPassageiro({ nome, distancia }) {
-   return (
-      <View style={estilos.passageiro}>
-         <Image source={fotoPassageiro} style={estilos.fotoPassageiro} />
-         <View>
-            <Texto style={estilos.texto}>{nome}</Texto>
-            <Texto style={estilos.textoAbaixo}>{distancia} km de distância</Texto>
-         </View>
-      </View>
-   );
-}
-
-function Passageiro({ foto, nome }) {
-   return (
-      <View style={estilos.passageiro}>
-         <Image source={foto} style={estilos.fotoPassageiro} />
-         <Texto style={estilos.texto}>{nome}</Texto>
-      </View>
-   );
-}
-
 const estilos = StyleSheet.create({
-   detalhesRota: {
+   container: {
       width: '100%',
-      backgroundColor: cores.branco,
-      justifyContent: 'space-around',
+      flex: 1,
+      backgroundColor: 'white',
    },
    linhaDetalhe: {
       width: '100%',
       borderBottomWidth: 1,
-      borderBottomColor: '#ECECEC',
+      borderBottomColor: cores.cinzaBorda,
       justifyContent: 'space-between',
       alignItems: 'center',
       flexDirection: 'row',
       paddingHorizontal: 20,
    },
+   bordaCima: { borderTopColor: cores.cinzaBorda, borderTopWidth: 1 },
    textoDetalhes: {
       fontSize: 18,
       lineHeight: 42,
-   },
-   passageiro: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginVertical: 5,
-   },
-   texto: {
-      fontSize: 18,
-   },
-   fotoPassageiro: {
-      width: 80,
-      height: 80,
-      borderRadius: 10,
-      borderColor: cores.preto,
-      borderWidth: 0.3,
-      marginRight: 15,
-   },
-   textoAbaixo: {
-      marginTop: 5,
-      fontSize: 16,
-      color: '#777777',
-   },
-});
-
-const styles = StyleSheet.create({
-   container: {
-      width: '100%',
-      flex: 1,
-      backgroundColor: 'white',
    },
 });

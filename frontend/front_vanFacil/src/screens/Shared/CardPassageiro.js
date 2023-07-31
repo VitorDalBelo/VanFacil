@@ -21,7 +21,7 @@ const estilos = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'flex-start',
       borderBottomWidth: 1,
-      borderBottomColor: '#ECECEC',
+      borderBottomColor: cores.cinzaBorda,
       alignItems: 'center',
       flexDirection: 'row',
       paddingHorizontal: 20,
