@@ -13,6 +13,8 @@ import M_Rota from './src/screens/Motorista/Rota';
 import P_Rota from './src/screens/Passageiro/Rota';
 import M_RotaAtiva from './src/screens/Motorista/RotaAtiva';
 
+import AppRotas from './src/routes/AppRotas';
+
 import {
    useFonts,
    Rubik_300Light,
@@ -46,7 +48,7 @@ export default function App() {
          <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
             <StatusBar style="auto" />
             <MenuBar nomeTela={'USCS - Noite'} />
-            <M_RotaAtiva />
+            <AppRotas />
          </SafeAreaView>
       </GestureHandlerRootView>
    );
@@ -56,6 +58,5 @@ const estilos = StyleSheet.create({
    container: {
       flex: 1,
       backgroundColor: '#ffffff',
-      alignItems: 'center',
    },
 });
