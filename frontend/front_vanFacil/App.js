@@ -13,6 +13,8 @@ import M_Rota from './src/screens/Motorista/Rota';
 import P_Rota from './src/screens/Passageiro/Rota';
 import M_RotaAtiva from './src/screens/Motorista/RotaAtiva';
 
+import AppRotas from './src/routes/AppRotas'
+
 import {
    useFonts,
    Rubik_300Light,
@@ -42,13 +44,19 @@ export default function App() {
    }
 
    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-         <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
-            <StatusBar style="auto" />
-            <MenuBar nomeTela={'USCS - Noite'} />
-            <M_RotaAtiva />
-         </SafeAreaView>
-      </GestureHandlerRootView>
+     
+          
+          <AppRotas />
+          
+      
+      
+      // <GestureHandlerRootView style={{ flex: 1 }}>
+      //    <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
+      //       <StatusBar style="auto" />
+      //       <MenuBar nomeTela={'USCS - Noite'} />
+      //       <M_Inicial />
+      //    </SafeAreaView>
+      // </GestureHandlerRootView>
    );
 }
 
