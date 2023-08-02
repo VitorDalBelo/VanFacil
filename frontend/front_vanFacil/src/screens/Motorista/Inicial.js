@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet,SafeAreaView ,StatusBar} from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import cores from '../../../assets/cores';
 
@@ -8,20 +8,12 @@ import BtnNovaRota from '../Shared/Inicial/BtnNovaRota';
 
 import rotas from '../../mocks/rotas';
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import MenuBar from '../Shared/MenuBar';
-
-
 export default function Inicial() {
    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
-             <StatusBar style="auto" />
-             <MenuBar nomeTela={'USCS - Noite'} />
-             <ListaRotas />
-            <BtnNovaRota />
-          </SafeAreaView>
-       </GestureHandlerRootView>
+      <>
+         <ListaRotas />
+         <BtnNovaRota />
+      </>
    );
 }
 function ListaRotas() {
@@ -35,12 +27,3 @@ function ListaRotas() {
       />
    );
 }
-
-
-const estilos = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: '#ffffff',
-      alignItems: 'center',
-   },
-});
