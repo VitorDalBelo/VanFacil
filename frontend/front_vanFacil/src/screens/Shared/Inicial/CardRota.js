@@ -8,11 +8,11 @@ import cores from '../../../../assets/cores';
 
 var img = ImagemFalha;
 
-export default function CardRota({ imagem, nome }) {
+export default function CardRota({ imagem, nome, aoPressionar }) {
    img = imagem;
 
    return (
-      <TouchableOpacity style={estilos.cardRota}>
+      <TouchableOpacity style={estilos.cardRota} onPress={aoPressionar}>
          <Image source={imagem} style={estilos.imagem} />
          <View style={estilos.textContainer}>
             <Texto style={estilos.texto}>{nome}</Texto>

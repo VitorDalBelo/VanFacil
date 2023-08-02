@@ -13,7 +13,7 @@ import M_Rota from './src/screens/Motorista/Rota';
 import P_Rota from './src/screens/Passageiro/Rota';
 import M_RotaAtiva from './src/screens/Motorista/RotaAtiva';
 
-import AppRotas from './src/routes/AppRotas'
+import AppRotas from './src/routes/AppRotas';
 
 import {
    useFonts,
@@ -44,19 +44,13 @@ export default function App() {
    }
 
    return (
-     
-          
-          <AppRotas />
-          
-      
-      
-      // <GestureHandlerRootView style={{ flex: 1 }}>
-      //    <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
-      //       <StatusBar style="auto" />
-      //       <MenuBar nomeTela={'USCS - Noite'} />
-      //       <M_Inicial />
-      //    </SafeAreaView>
-      // </GestureHandlerRootView>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+         <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
+            <StatusBar style="auto" />
+            <MenuBar nomeTela={'USCS - Noite'} />
+            <AppRotas />
+         </SafeAreaView>
+      </GestureHandlerRootView>
    );
 }
 
@@ -64,6 +58,5 @@ const estilos = StyleSheet.create({
    container: {
       flex: 1,
       backgroundColor: '#ffffff',
-      alignItems: 'center',
    },
 });
