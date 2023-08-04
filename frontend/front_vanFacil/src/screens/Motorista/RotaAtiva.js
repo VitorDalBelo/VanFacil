@@ -10,6 +10,7 @@ import CardPassageiro from '../Shared/CardPassageiro';
 import fotoPassageiro from '../../../assets/teste/Haingrindi.png';
 
 import cores from '../../../assets/cores';
+import MenuBar from '../Shared/MenuBar';
 
 const restantes = 10;
 
@@ -42,6 +43,7 @@ export default function RotaAtiva() {
    return (
       <>
          <View style={estilos.container}>
+            <MenuBar nomeTela={'Motorista Rota'}/>
             <MapaRotaInativa />
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>

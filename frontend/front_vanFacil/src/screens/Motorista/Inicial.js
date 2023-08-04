@@ -5,15 +5,20 @@ import cores from '../../../assets/cores';
 
 import CardRota from '../Shared/Inicial/CardRota';
 import BtnNovaRota from '../Shared/Inicial/BtnNovaRota';
+import MenuBar from '../Shared/MenuBar';
 
 import rotas from '../../mocks/rotas';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Inicial() {
+   const navigation = useNavigation();
    return (
       <>
+         <MenuBar nomeTela={'USCS - Noite'}/>
          <ListaRotas />
-         <BtnNovaRota />
+         <BtnNovaRota aoPressionar={() => {
+                     navigation.navigate('M_rota');
+                  }}/>
       </>
    );
 }
@@ -29,7 +34,6 @@ function ListaRotas() {
                   {...item}
                   aoPressionar={() => {
                      navigation.navigate('M_RotaAtiva');
-                     console.log('a');
                   }}
                />
             );

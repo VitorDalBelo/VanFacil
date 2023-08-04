@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import cores from '../../../../assets/cores';
+import { useNavigation } from '@react-navigation/native';
 
 export default function BtnNovaRota({ telaMotorista = true }) {
    const defineIcone = () => {
@@ -12,9 +13,9 @@ export default function BtnNovaRota({ telaMotorista = true }) {
       }
       return 'search';
    };
-
+   const navigation = useNavigation();
    return (
-      <TouchableOpacity style={estilos.botao}>
+      <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('M_Rota')}>
          <Feather name={defineIcone()} style={estilos.iconeBotao} />
       </TouchableOpacity>
    );
