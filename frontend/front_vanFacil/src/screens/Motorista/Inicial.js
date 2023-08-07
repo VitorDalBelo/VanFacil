@@ -14,7 +14,7 @@ export default function Inicial() {
    const navigation = useNavigation();
    return (
       <>
-         <MenuBar nomeTela={'USCS - Noite'}/>
+         <MenuBar nomeTela={'Home'}/>
          <ListaRotas />
          <BtnNovaRota aoPressionar={() => {
                      navigation.navigate('M_rota');
