@@ -6,11 +6,14 @@ import Texto from '../../components/Texto';
 import FotoPerfil from '../../../assets/teste/Gataruga.png';
 import cores from '../../../assets/cores';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function MenuBar({ nomeTela }) {
+
+   const navigation = useNavigation();
    return (
       <View style={estilos.menuBar}>
-         <TouchableOpacity style={estilos.botaoMenu}>
+            <TouchableOpacity style={estilos.botaoMenu} onPress={() => {if (navigation.canGoBack()) {navigation.goBack();}}}>
             <Feather name="menu" style={estilos.iconeMenu} />
          </TouchableOpacity>
 

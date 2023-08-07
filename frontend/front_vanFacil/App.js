@@ -6,13 +6,6 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import MenuBar from './src/screens/Shared/MenuBar';
 
-// Import das telas já feitas, quando houver a navegação vai ser deletado
-import M_Inicial from './src/screens/Motorista/Inicial';
-import P_Inicial from './src/screens/Passageiro/Inicial';
-import M_Rota from './src/screens/Motorista/Rota';
-import P_Rota from './src/screens/Passageiro/Rota';
-import M_RotaAtiva from './src/screens/Motorista/RotaAtiva';
-
 import AppRotas from './src/routes/AppRotas';
 
 import {
@@ -47,7 +40,7 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
          <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
             <StatusBar style="auto" />
-            <MenuBar nomeTela={'USCS - Noite'} />
+            {/* <MenuBar nomeTela={'USCS - Noite'} /> */}
             <AppRotas />
          </SafeAreaView>
       </GestureHandlerRootView>
