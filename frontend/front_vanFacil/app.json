@@ -15,12 +15,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.VanFacil"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.VanFacil",
+      "config":{
+        "googleMaps":{
+          "apiKey":"AIzaSyAeb9UnZtFM_mxCX7c1SRI8sx45wsEkv40"
+        }
       }
     },
     "web": {
