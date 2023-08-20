@@ -15,7 +15,7 @@ export default function BtnNovaRota({ telaMotorista = true }) {
    };
    const navigation = useNavigation();
    return (
-      <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('M_Rota')}>
+      <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('P_pesquisa')}>
          <Feather name={defineIcone()} style={estilos.iconeBotao} />
       </TouchableOpacity>
    );

@@ -7,6 +7,8 @@ import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
 import listaPassageiros from '../../mocks/passageiros';
 import CardPassageiro from '../Shared/CardPassageiro';
 
+import Mapa_teste from '../Shared/Rota/mapa_teste';
+
 import fotoPassageiro from '../../../assets/teste/Haingrindi.png';
 
 import cores from '../../../assets/cores';
@@ -44,7 +46,8 @@ export default function RotaAtiva() {
       <>
          <View style={estilos.container}>
             <MenuBar nomeTela={'Motorista Rota'}/>
-            <MapaRotaInativa />
+            {/* <MapaRotaInativa /> */}
+            <Mapa_teste />
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
