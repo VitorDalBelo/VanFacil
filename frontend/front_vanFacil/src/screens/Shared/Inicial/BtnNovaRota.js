@@ -6,16 +6,16 @@ import { Feather } from '@expo/vector-icons';
 import cores from '../../../../assets/cores';
 import { useNavigation } from '@react-navigation/native';
 
-export default function BtnNovaRota({ telaMotorista = true }) {
+export default function BtnNovaRota({ telaMotorista = true ,pressionar }) {
    const defineIcone = () => {
       if (telaMotorista) {
          return 'plus';
       }
       return 'search';
    };
-   const navigation = useNavigation();
+   // const navigation = useNavigation();
    return (
-      <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('P_pesquisa')}>
+      <TouchableOpacity style={estilos.botao} onPress={pressionar}>
          <Feather name={defineIcone()} style={estilos.iconeBotao} />
       </TouchableOpacity>
    );
@@ -38,3 +38,7 @@ const estilos = StyleSheet.create({
       color: cores.branco,
    },
 });
+
+
+
+// onPress={() => navigation.navigate('P_pesquisa')}

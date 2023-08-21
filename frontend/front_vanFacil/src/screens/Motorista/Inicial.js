@@ -16,9 +16,7 @@ export default function Inicial() {
       <>
          <MenuBar nomeTela={'Home'}/>
          <ListaRotas />
-         <BtnNovaRota aoPressionar={() => {
-                     navigation.navigate('M_rota');
-                  }}/>
+         <BtnNovaRota pressionar={() => navigation.navigate('M_Rota')}/>
       </>
    );
 }
