@@ -10,6 +10,8 @@ import Navegação from '../screens/testeNavegação'
 import P_Inicial from '../screens/Passageiro/Inicial'
 import P_Pesquisa from '../screens/Passageiro/Pesquisa'
 
+import Perfil from '../screens/Perfil'
+
 const Stack = createNativeStackNavigator();
 
 export default function AppRotas() {
@@ -24,6 +26,8 @@ export default function AppRotas() {
 
             <Stack.Screen name="P_Inicial" component={P_Inicial} />
             <Stack.Screen name="P_Pesquisa" component={P_Pesquisa} />
+
+            <Stack.Screen name="Perfil" component={Perfil} />
 
          </Stack.Navigator>
       </NavigationContainer>

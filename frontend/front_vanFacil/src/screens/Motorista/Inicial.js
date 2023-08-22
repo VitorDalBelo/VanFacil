@@ -28,12 +28,8 @@ function ListaRotas() {
          data={rotas.lista1}
          renderItem={({ item }) => {
             return (
-               <CardRota
-                  {...item}
-                  aoPressionar={() => {
-                     navigation.navigate('M_RotaAtiva');
-                  }}
-               />
+               <CardRota {...item}
+                  aoPressionar={() => {navigation.navigate('M_RotaAtiva');}}/>
             );
          }}
          keyExtractor={({ nome }) => nome}
