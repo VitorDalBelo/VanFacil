@@ -20,6 +20,7 @@ export default function AppRotas() {
          <Stack.Navigator screenOptions={{ headerShown: false }}>
 
             <Stack.Screen name="Navegação" component={Navegação} />
+              
             <Stack.Screen name="M_Inicial" component={M_Inicial} />
             <Stack.Screen name="M_RotaAtiva" component={M_RotaAtiva} />
             <Stack.Screen name="M_Rota" component={M_rota} />
