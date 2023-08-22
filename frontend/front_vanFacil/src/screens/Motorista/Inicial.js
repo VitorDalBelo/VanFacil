@@ -16,9 +16,7 @@ export default function Inicial() {
       <>
          <MenuBar nomeTela={'Home'}/>
          <ListaRotas />
-         <BtnNovaRota aoPressionar={() => {
-                     navigation.navigate('M_rota');
-                  }}/>
+         <BtnNovaRota pressionar={() => navigation.navigate('M_Rota')}/>
       </>
    );
 }
@@ -30,12 +28,8 @@ function ListaRotas() {
          data={rotas.lista1}
          renderItem={({ item }) => {
             return (
-               <CardRota
-                  {...item}
-                  aoPressionar={() => {
-                     navigation.navigate('M_RotaAtiva');
-                  }}
-               />
+               <CardRota {...item}
+                  aoPressionar={() => {navigation.navigate('M_RotaAtiva');}}/>
             );
          }}
          keyExtractor={({ nome }) => nome}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import cores from '../../../assets/cores';
 
@@ -10,6 +11,7 @@ import BtnNovaRota from '../Shared/Inicial/BtnNovaRota';
 import Motoristas from '../../mocks/motorista';
 
 export default function Inicial() {
+
    return (
       <>
          <MenuBar/>
@@ -18,11 +20,13 @@ export default function Inicial() {
    );
 }
 function ListaPesquisa() {
+   const navigation = useNavigation();
    return (
       <FlatList
          data={Motoristas}
          renderItem={({ item }) => {
-            return <CardPesquisa {...item} />;
+            return <CardPesquisa {...item} 
+            aoPressionar={() => {navigation.navigate('Perfil',item);}}/>;
          }}
          keyExtractor={({ nome }) => nome}
       />

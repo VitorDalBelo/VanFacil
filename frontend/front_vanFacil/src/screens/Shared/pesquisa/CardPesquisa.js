@@ -12,7 +12,7 @@ export default function CardRota({ foto, nome, descrição, aoPressionar }) {
    img = foto;
 
    return (
-      <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
+      <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar} >
          <View style={estilos.topoCard}>
             <Image source={foto} style={estilos.imagem} />
             <Texto style={estilos.texto}>{nome}</Texto>
