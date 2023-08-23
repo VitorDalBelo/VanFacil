@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 
 import Texto from '../../components/Texto';
 
@@ -8,21 +8,39 @@ import cores from '../../../assets/cores';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function MenuBar({ nomeTela }) {
-
-   const navigation = useNavigation();
+export default function MenuBar({ nomeTela, mostraBtnPerfil = true }) {
    return (
       <View style={estilos.menuBar}>
-            <TouchableOpacity style={estilos.botaoMenu} onPress={() => {if (navigation.canGoBack()) {navigation.goBack();}}}>
-            <Feather name="menu" style={estilos.iconeMenu} />
-         </TouchableOpacity>
-
          <Texto style={estilos.nomeTela}>{nomeTela}</Texto>
 
-         <TouchableOpacity style={estilos.botaoPerfil}>
-            <Image source={FotoPerfil} style={estilos.fotoPerfil} />
-         </TouchableOpacity>
+         <BotaoMenu />
+
+         {mostraBtnPerfil && <BotaoPerfil />}
       </View>
+   );
+}
+
+function BotaoMenu() {
+   const navigation = useNavigation();
+   return (
+      <TouchableOpacity
+         style={estilos.botaoMenu}
+         onPress={() => {
+            if (navigation.canGoBack()) {
+               navigation.goBack();
+            }
+         }}
+      >
+         <Feather name="menu" style={estilos.iconeMenu} />
+      </TouchableOpacity>
+   );
+}
+
+function BotaoPerfil() {
+   return (
+      <TouchableOpacity style={estilos.botaoPerfil}>
+         <Image source={FotoPerfil} style={estilos.fotoPerfil} />
+      </TouchableOpacity>
    );
 }
 
@@ -54,5 +72,9 @@ const estilos = StyleSheet.create({
    },
    nomeTela: {
       fontSize: 22,
+      textAlign: 'center',
+      position: 'absolute',
+      left: 0,
+      right: 0,
    },
 });
