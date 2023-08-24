@@ -16,7 +16,7 @@ export default function Inicial() {
       <View style={estilos.container}>
          <MenuBar nomeTela={'Home Passageiro'} />
          <ListaRotas />
-         <BtnNovaRota telaMotorista={false} pressionar={() => navigation.navigate('P_Pesquisa')} />
+         <BtnNovaRota telaMotorista={false} />
       </View>
    );
 }

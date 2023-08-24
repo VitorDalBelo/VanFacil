@@ -11,12 +11,11 @@ import rotas from '../../mocks/rotas';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Inicial() {
-   const navigation = useNavigation();
    return (
       <View style={estilos.container}>
          <MenuBar nomeTela={'Home Motorista'} />
          <ListaRotas />
-         <BtnNovaRota pressionar={() => navigation.navigate('M_Rota')} />
+         <BtnNovaRota />
       </View>
    );
 }
