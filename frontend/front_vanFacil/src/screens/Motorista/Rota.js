@@ -16,7 +16,7 @@ const distancia = 30;
 export default function Rota() {
    return (
       <>
-         <MenuBar nomeTela={'Rota Inativa Motorista'} />
+         <MenuBar nomeTela={'Rota Inativa Motorista'} mostraBtnPerfil={false} />
          <MapaRotaInativa />
          <View style={estilos.detalhesRota}>
             <View style={estilos.linhaDetalhe}>

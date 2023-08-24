@@ -40,7 +40,6 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
          <SafeAreaView style={estilos.container} onLayout={onLayoutRootView}>
             <StatusBar style="auto" />
-            {/* <MenuBar nomeTela={'USCS - Noite'} /> */}
             <AppRotas />
          </SafeAreaView>
       </GestureHandlerRootView>

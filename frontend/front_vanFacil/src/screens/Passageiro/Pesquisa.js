@@ -13,7 +13,7 @@ import Motoristas from '../../mocks/motorista';
 export default function Inicial() {
    return (
       <>
-         <MenuBar nomeTela={'Pesquisa Motorista'} />
+         <MenuBar nomeTela={'Pesquisa Motorista'} mostraBtnPerfil={false} />
          <ListaPesquisa />
       </>
    );
