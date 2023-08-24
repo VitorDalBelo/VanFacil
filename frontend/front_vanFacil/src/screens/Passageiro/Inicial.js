@@ -14,18 +14,27 @@ export default function Inicial() {
    const navigation = useNavigation();
    return (
       <>
-         <MenuBar/>
+         <MenuBar nomeTela={'Home Passageiro'} />
          <ListaRotas />
-         <BtnNovaRota telaMotorista={false} pressionar={() => navigation.navigate('P_Pesquisa')}/>
+         <BtnNovaRota telaMotorista={false} pressionar={() => navigation.navigate('P_Pesquisa')} />
       </>
    );
 }
+
 function ListaRotas() {
+   const navigation = useNavigation();
    return (
       <FlatList
          data={rotas.lista1}
          renderItem={({ item }) => {
-            return <CardRota {...item} />;
+            return (
+               <CardRota
+                  {...item}
+                  aoPressionar={() => {
+                     navigation.navigate('P_RotaAtiva');
+                  }}
+               />
+            );
          }}
          keyExtractor={({ nome }) => nome}
       />
