@@ -17,6 +17,7 @@ export default function Rota() {
 
    return (
       <>
+         <MenuBar nomeTela={'Rota Inativa Passageiro'} mostraBtnPerfil={false} />
          <MapaRotaInativa />
          <View style={estilos.detalhesRota}>
             <View style={estilos.linhaDetalhe}>
