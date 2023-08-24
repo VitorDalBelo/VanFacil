@@ -14,12 +14,13 @@ export default function Inicial() {
    const navigation = useNavigation();
    return (
       <>
-         <MenuBar nomeTela={'Home'}/>
+         <MenuBar nomeTela={'Home Motorista'} />
          <ListaRotas />
-         <BtnNovaRota pressionar={() => navigation.navigate('M_Rota')}/>
+         <BtnNovaRota pressionar={() => navigation.navigate('M_Rota')} />
       </>
    );
 }
+
 function ListaRotas() {
    const navigation = useNavigation();
 
@@ -28,8 +29,12 @@ function ListaRotas() {
          data={rotas.lista1}
          renderItem={({ item }) => {
             return (
-               <CardRota {...item}
-                  aoPressionar={() => {navigation.navigate('M_RotaAtiva');}}/>
+               <CardRota
+                  {...item}
+                  aoPressionar={() => {
+                     navigation.navigate('M_RotaAtiva');
+                  }}
+               />
             );
          }}
          keyExtractor={({ nome }) => nome}

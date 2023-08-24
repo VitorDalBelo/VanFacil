@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
-import MenuBar from '../Shared/MenuBar'
+import MenuBar from '../Shared/MenuBar';
 
 import cores from '../../../assets/cores';
 
@@ -16,7 +16,7 @@ const distancia = 30;
 export default function Rota() {
    return (
       <>
-         <MenuBar nomeTela={'rota'}/>
+         <MenuBar nomeTela={'Rota Inativa Motorista'} />
          <MapaRotaInativa />
          <View style={estilos.detalhesRota}>
             <View style={estilos.linhaDetalhe}>

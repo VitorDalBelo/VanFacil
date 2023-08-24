@@ -45,8 +45,7 @@ export default function RotaAtiva() {
    return (
       <>
          <View style={estilos.container}>
-            <MenuBar nomeTela={'Motorista Rota'}/>
-            {/* <MapaRotaInativa /> */}
+            <MenuBar nomeTela={'Rota Ativa Motorista'} />
             <Mapa_teste />
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>

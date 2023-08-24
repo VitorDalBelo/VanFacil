@@ -78,7 +78,7 @@ export default function RotaAtiva() {
 
    return (
       <>
-         <MenuBar nomeTela={'Home'} />
+         <MenuBar nomeTela={'Rota Ativa Passageiro'} />
          <View style={estilos.container}>
             <MapaRotaInativa />
             <BottomSheet
