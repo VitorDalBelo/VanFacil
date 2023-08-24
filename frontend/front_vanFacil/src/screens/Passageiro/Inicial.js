@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import cores from '../../../assets/cores';
@@ -13,11 +13,11 @@ import rotas from '../../mocks/rotas';
 export default function Inicial() {
    const navigation = useNavigation();
    return (
-      <>
+      <View style={estilos.container}>
          <MenuBar nomeTela={'Home Passageiro'} />
          <ListaRotas />
          <BtnNovaRota telaMotorista={false} pressionar={() => navigation.navigate('P_Pesquisa')} />
-      </>
+      </View>
    );
 }
 
@@ -40,3 +40,10 @@ function ListaRotas() {
       />
    );
 }
+
+const estilos = StyleSheet.create({
+   container: {
+      flex: 1,
+      alignItems: 'center',
+   },
+});

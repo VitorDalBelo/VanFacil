@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 import cores from '../../../assets/cores';
 
@@ -13,11 +13,11 @@ import { useNavigation } from '@react-navigation/native';
 export default function Inicial() {
    const navigation = useNavigation();
    return (
-      <>
+      <View style={estilos.container}>
          <MenuBar nomeTela={'Home Motorista'} />
          <ListaRotas />
          <BtnNovaRota pressionar={() => navigation.navigate('M_Rota')} />
-      </>
+      </View>
    );
 }
 
@@ -41,3 +41,10 @@ function ListaRotas() {
       />
    );
 }
+
+const estilos = StyleSheet.create({
+   container: {
+      flex: 1,
+      alignItems: 'center',
+   },
+});
