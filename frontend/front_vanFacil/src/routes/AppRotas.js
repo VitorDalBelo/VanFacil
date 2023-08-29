@@ -2,10 +2,11 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import Navegação from '../screens/testeNavegação'
+
 import M_Inicial from '../screens/Motorista/Inicial';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
 import M_rota from '../screens/Motorista/Rota';
-import Navegação from '../screens/testeNavegação'
 
 import P_Inicial from '../screens/Passageiro/Inicial'
 import P_Pesquisa from '../screens/Passageiro/Pesquisa'
