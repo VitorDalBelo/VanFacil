@@ -10,6 +10,7 @@ export default function TesteNavegação(){
         <>
         <Button style={estilo.btn} title="Motorista" onPress={() => navigation.navigate('M_Inicial')}/>
         <Button style={estilo.btn} title="passageiro" onPress={() => navigation.navigate('P_Inicial')}/>
+        <Button style={estilo.btn} title="cadastro" onPress={() => navigation.navigate('Cadastro')}/>
         </>
     )
 }
