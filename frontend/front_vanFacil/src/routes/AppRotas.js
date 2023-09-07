@@ -21,8 +21,9 @@ export default function AppRotas() {
    return (
       <NavigationContainer>
          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Cadastro" component={Cadastro} />
+            
             <Stack.Screen name="Navegação" component={Navegação} />
+            <Stack.Screen name="Cadastro" component={Cadastro} />
 
             <Stack.Screen name="M_Inicial" component={M_Inicial} />
             <Stack.Screen name="M_RotaAtiva" component={M_RotaAtiva} />
