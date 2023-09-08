@@ -4,13 +4,13 @@ import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
-import listaPassageiros from '../../mocks/passageiros';
 import CardPassageiro from '../Shared/CardPassageiro';
 
 import fotoPassageiro from '../../../assets/teste/Haingrindi.png';
 
 import cores from '../../../assets/cores';
 import MenuBar from '../Shared/MenuBar';
+import { useRoute } from '@react-navigation/native';
 
 const restantes = 10;
 
@@ -47,6 +47,10 @@ const funcaoEstilo = (vai, volta) =>
    });
 
 export default function RotaAtiva() {
+   const route = useRoute();
+   const { passageiros } = route.params;
+   const listaPassageiros = passageiros.slice(1);
+
    const [vai, inverterVai] = useReducer((vai) => !vai, true);
    const [volta, inverterVolta] = useReducer((volta) => !volta, true);
 
@@ -80,7 +84,7 @@ export default function RotaAtiva() {
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               <CardPassageiro {...proximo} />
+               <CardPassageiro {...passageiros[0]} />
 
                <BottomSheetFlatList
                   ListHeaderComponent={TopoLista}

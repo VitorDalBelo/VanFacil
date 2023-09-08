@@ -11,12 +11,12 @@ import Mamaco4 from '../../assets/teste/passageiros/Mamaco4.png';
 import Paulo from '../../assets/teste/passageiros/Paulo.png';
 
 const Passageiros = [
-   // {
-   //    ordem: 1,
-   //    foto: Haingrindi,
-   //    nome: 'Revert Richards',
-   //    endereco: 'Av. Picão 24',
-   // },
+   {
+      ordem: 1,
+      foto: Haingrindi,
+      nome: 'Revert Richards',
+      endereco: 'Av. Picão 24',
+   },
    {
       ordem: 2,
       foto: Gataruga,
