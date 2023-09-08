@@ -1,5 +1,5 @@
-import textos from '../mocks/textos';
+import rotas from '../mocks/rotas';
 
-export const carregaTextos = () => {
-   return textos;
+export const carregaRotas = () => {
+   return rotas;
 };

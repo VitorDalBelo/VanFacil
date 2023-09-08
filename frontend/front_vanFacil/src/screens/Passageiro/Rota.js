@@ -5,6 +5,7 @@ import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
 
 import cores from '../../../assets/cores';
+import MenuBar from '../Shared/MenuBar';
 
 const numConfirmados = 10;
 const numTotal = 15;
@@ -37,16 +38,10 @@ export default function Rota() {
             </View>
 
             <View style={estilos.linhaDetalhe}>
-               <TouchableOpacity
-                  style={[estilos.botao, estilosSwitch.botaoIda]}
-                  onPress={inverterVai}
-               >
+               <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoIda]} onPress={inverterVai}>
                   <Texto style={estilos.textoBotao}>{vai ? 'Vou' : 'Não vou'}</Texto>
                </TouchableOpacity>
-               <TouchableOpacity
-                  style={[estilos.botao, estilosSwitch.botaoVolta]}
-                  onPress={inverterVolta}
-               >
+               <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoVolta]} onPress={inverterVolta}>
                   <Texto style={estilos.textoBotao}>{volta ? 'Volto' : 'Não volto'}</Texto>
                </TouchableOpacity>
             </View>
@@ -58,10 +53,10 @@ export default function Rota() {
 const funcaoEstilo = (vai, volta) =>
    StyleSheet.create({
       botaoIda: {
-         backgroundColor: vai ? cores.azulProfundo : cores.vermelho,
+         backgroundColor: vai ? cores.azul : cores.vermelho,
       },
       botaoVolta: {
-         backgroundColor: volta ? cores.azulProfundo : cores.vermelho,
+         backgroundColor: volta ? cores.azul : cores.vermelho,
       },
    });
 
