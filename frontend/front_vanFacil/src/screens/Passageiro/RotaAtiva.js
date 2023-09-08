@@ -39,10 +39,10 @@ function TopoLista() {
 const funcaoEstilo = (vai, volta) =>
    StyleSheet.create({
       botaoIda: {
-         backgroundColor: vai ? cores.azulProfundo : cores.vermelho,
+         backgroundColor: vai ? cores.azul : cores.vermelho,
       },
       botaoVolta: {
-         backgroundColor: volta ? cores.azulProfundo : cores.vermelho,
+         backgroundColor: volta ? cores.azul : cores.vermelho,
       },
    });
 
@@ -51,25 +51,16 @@ export default function RotaAtiva() {
    const [volta, inverterVolta] = useReducer((volta) => !volta, true);
 
    const bottomSheetRef = useRef(BottomSheet);
-   const snapPoints = useMemo(() => [270, '100%'], []);
-
-   const [mostrarBotoes, setMostrarBotoes] = useState(false);
-
-   const handleSheetChange = useCallback(() => {
-      setMostrarBotoes(!mostrarBotoes);
-   }, [mostrarBotoes]);
+   const snapPoints = useMemo(() => [202, '100%'], []);
 
    function Botoes() {
       const estilosSwitch = funcaoEstilo(vai, volta);
       return (
-         <View style={estilos.linhaDetalhe}>
+         <View style={[estilos.linhaDetalhe, estilos.teste]}>
             <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoIda]} onPress={inverterVai}>
                <Texto style={estilos.textoBotao}>{vai ? 'Vou' : 'Não vou'}</Texto>
             </TouchableOpacity>
-            <TouchableOpacity
-               style={[estilos.botao, estilosSwitch.botaoVolta]}
-               onPress={inverterVolta}
-            >
+            <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoVolta]} onPress={inverterVolta}>
                <Texto style={estilos.textoBotao}>{volta ? 'Volto' : 'Não volto'}</Texto>
             </TouchableOpacity>
          </View>
@@ -81,12 +72,7 @@ export default function RotaAtiva() {
          <MenuBar nomeTela={'Rota Ativa Passageiro'} mostraBtnPerfil={false} />
          <View style={estilos.container}>
             <MapaRotaInativa />
-            <BottomSheet
-               ref={bottomSheetRef}
-               index={0}
-               snapPoints={snapPoints}
-               onChange={handleSheetChange}
-            >
+            <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
                   <Texto style={estilos.textoDetalhes}>{restantes}</Texto>
@@ -96,7 +82,6 @@ export default function RotaAtiva() {
                </View>
                <CardPassageiro {...proximo} />
 
-               {mostrarBotoes && <Botoes />}
                <BottomSheetFlatList
                   ListHeaderComponent={TopoLista}
                   data={listaPassageiros}
@@ -107,6 +92,7 @@ export default function RotaAtiva() {
                />
             </BottomSheet>
          </View>
+         <Botoes />
       </>
    );
 }
@@ -166,4 +152,5 @@ const estilos = StyleSheet.create({
    switch: {
       marginLeft: 5,
    },
+   teste: {},
 });

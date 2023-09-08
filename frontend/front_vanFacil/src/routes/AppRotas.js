@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Navegação from '../screens/testeNavegação';
-import Cadastro from '../screens/cadastro'
+import Cadastro from '../screens/cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
@@ -12,6 +12,7 @@ import M_Rota from '../screens/Motorista/Rota';
 import P_Inicial from '../screens/Passageiro/Inicial';
 import P_Pesquisa from '../screens/Passageiro/Pesquisa';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
+import P_Rota from '../screens/Passageiro/Rota';
 
 import Perfil from '../screens/Perfil';
 
@@ -21,7 +22,6 @@ export default function AppRotas() {
    return (
       <NavigationContainer>
          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            
             <Stack.Screen name="Navegação" component={Navegação} />
             <Stack.Screen name="Cadastro" component={Cadastro} />
 
