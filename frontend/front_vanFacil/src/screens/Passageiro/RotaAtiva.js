@@ -1,24 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useMemo, useReducer, useRef } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
+import MenuBar from '../Shared/MenuBar';
 import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
 import CardPassageiro from '../Shared/CardPassageiro';
 
-import fotoPassageiro from '../../../assets/teste/Haingrindi.png';
-
 import cores from '../../../assets/cores';
-import MenuBar from '../Shared/MenuBar';
 import { useRoute } from '@react-navigation/native';
-
-const restantes = 10;
-
-const proximo = {
-   foto: fotoPassageiro,
-   nome: 'Revert Richards',
-   endereco: '3 km de distância',
-};
 
 function TopoLista() {
    return (
@@ -48,8 +38,8 @@ const funcaoEstilo = (vai, volta) =>
 
 export default function RotaAtiva() {
    const route = useRoute();
-   const { passageiros } = route.params;
-   const listaPassageiros = passageiros.slice(1);
+   var { passageiros } = route.params;
+   var listaPassageiros = passageiros.slice(1);
 
    const [vai, inverterVai] = useReducer((vai) => !vai, true);
    const [volta, inverterVolta] = useReducer((volta) => !volta, true);
@@ -79,7 +69,7 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{restantes}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passageiros.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
