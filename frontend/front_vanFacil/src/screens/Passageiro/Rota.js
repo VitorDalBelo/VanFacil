@@ -1,8 +1,9 @@
-import React, { useReducer, useState } from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
+import BotoesIdaVolta from './BotoesIdaVolta';
 
 import cores from '../../../assets/cores';
 import MenuBar from '../Shared/MenuBar';
@@ -11,64 +12,9 @@ const numConfirmados = 10;
 const numTotal = 15;
 
 export default function Rota() {
-   const [vai, inverterVai] = useReducer((vai) => !vai, true);
-   const [volta, inverterVolta] = useReducer((volta) => !volta, true);
-
-   const estilosSwitch = funcaoEstilo(vai, volta);
-
-   const [modalVisible, setModalVisible] = useState(false);
-   const [idaOuVolta, defineIdaOuVolta] = useState(true);
-
-   const mostrarModal = () => {
-      defineMensagem(idaOuVolta);
-      setModalVisible(true);
-   };
-
-   const defineMensagem = (ida) => {
-      var texto = '';
-      if (ida) {
-         texto = !vai ? 'vai' : 'não vai';
-      } else {
-         texto = !volta ? 'volta' : 'não volta';
-      }
-      return texto;
-   };
-
-   const confirmar = (ida) => {
-      if (ida) {
-         inverterVai();
-      } else {
-         inverterVolta();
-      }
-      setModalVisible(false);
-   };
-
-   const cancelar = () => {
-      setModalVisible(false);
-   };
-
    return (
       <>
          <MenuBar nomeTela={'Rota Inativa Passageiro'} mostraBtnPerfil={false} />
-
-         <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={cancelar}>
-            <View style={modal.overlay}>
-               <View style={modal.caixaCentral}>
-                  <View style={modal.titleContainer}>
-                     <Texto style={modal.titulo}>Confirmação</Texto>
-                  </View>
-                  <TextoMensagem textoPrincipal={defineMensagem(idaOuVolta)} />
-                  <View style={modal.linhaBotoes}>
-                     <TouchableOpacity style={[modal.button, modal.btnConfirmar]} onPress={() => confirmar(idaOuVolta)}>
-                        <Texto style={modal.buttonText}>Confirmar</Texto>
-                     </TouchableOpacity>
-                     <TouchableOpacity style={[modal.button, modal.btnCancelar]} onPress={cancelar}>
-                        <Texto style={modal.buttonText}>Cancelar</Texto>
-                     </TouchableOpacity>
-                  </View>
-               </View>
-            </View>
-         </Modal>
 
          <MapaRotaInativa />
 
@@ -89,50 +35,11 @@ export default function Rota() {
                </TouchableOpacity>
             </View>
 
-            <View style={estilos.linhaDetalhe}>
-               <TouchableOpacity
-                  style={[estilos.botao, estilosSwitch.botaoIda]}
-                  onPress={() => {
-                     mostrarModal();
-                     defineIdaOuVolta(true);
-                  }}
-               >
-                  <Texto style={estilos.textoBotao}>{vai ? 'Vou' : 'Não vou'}</Texto>
-               </TouchableOpacity>
-               <TouchableOpacity
-                  style={[estilos.botao, estilosSwitch.botaoVolta]}
-                  onPress={() => {
-                     mostrarModal();
-                     defineIdaOuVolta(false);
-                  }}
-               >
-                  <Texto style={estilos.textoBotao}>{volta ? 'Volto' : 'Não volto'}</Texto>
-               </TouchableOpacity>
-            </View>
+            <BotoesIdaVolta />
          </View>
       </>
    );
 }
-
-function TextoMensagem({ textoPrincipal }) {
-   return (
-      <View style={{ flexDirection: 'row' }}>
-         <Texto style={modal.texto}>Confirmar que </Texto>
-         <Texto style={modal.textoPrincipal}>{textoPrincipal}</Texto>
-         <Texto style={modal.texto}> de van hoje?</Texto>
-      </View>
-   );
-}
-
-const funcaoEstilo = (vai, volta) =>
-   StyleSheet.create({
-      botaoIda: {
-         backgroundColor: vai ? cores.azul : cores.vermelho,
-      },
-      botaoVolta: {
-         backgroundColor: volta ? cores.azul : cores.vermelho,
-      },
-   });
 
 const estilos = StyleSheet.create({
    detalhesRota: {
@@ -182,77 +89,5 @@ const estilos = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 18,
       lineHeight: 30,
-   },
-   switchContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-   },
-   switch: {
-      marginLeft: 5,
-   },
-});
-
-const modal = StyleSheet.create({
-   overlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   caixaCentral: {
-      width: 310,
-      backgroundColor: cores.branco,
-      borderRadius: 10,
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: cores.cinzaClaro,
-   },
-   titleContainer: {
-      alignItems: 'center',
-      backgroundColor: cores.cinzaClaro,
-      padding: 10,
-      borderTopLeftRadius: 9,
-      borderTopRightRadius: 9,
-      width: '100%',
-      marginBottom: 10,
-   },
-   titulo: {
-      fontSize: 22,
-      fontWeight: 'bold',
-   },
-   texto: {
-      fontSize: 16,
-      marginBottom: 20,
-   },
-   textoPrincipal: {
-      fontSize: 16,
-      marginBottom: 20,
-      fontWeight: 'bold',
-   },
-   linhaBotoes: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-   },
-   button: {
-      flex: 1,
-      alignItems: 'center',
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-      borderRadius: 5,
-      margin: 10,
-   },
-   buttonText: {
-      color: cores.branco,
-      fontWeight: 'bold',
-   },
-   btnConfirmar: {
-      backgroundColor: cores.azul,
-      marginRight: 10,
-      alignSelf: 'flex-start',
-   },
-   btnCancelar: {
-      backgroundColor: cores.vermelho,
-      marginLeft: 10,
-      alignSelf: 'flex-end',
    },
 });
