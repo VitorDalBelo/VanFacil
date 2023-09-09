@@ -1,8 +1,9 @@
-import React, { useReducer, useState } from 'react';
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
+import BotoesIdaVolta from './BotoesIdaVolta';
 
 import cores from '../../../assets/cores';
 import MenuBar from '../Shared/MenuBar';
@@ -11,15 +12,12 @@ const numConfirmados = 10;
 const numTotal = 15;
 
 export default function Rota() {
-   const [vai, inverterVai] = useReducer((vai) => !vai, true);
-   const [volta, inverterVolta] = useReducer((volta) => !volta, true);
-
-   const estilosSwitch = funcaoEstilo(vai, volta);
-
    return (
       <>
          <MenuBar nomeTela={'Rota Inativa Passageiro'} mostraBtnPerfil={false} />
+
          <MapaRotaInativa />
+
          <View style={estilos.detalhesRota}>
             <View style={estilos.linhaDetalhe}>
                <Texto style={estilos.textoDetalhes}>Passageiros confirmados:</Texto>
@@ -37,28 +35,11 @@ export default function Rota() {
                </TouchableOpacity>
             </View>
 
-            <View style={estilos.linhaDetalhe}>
-               <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoIda]} onPress={inverterVai}>
-                  <Texto style={estilos.textoBotao}>{vai ? 'Vou' : 'Não vou'}</Texto>
-               </TouchableOpacity>
-               <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoVolta]} onPress={inverterVolta}>
-                  <Texto style={estilos.textoBotao}>{volta ? 'Volto' : 'Não volto'}</Texto>
-               </TouchableOpacity>
-            </View>
+            <BotoesIdaVolta />
          </View>
       </>
    );
 }
-
-const funcaoEstilo = (vai, volta) =>
-   StyleSheet.create({
-      botaoIda: {
-         backgroundColor: vai ? cores.azul : cores.vermelho,
-      },
-      botaoVolta: {
-         backgroundColor: volta ? cores.azul : cores.vermelho,
-      },
-   });
 
 const estilos = StyleSheet.create({
    detalhesRota: {
@@ -108,12 +89,5 @@ const estilos = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 18,
       lineHeight: 30,
-   },
-   switchContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-   },
-   switch: {
-      marginLeft: 5,
    },
 });

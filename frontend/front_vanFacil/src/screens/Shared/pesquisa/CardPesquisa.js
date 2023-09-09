@@ -8,11 +8,11 @@ import cores from '../../../../assets/cores';
 
 var img = ImagemFalha;
 
-export default function CardRota({ foto, nome, descrição, aoPressionar }) {
+export default function CardPesquisa({ foto, nome, descrição, aoPressionar }) {
    img = foto;
 
    return (
-      <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar} >
+      <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
          <View style={estilos.topoCard}>
             <Image source={foto} style={estilos.imagem} />
             <Texto style={estilos.texto}>{nome}</Texto>
@@ -20,7 +20,6 @@ export default function CardRota({ foto, nome, descrição, aoPressionar }) {
          <View style={estilos.descCaixa}>
             <Texto style={estilos.desc}>{descrição}</Texto>
          </View>
-         
       </TouchableOpacity>
    );
 }
@@ -67,8 +66,8 @@ const estilos = StyleSheet.create({
       height: 40,
       borderRadius: 50,
       borderWidth: 2,
-      borderColor: cores.azulProfundo ,
-      marginRight:10,
+      borderColor: cores.azulProfundo,
+      marginRight: 10,
    },
    texto: {
       color: '#000',
@@ -77,20 +76,17 @@ const estilos = StyleSheet.create({
       textAlignVertical: 'center',
       width: larguraTela - 110,
       borderWidth: 2,
-      borderColor: cores.azulProfundo ,
+      borderColor: cores.azulProfundo,
       borderRadius: 5,
    },
    descCaixa: {
-      flex:1,
+      flex: 1,
       width: larguraTela - 60,
       borderWidth: 2,
-      borderColor: cores.azulProfundo ,
+      borderColor: cores.azulProfundo,
       borderRadius: 5,
       margin: 10,
       padding: 10,
    },
-   desc:{
-      
-      
-   },
+   desc: {},
 });

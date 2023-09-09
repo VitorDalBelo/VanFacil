@@ -2,10 +2,8 @@ import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import cores from '../../../assets/cores';
-
 import MenuBar from '../Shared/MenuBar';
-import CardPesquisa from '../Shared/pesquisa/CardPesquisa';
+import CardPesquisa from '../Shared/Pesquisa/CardPesquisa';
 
 import Motoristas from '../../mocks/motoristas';
 

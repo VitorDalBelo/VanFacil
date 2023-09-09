@@ -1,24 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useMemo, useRef } from 'react';
+import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
+import MenuBar from '../Shared/MenuBar';
 import Texto from '../../components/Texto';
 import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
 import CardPassageiro from '../Shared/CardPassageiro';
-
-import fotoPassageiro from '../../../assets/teste/Haingrindi.png';
+import BotoesIdaVolta from './BotoesIdaVolta';
 
 import cores from '../../../assets/cores';
-import MenuBar from '../Shared/MenuBar';
 import { useRoute } from '@react-navigation/native';
-
-const restantes = 10;
-
-const proximo = {
-   foto: fotoPassageiro,
-   nome: 'Revert Richards',
-   endereco: '3 km de distância',
-};
 
 function TopoLista() {
    return (
@@ -36,50 +27,24 @@ function TopoLista() {
    );
 }
 
-const funcaoEstilo = (vai, volta) =>
-   StyleSheet.create({
-      botaoIda: {
-         backgroundColor: vai ? cores.azul : cores.vermelho,
-      },
-      botaoVolta: {
-         backgroundColor: volta ? cores.azul : cores.vermelho,
-      },
-   });
-
 export default function RotaAtiva() {
    const route = useRoute();
-   const { passageiros } = route.params;
-   const listaPassageiros = passageiros.slice(1);
-
-   const [vai, inverterVai] = useReducer((vai) => !vai, true);
-   const [volta, inverterVolta] = useReducer((volta) => !volta, true);
+   var { passageiros } = route.params;
+   var listaPassageiros = passageiros.slice(1);
 
    const bottomSheetRef = useRef(BottomSheet);
    const snapPoints = useMemo(() => [202, '100%'], []);
-
-   function Botoes() {
-      const estilosSwitch = funcaoEstilo(vai, volta);
-      return (
-         <View style={[estilos.linhaDetalhe, estilos.teste]}>
-            <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoIda]} onPress={inverterVai}>
-               <Texto style={estilos.textoBotao}>{vai ? 'Vou' : 'Não vou'}</Texto>
-            </TouchableOpacity>
-            <TouchableOpacity style={[estilos.botao, estilosSwitch.botaoVolta]} onPress={inverterVolta}>
-               <Texto style={estilos.textoBotao}>{volta ? 'Volto' : 'Não volto'}</Texto>
-            </TouchableOpacity>
-         </View>
-      );
-   }
 
    return (
       <>
          <MenuBar nomeTela={'Rota Ativa Passageiro'} mostraBtnPerfil={false} />
          <View style={estilos.container}>
             <MapaRotaInativa />
+
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{restantes}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passageiros.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
@@ -96,7 +61,8 @@ export default function RotaAtiva() {
                />
             </BottomSheet>
          </View>
-         <Botoes />
+
+         <BotoesIdaVolta />
       </>
    );
 }
@@ -105,7 +71,7 @@ const estilos = StyleSheet.create({
    container: {
       width: '100%',
       flex: 1,
-      backgroundColor: 'white',
+      backgroundColor: cores.branco,
    },
    linhaDetalhe: {
       width: '100%',
@@ -143,18 +109,4 @@ const estilos = StyleSheet.create({
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
    },
-   textoBotao: {
-      color: cores.branco,
-      fontWeight: 'bold',
-      fontSize: 18,
-      lineHeight: 30,
-   },
-   switchContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-   },
-   switch: {
-      marginLeft: 5,
-   },
-   teste: {},
 });

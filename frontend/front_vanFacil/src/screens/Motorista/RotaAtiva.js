@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useMemo, useRef } from 'react';
+import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 import Texto from '../../components/Texto';
@@ -7,19 +7,9 @@ import CardPassageiro from '../Shared/CardPassageiro';
 
 import Mapa_teste from '../Shared/Rota/mapa_teste';
 
-import fotoPassageiro from '../../../assets/teste/Haingrindi.png';
-
 import cores from '../../../assets/cores';
 import MenuBar from '../Shared/MenuBar';
 import { useRoute } from '@react-navigation/native';
-
-const restantes = 10;
-
-const proximo = {
-   foto: fotoPassageiro,
-   nome: 'Revert Richards',
-   endereco: '3 km de distância',
-};
 
 function TopoLista() {
    return (
@@ -53,7 +43,7 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{restantes}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passageiros.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
