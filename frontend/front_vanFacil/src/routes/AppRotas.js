@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Navegação from '../screens/testeNavegação';
-import Cadastro from '../screens/Cadastro';
+import Cadastro from '../screens/cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
