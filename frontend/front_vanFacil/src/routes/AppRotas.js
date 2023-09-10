@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Navegação from '../screens/testeNavegação';
-import Cadastro from '../screens/Cadastro';
+import Cadastro from '../screens/cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
@@ -15,13 +15,25 @@ import P_Rota from '../screens/Passageiro/Rota';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
 
 import Perfil from '../screens/Perfil';
+import CadastroPassageiro from '../screens/CadastroPassageiro';
+
+import { AuthProvider } from '../context/Auth/AuthContext';
+
+import Login from '../screens/Login';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppRotas() {
    return (
       <NavigationContainer>
+         <AuthProvider>
          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={Login} />
+
+            <Stack.Screen name="CadastroPassageiro" component={CadastroPassageiro} />
+            
+
+
             <Stack.Screen name="Navegação" component={Navegação} />
             <Stack.Screen name="Cadastro" component={Cadastro} />
 
@@ -36,6 +48,7 @@ export default function AppRotas() {
 
             <Stack.Screen name="Perfil" component={Perfil} />
          </Stack.Navigator>
+         </AuthProvider>
       </NavigationContainer>
    );
 }
