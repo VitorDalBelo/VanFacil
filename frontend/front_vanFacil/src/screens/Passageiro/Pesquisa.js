@@ -5,9 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import MenuBar from '../Shared/MenuBar';
 import CardPesquisa from '../Shared/Pesquisa/CardPesquisa';
 
-import Motoristas from '../../mocks/motoristas';
+import useMotoristas from '../../hooks/useMotoristas';
 
-export default function Inicial() {
+export default function Pesquisa() {
    return (
       <View style={estilos.container}>
          <MenuBar nomeTela={'Pesquisa Motorista'} mostraBtnPerfil={false} />
@@ -17,10 +17,11 @@ export default function Inicial() {
 }
 
 function ListaPesquisa() {
+   const motoristas = useMotoristas();
    const navigation = useNavigation();
    return (
       <FlatList
-         data={Motoristas}
+         data={motoristas}
          renderItem={({ item }) => {
             return (
                <CardPesquisa

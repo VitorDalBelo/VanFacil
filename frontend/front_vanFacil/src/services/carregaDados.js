@@ -5,6 +5,6 @@ export const carregaRotas = () => {
    return rotas;
 };
 
-export const carregaMorotistas = () => {
+export const carregaMotoristas = () => {
    return motoristas;
 };
