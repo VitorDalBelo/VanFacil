@@ -18,6 +18,8 @@ import {
 
 SplashScreen.preventAutoHideAsync();
 
+console.log("BackEnd",process.env.EXPO_PUBLIC_BACKEND_URL);
+
 export default function App() {
    const [fontsLoaded] = useFonts({
       RubikLight: Rubik_300Light,

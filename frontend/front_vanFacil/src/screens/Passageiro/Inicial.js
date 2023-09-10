@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useEffect,useContext} from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -9,9 +9,16 @@ import BtnNovaRota from '../Shared/Inicial/BtnNovaRota';
 import MenuBar from '../Shared/MenuBar';
 
 import rotas from '../../mocks/rotas';
+import { AuthContext } from '../../context/Auth/AuthContext';
 
 export default function Inicial() {
    const navigation = useNavigation();
+   const {user,handleLogout} = useContext(AuthContext)
+
+   useEffect(()=>{
+      if(!user.name) handleLogout();
+   })
+
    return (
       <View style={estilos.container}>
          <MenuBar nomeTela={'Home Passageiro'} />

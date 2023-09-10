@@ -12,13 +12,25 @@ import P_Pesquisa from '../screens/Passageiro/Pesquisa';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
 
 import Perfil from '../screens/Perfil';
+import CadastroPassageiro from '../screens/CadastroPassageiro';
+
+import { AuthProvider } from '../context/Auth/AuthContext';
+
+import Login from '../screens/Login';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppRotas() {
    return (
       <NavigationContainer>
+         <AuthProvider>
          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={Login} />
+
+            <Stack.Screen name="CadastroPassageiro" component={CadastroPassageiro} />
+            
+
+
             <Stack.Screen name="Navegação" component={Navegação} />
 
             <Stack.Screen name="M_Inicial" component={M_Inicial} />
@@ -31,6 +43,7 @@ export default function AppRotas() {
 
             <Stack.Screen name="Perfil" component={Perfil} />
          </Stack.Navigator>
+         </AuthProvider>
       </NavigationContainer>
    );
 }
