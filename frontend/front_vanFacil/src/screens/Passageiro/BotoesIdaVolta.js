@@ -2,6 +2,7 @@ import React, { useReducer, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Texto from '../../components/Texto';
+import toast from '../../helpers/toast';
 
 import cores from '../../../assets/cores';
 
@@ -32,6 +33,7 @@ export default function BotoesIdaVolta() {
    const confirmar = (ida) => {
       ida ? inverterVai() : inverterVolta();
       setModalVisible(false);
+      toast('O Motorista foi notificado da sua alteração!', 'success');
    };
 
    const cancelar = () => {
