@@ -5,17 +5,27 @@ import Texto from '../../../components/Texto';
 
 import ImagemFalha from '../../../../assets/icon.png';
 import cores from '../../../../assets/cores';
+import { useNavigation } from '@react-navigation/native';
 
 var img = ImagemFalha;
 
-export default function CardRota({ imagem, nome, aoPressionar }) {
+export default function CardRota({ id, imagem, nome, ativa, telaMotorista = true, passageiros }) {
    img = imagem;
+   const navigation = useNavigation();
+
+   const defineCaminho = () => {
+      const caminhoMotorista = ativa ? 'M_RotaAtiva' : 'M_Rota';
+      const caminhoPassageiro = ativa ? 'P_RotaAtiva' : 'P_Rota';
+      const caminho = telaMotorista ? caminhoMotorista : caminhoPassageiro;
+      return () => navigation.navigate(caminho, { passageiros });
+   };
 
    return (
-      <TouchableOpacity style={estilos.cardRota} onPress={aoPressionar}>
+      <TouchableOpacity style={estilos.cardRota} onPress={defineCaminho()}>
          <Image source={imagem} style={estilos.imagem} />
          <View style={estilos.textContainer}>
             <Texto style={estilos.texto}>{nome}</Texto>
+            {ativa && <Texto style={estilos.texto}>Ativa</Texto>}
          </View>
       </TouchableOpacity>
    );
@@ -57,6 +67,8 @@ const estilos = StyleSheet.create({
       height: alturaCard - 1,
    },
    textContainer: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
       position: 'absolute',
       bottom: 0,
       left: 0,
@@ -66,8 +78,8 @@ const estilos = StyleSheet.create({
       height: 48,
    },
    texto: {
-      color: '#000',
-      paddingLeft: 8,
+      color: cores.preto,
+      paddingHorizontal: 8,
       fontSize: 20,
    },
 });

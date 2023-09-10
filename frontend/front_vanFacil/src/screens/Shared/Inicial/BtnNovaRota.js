@@ -9,17 +9,12 @@ import { useNavigation } from '@react-navigation/native';
 export default function BtnNovaRota({ telaMotorista = true }) {
    const navigation = useNavigation();
    const defineIcone = () => {
-      if (telaMotorista) {
-         return 'plus';
-      }
-      return 'search';
+      return telaMotorista ? 'plus' : 'search';
    };
 
    const defineCaminho = () => {
-      if (telaMotorista) {
-         return () => navigation.navigate('M_Rota');
-      }
-      return () => navigation.navigate('P_Pesquisa');
+      const caminho = telaMotorista ? 'M_Rota' : 'P_Pesquisa';
+      return () => navigation.navigate(caminho);
    };
 
    return (

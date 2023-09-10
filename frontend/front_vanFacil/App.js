@@ -4,19 +4,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import * as SplashScreen from 'expo-splash-screen';
 
-import MenuBar from './src/screens/Shared/MenuBar';
-
 import AppRotas from './src/routes/AppRotas';
 
-import {
-   useFonts,
-   Rubik_300Light,
-   Rubik_400Regular,
-   Rubik_500Medium,
-   Rubik_700Bold,
-} from '@expo-google-fonts/rubik';
+import { useFonts, Rubik_300Light, Rubik_400Regular, Rubik_500Medium, Rubik_700Bold } from '@expo-google-fonts/rubik';
 
 SplashScreen.preventAutoHideAsync();
+
+console.log("BackEnd",process.env.EXPO_PUBLIC_BACKEND_URL);
 
 export default function App() {
    const [fontsLoaded] = useFonts({
