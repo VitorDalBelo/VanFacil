@@ -1,11 +1,10 @@
 import React from "react";
-import { StyleSheet ,View , TouchableOpacity,Text} from "react-native";
+import { Button, StyleSheet ,View , TouchableOpacity,Text} from "react-native";
 import { useNavigation} from "@react-navigation/native";
 import GoBackButton from "../components/GoBackButton";
 
-export default function TesteNavegação(){
-
-    const navigation = useNavigation();
+export default function TesteNavegação() {
+   const navigation = useNavigation();
 
     return(
         <View style={estilo.page}>

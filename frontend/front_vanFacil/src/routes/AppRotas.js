@@ -3,12 +3,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Navegação from '../screens/testeNavegação';
+import Cadastro from '../screens/cadastro';
+
 import M_Inicial from '../screens/Motorista/Inicial';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
 import M_Rota from '../screens/Motorista/Rota';
 
 import P_Inicial from '../screens/Passageiro/Inicial';
 import P_Pesquisa from '../screens/Passageiro/Pesquisa';
+import P_Rota from '../screens/Passageiro/Rota';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
 
 import Perfil from '../screens/Perfil';
@@ -32,13 +35,15 @@ export default function AppRotas() {
 
 
             <Stack.Screen name="Navegação" component={Navegação} />
+            <Stack.Screen name="Cadastro" component={Cadastro} />
 
             <Stack.Screen name="M_Inicial" component={M_Inicial} />
-            <Stack.Screen name="M_RotaAtiva" component={M_RotaAtiva} />
             <Stack.Screen name="M_Rota" component={M_Rota} />
+            <Stack.Screen name="M_RotaAtiva" component={M_RotaAtiva} />
 
             <Stack.Screen name="P_Inicial" component={P_Inicial} />
             <Stack.Screen name="P_Pesquisa" component={P_Pesquisa} />
+            <Stack.Screen name="P_Rota" component={P_Rota} />
             <Stack.Screen name="P_RotaAtiva" component={P_RotaAtiva} />
 
             <Stack.Screen name="Perfil" component={Perfil} />
