@@ -10,6 +10,8 @@ import { useFonts, Rubik_300Light, Rubik_400Regular, Rubik_500Medium, Rubik_700B
 
 SplashScreen.preventAutoHideAsync();
 
+console.log("BackEnd",process.env.EXPO_PUBLIC_BACKEND_URL);
+
 export default function App() {
    const [fontsLoaded] = useFonts({
       RubikLight: Rubik_300Light,
