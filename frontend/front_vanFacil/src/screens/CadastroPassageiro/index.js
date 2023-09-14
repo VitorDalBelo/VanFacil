@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React , {useState,useRef} from "react";
 import { Button , Text, View , TouchableOpacity , ActivityIndicator,StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import api from "../../services/api";
@@ -7,6 +7,8 @@ import Toast from 'react-native-root-toast';
 import { useNavigation} from "@react-navigation/native";
 import * as Yup from "yup";
 import GoBackButton from "../../components/GoBackButton";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MapView , {PROVIDER_GOOGLE , Marker}from 'react-native-maps';
 
 const esquemaPassageiro = Yup.object({
     nome: Yup.string().required("Informe seu nome."),
@@ -28,6 +30,10 @@ export default function CadastroPassageiro() {
     const [senhaVisivel,setSenhaVisivel] = useState(false);
     const [confirSenhaVisivel,setConfirSenhaVisivel] = useState(false);
     const [loading,setLoading] = useState(false);
+    const [lat,setLat] = useState(null);
+    const [lon,setLon] = useState(null);
+    const mapRef = useRef(null);
+
     const navigation = useNavigation();
 
     const validarForm = async ()=>{
@@ -92,43 +98,86 @@ export default function CadastroPassageiro() {
     }
 
     return (
+        
         <View style={estilos.page}> 
-            <GoBackButton/> 
-            <View style={estilos.form}>  
-                <Text>Nome</Text>
-                <TextInput editable={!loading} style={estilos.inputContainer} value={nome} onChangeText={setNome} />
-                <Text>Email</Text>
-                <TextInput editable={!loading} style={estilos.inputContainer} value={email} onChangeText={setEmail} />
-                <Text>CPF</Text>
-                <TextInput editable={!loading} style={estilos.inputContainer} value={cpf} onChangeText={aplicarCPFMascara} maxLength={14}/>
-                <Text>Senha</Text>
-                <View style={estilos.inputContainer}>
-                    <TextInput editable={!loading} value={senha} secureTextEntry={!senhaVisivel} onChangeText={setSenha} />
-                    <TouchableOpacity onPress={()=>setSenhaVisivel(!senhaVisivel)} style={estilos.visibleIcon}>
-                        <MaterialIcons name={senhaVisivel?"visibility":"visibility-off" } size={24} color="white" />
-                    </TouchableOpacity>
-                </View>
-                <Text>Confirme Sua Senha</Text>
+             <GoBackButton/> 
+             <View style={estilos.form}>  
+                 <Text>Nome</Text>
+                 <TextInput editable={!loading} style={estilos.inputContainer} value={nome} onChangeText={setNome} />
+                 <Text>Email</Text>
+                 <TextInput editable={!loading} style={estilos.inputContainer} value={email} onChangeText={setEmail} />
+                 <Text>CPF</Text>
+                 <TextInput editable={!loading} style={estilos.inputContainer} value={cpf} onChangeText={aplicarCPFMascara} maxLength={14}/>
+                 <Text>Senha</Text>
+                 <View style={estilos.inputContainer}>
+                     <TextInput editable={!loading} value={senha} secureTextEntry={!senhaVisivel} onChangeText={setSenha} />
+                     <TouchableOpacity onPress={()=>setSenhaVisivel(!senhaVisivel)} style={estilos.visibleIcon}>
+                         <MaterialIcons name={senhaVisivel?"visibility":"visibility-off" } size={24} color="white" />
+                     </TouchableOpacity>
+                 </View>
+                 <Text>Confirme Sua Senha</Text>
                     <View style={estilos.inputContainer}>
-                        <TextInput editable={!loading} value={confirSenha} secureTextEntry={!confirSenhaVisivel} onChangeText={setConfirSenha} />
-                        <TouchableOpacity onPress={()=>setConfirSenhaVisivel(!confirSenhaVisivel)} style={estilos.visibleIcon}>
-                            <MaterialIcons name={confirSenhaVisivel?"visibility":"visibility-off"} size={24} color="white" />
-                        </TouchableOpacity>
+                         <TextInput editable={!loading} value={confirSenha} secureTextEntry={!confirSenhaVisivel} onChangeText={setConfirSenha} />
+                         <TouchableOpacity onPress={()=>setConfirSenhaVisivel(!confirSenhaVisivel)} style={estilos.visibleIcon}>
+                             <MaterialIcons name={confirSenhaVisivel?"visibility":"visibility-off"} size={24} color="white" />
+                         </TouchableOpacity>
+                     </View>
+                     <View>
+                     <GooglePlacesAutocomplete
+                        styles={
+                            {
+                                container:{flex:0,},
+                                listView:{position:"absolute",top:45,zIndex:999,height:100}
+                            }
+                        }
+                        placeholder='Search'
+                        fetchDetails
+                        onPress={(data,details = null) => {
+                            // 'details' is provided when fetchDetails = true
+                            console.log("geometry",details.geometry);
+                            console.log(details.address_components);
+                            const {location} = details.geometry;
+                            setLat(location.lat);
+                            setLon(location.lng); 
+                            mapRef.current?.animateToRegion({
+                                latitude: location.lat,
+                                longitude: location.lng,
+                                latitudeDelta: 0.00009, 
+                                longitudeDelta: 0.00009, 
+                            })
+                        }}
+                        query={{
+                            key: 'AIzaSyCRQi-6BPBTDYPF4SRAPOoEqnZhQeVyphk',
+                            language: 'pt-br',
+                            type:"geocode"
+                        }}
+                        />
+                        <MapView ref={mapRef} style={{width:"100%",height:200,zIndex:-1}} provider={PROVIDER_GOOGLE} >
+                            {lat && lon && (
+                                <Marker
+                                coordinate={{
+                                    latitude:lat,
+                                    longitude:lon
+                                }}
+                                />
+                            )}
+                        </MapView>
                     </View>
-            </View>
 
-            <View style={estilos.signupBtn}>
-                {
-                    loading?
-                        <ActivityIndicator size="large" color="#2196f3"/>:
-                        <TouchableOpacity >
-                            <Button title="Cadastrar" onPress={()=>{
-                                cadastrar()
-                            }}/>
-                        </TouchableOpacity>
-                }
-            </View>
-        </View>
+             </View>
+
+             <View style={estilos.signupBtn}>
+                 {
+                     loading?
+                         <ActivityIndicator size="large" color="#2196f3"/>:
+                         <TouchableOpacity >
+                             <Button title="Cadastrar" onPress={()=>{
+                                 cadastrar()
+                             }}/>
+                         </TouchableOpacity>
+                 }
+             </View>
+         </View>
     )
 }
 
@@ -159,15 +208,16 @@ const estilos = StyleSheet.create({
     form:{
         paddingHorizontal:'2.5%',
         paddingVertical:"3%",
-        marginBottom:'22%',
+        marginBottom:'10%',
         borderWidth:1,
         borderColor:"#2196f3",
         borderRadius:5,
+        overflow:"visible"
     },
     page:{
         height:'100%',
         justifyContent:"center",
-        paddingHorizontal:'5%'
+        paddingHorizontal:'5%',
     },
     signupBtn:{
         paddingHorizontal:"25%"

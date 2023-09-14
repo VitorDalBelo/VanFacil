@@ -29,7 +29,7 @@ export default function GoBackButton({ style }) {
     >
       {keyboardVisible ? null : (
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={50} color="white" />
+          <AntDesign name="arrowleft" size={40} color="white" />
         </TouchableOpacity>
       )}
     </KeyboardAvoidingView>
@@ -40,7 +40,7 @@ const estilo = StyleSheet.create({
   default: {
     position: "absolute",
     left: 20,
-    top: 45,
+    top: 25,
     backgroundColor: "#2297ef",
     borderRadius: 10
   },
