@@ -15,6 +15,7 @@ export default function MapaRegiao({ regiao }) {
             longitudeDelta: centro.delta,
          }}
          scrollEnabled={false}
+         zoomEnabled={false}
       >
          <Polygon coordinates={regiao} fillColor={cores.roxoTransparente} strokeColor={cores.roxoTransparente} />
       </MapView>

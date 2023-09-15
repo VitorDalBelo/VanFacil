@@ -28,12 +28,10 @@ export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacao,
 }
 
 const larguraTela = Dimensions.get('screen').width;
-const alturaCard = larguraTela * 0.8;
 
 const estilos = StyleSheet.create({
    cardPesquisa: {
       width: larguraTela - 40,
-      height: alturaCard,
       margin: 10,
       padding: 10,
       borderRadius: 10,
@@ -82,8 +80,8 @@ const estilos = StyleSheet.create({
       marginBottom: 5,
    },
    caixaMapa: {
-      flex: 1,
       width: '100%',
+      height: larguraTela * 0.6,
       overflow: 'hidden',
       borderWidth: 2,
       borderColor: cores.azulProfundo,
