@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
-import { StyleSheet, Animated, View, Image, SafeAreaView, Text } from 'react-native';
+import { StyleSheet, Animated, View, SafeAreaView, Text } from 'react-native';
 import MapViewGestures from 'react-native-maps-draw';
 import MapView, { Polygon, Marker } from 'react-native-maps';
+import { MenuCard } from '../../../components/';
+import { Feather } from '@expo/vector-icons';
 
 const AnimatedPolygon = Animated.createAnimatedComponent(Polygon);
 
@@ -52,7 +54,7 @@ export default function TesteDesenhaMapa() {
                   {polygon.centerLatLng && (
                      <Marker onPress={handleRemovePolygon} coordinate={polygon.centerLatLng}>
                         <View style={styles.card}>
-                           <Image source={require('../assets/location.png')} resizeMode={'stretch'} style={styles.img} />
+                           <Feather name="location" style={styles.img} />
                         </View>
                      </Marker>
                   )}
