@@ -1,7 +1,13 @@
 import React, { useReducer, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
-import MapView, { Marker, Polygon } from 'react-native-maps';
+import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Ionicons, Feather } from '@expo/vector-icons';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import Constants from 'expo-constants';
+
+const googleApiKey = Constants.manifest.android.config.googleMaps.apiKey;
+
+const Color = require('color');
 
 import cores from '../../assets/cores';
 import Texto from '../components/Texto';
@@ -13,10 +19,32 @@ export default function TesteDesenhaMapa() {
 
    var desabilitaEdicao = mexerMapa || marcadores.length <= 0;
 
+   const [region, setRegion] = useState({
+      latitude: -23.65199226671823,
+      longitude: -46.57039785158304,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+   });
+
+   const handleLocationSelect = (data, details) => {
+      // Extrair a latitude e a longitude dos detalhes selecionados e atualizar a região
+      const { lat, lng } = details.geometry.location;
+      setRegion({
+         latitude: lat,
+         longitude: lng,
+         latitudeDelta: 0.0922,
+         longitudeDelta: 0.0421,
+      });
+   };
+
    const defineMensagem = () => {
       return mexerMapa
-         ? 'Posicione o mapa na região e clique no botão para desenhar a área de atuação'
-         : 'Agora, clique no mapa para definir os pontos. Tente seguir o contorno da área';
+         ? 'Posicione o mapa na região usando a barra de pesquisa de endereço no topo.\n\nToque no botão para alternar para o modo de desenho.'
+         : 'Toque no mapa para definir os pontos e desenhar a área aproximada, tente seguir o contorno da área.\n\nToque no botão novamente para travar o desenho.';
+   };
+
+   const defineTitulo = () => {
+      return mexerMapa ? 'Procure a área' : 'Desenhe';
    };
 
    const criaMarcador = (e) => {
@@ -51,15 +79,14 @@ export default function TesteDesenhaMapa() {
 
    return (
       <>
-         <MenuBar nomeTela={'Área de atuação'} />
          <MapView
+            region={region}
+            provider={PROVIDER_GOOGLE}
             style={estilos.mapa}
-            rotateEnabled={mexerMapa}
-            scrollEnabled={mexerMapa}
-            zoomEnabled={mexerMapa}
-            pitchEnable={mexerMapa}
-            loadingEnabled={true}
+            rotateEnabled={false}
+            pitchEnable={false}
             moveOnMarkerPress={false}
+            loadingEnabled={true}
             onPress={criaMarcador}
          >
             {marcadores.length < 3 &&
@@ -77,8 +104,11 @@ export default function TesteDesenhaMapa() {
             )}
          </MapView>
 
+         <View style={[estilos.containerTexto, { backgroundColor: defineCorFundo(mexerMapa) }]}>
+            <Texto style={estilos.texto}>{defineTitulo()}</Texto>
+         </View>
          <View style={estilos.container}>
-            <Texto style={estilos.texto}>{defineMensagem()}</Texto>
+            <Texto style={estilos.dica}>{defineMensagem()}</Texto>
             <View style={estilos.controles}>
                <TouchableOpacity style={[estilos.botao, mexerMapa ? {} : { backgroundColor: cores.azul }]} onPress={setMexerMapa}>
                   <Ionicons name="color-palette" size={24} style={estilos.img} />
@@ -100,6 +130,18 @@ export default function TesteDesenhaMapa() {
                   <Ionicons name="arrow-undo" size={24} style={estilos.img} />
                </TouchableOpacity>
             </View>
+         </View>
+
+         <View style={estilos.pesquisa}>
+            <GooglePlacesAutocomplete
+               placeholder="Pesquise um endereço"
+               onPress={handleLocationSelect}
+               fetchDetails={true}
+               query={{
+                  key: googleApiKey,
+                  language: 'pt',
+               }}
+            />
          </View>
 
          <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={cancelar}>
@@ -124,19 +166,40 @@ export default function TesteDesenhaMapa() {
    );
 }
 
+function makeColorLighter(baseColor, factor) {
+   const color = Color(baseColor);
+   return color.lighten(factor).hex();
+}
+
+function defineCorFundo(mexerMapa) {
+   return mexerMapa ? makeColorLighter(cores.azulProfundo, 3) : makeColorLighter(cores.azul, 1.2);
+}
+
 const estilos = StyleSheet.create({
+   pesquisa: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+   },
    mapa: {
       flex: 1,
    },
+   containerTexto: {
+      padding: 10,
+      fontSize: 24,
+   },
+   texto: {
+      fontSize: 24,
+   },
    container: {
-      height: '20%',
-      backgroundColor: 'white',
+      backgroundColor: cores.branco,
       padding: 10,
    },
    controles: {
       flexDirection: 'row',
    },
-   texto: {
+   dica: {
       fontSize: 16,
       marginBottom: 10,
    },
