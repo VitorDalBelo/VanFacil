@@ -1,5 +1,5 @@
 import React , {useState,useContext} from "react"
-import { Button , Text, View , TouchableOpacity ,StyleSheet } from "react-native";
+import { Button , Text, View , TouchableOpacity ,StyleSheet , ActivityIndicator } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import * as Yup  from "yup";
 import toast from "../../helpers/toast";
@@ -40,8 +40,9 @@ export default function Login(){
     const login = async ()=>{
         const basicValidation = await validarForm();
         if(basicValidation.result){
-            await handleLogin(email,senha);
-            // await handleLogout()
+            setLoading(true)
+            await handleLogin(email,senha)
+            setLoading(false);
         }
         else{
             toast(basicValidation.message,"error");
@@ -61,12 +62,17 @@ export default function Login(){
                     </TouchableOpacity>
                 </View>
                 <View styles>
-                    <TouchableOpacity >
-                        <Button title="Entrar" onPress={()=>{
-                            login()
-                        }}/>
-                    </TouchableOpacity>
-                    <Text onPress={()=> navigation.navigate('Navegação')}>Não possue conta ainda? Cadastre-se! </Text>
+                {
+                        loading?
+                            <ActivityIndicator size="large" color="#2196f3"/>:
+                            <TouchableOpacity >
+                                <Button title="Entrar" onPress={()=>{
+                                    login()
+                                }}/>
+                            </TouchableOpacity>
+                }
+
+                    <Text onPress={()=> {if(!loading)navigation.navigate('Navegação');}}>Não possue conta ainda? Cadastre-se! </Text>
                 </View>
             </View> 
         </View>
