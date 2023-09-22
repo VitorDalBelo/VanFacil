@@ -1,5 +1,12 @@
-import React , {useState,useRef} from "react";
-import { Button , Text, View , TouchableOpacity , ActivityIndicator,StyleSheet } from "react-native";
+import React , {useState,useRef,createContext, useContext} from "react";
+import { 
+    Button , 
+    Text, 
+    View , 
+    TouchableOpacity , 
+    ActivityIndicator,
+    StyleSheet,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import api from "../../services/api";
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -9,11 +16,184 @@ import * as Yup from "yup";
 import GoBackButton from "../../components/GoBackButton";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView , {PROVIDER_GOOGLE , Marker}from 'react-native-maps';
+import {Picker} from '@react-native-picker/picker';
+
+const SteperContext = createContext();
+const campus = [{id:1,nome:"Barcelona"},{id:2,nome:"Centro"},{id:3,nome:"Conceição"}]
+
+function Adress(){
+    const {
+        loading,
+        endereco,setEndereco,
+        complemento,setComplemento,
+        phone,setPhone,
+        selectedCampus, setSelectedCampus
+    } = useContext(SteperContext);
+    const mapRef = useRef(null);
+    function getAdrresJson(array) {
+        const jsonResult = {};
+      
+        for (const item of array) {
+          if (item.types.includes("street_number")) {
+            jsonResult.numero = parseInt(item.long_name);
+          } else if (item.types.includes("route")) {
+            jsonResult.logradouro = item.long_name;
+          } else if (item.types.includes("sublocality_level_1")) {
+            jsonResult.bairro = item.long_name;
+          } else if (item.types.includes("administrative_area_level_2")) {
+            jsonResult.cidade = item.long_name;
+          } else if (item.types.includes("administrative_area_level_1")) {
+            jsonResult.uf = item.short_name;
+          } else if (item.types.includes("country")) {
+            jsonResult.pais = item.long_name;
+          }
+        }
+      
+        return jsonResult;
+      }
+    const formatPhoneNumber = (text) => {
+        // Remove qualquer caractere não numérico do texto.
+        const cleanedText = text.replace(/\D/g, '');
+      
+        // Aplica a máscara "(99) 999999999".
+        const match = cleanedText.match(/^(\d{0,2})(\d{0,9})$/);
+        if (match) {
+          let formattedText = '';
+          
+          if (match[1]) {
+            formattedText += `(${match[1]}`;
+          }
+      
+          if (match[2]) {
+            formattedText += `) ${match[2]}`;
+          }
+      
+          setPhone(formattedText);
+        } else {
+          setPhone(cleanedText);
+        }
+      };
+    return(
+        <View>
+        <Text>Celular</Text>
+        <TextInput maxLength={14} editable={!loading} style={estilos.inputContainer} value={phone} onChangeText={formatPhoneNumber}/>
+        <Text>Endereço</Text>
+        <GooglePlacesAutocomplete
+            styles={
+                {
+                    container:{flex:0,},
+                    listView:{position:"absolute",top:35,zIndex:999,height:100},
+                    textInput:{height:32,borderWidth:1,borderColor:"#2196f3",borderRadius:5,}
+                }
+            }
+            
+        
+            placeholder=''
+            fetchDetails
+            onPress={(data,details = null) => {
+                if(!loading){
+                    const {lat,lng} = details.geometry.location;
+                    const endereco = getAdrresJson(details.address_components);
+                    endereco.latitude = lat;
+                    endereco.longitude = lng; 
+                    setEndereco(endereco);                          
+                    mapRef.current?.animateToRegion({
+                        latitude: lat,
+                        longitude: lng,
+                        latitudeDelta: 0.0005, 
+                        longitudeDelta: 0.0005, 
+                    })
+                }
+            }}
+            query={{
+                key: 'AIzaSyCRQi-6BPBTDYPF4SRAPOoEqnZhQeVyphk',
+                language: 'pt-br',
+                type:"geocode"
+            }}
+            />
+            <MapView 
+                ref={mapRef} 
+                style={{width:"100%",height:170,zIndex:-1}} 
+                provider={PROVIDER_GOOGLE}
+                initialRegion={endereco.latitude && endereco.longitude?{
+                    latitude: endereco.latitude,
+                    longitude: endereco.longitude,
+                    latitudeDelta: 0.0005, 
+                    longitudeDelta: 0.0005, 
+                }:undefined}
+            >
+                {endereco.latitude && endereco.longitude && (
+                    <Marker
+                    coordinate={{
+                        latitude:endereco.latitude,
+                        longitude:endereco.longitude
+                    }}
+                    />
+                )}
+            </MapView>
+            <Text>Complemento</Text>
+            <TextInput editable={!loading} style={estilos.inputContainer} value={complemento} onChangeText={setComplemento} />
+            <Text>Em qual campus da uscs você estuda?</Text>
+            <View style={{ borderWidth:1,borderColor:"#2196f3",borderRadius:5}}>
+            <Picker
+                enabled={!loading}
+                style={{ width: '100%' }} // Ajuste a altura conforme necessário
+                selectedValue={selectedCampus}
+                onValueChange={(itemValue) => setSelectedCampus(itemValue)}
+            >
+                {campus.map((campus) => (
+                <Picker.Item key={campus.id} label={campus.nome} value={campus.id} />
+                ))}
+            </Picker>
+            </View>
+
+
+        </View>
+    )
+}
+
+function UserData(){
+    const {
+        nome,setNome,
+        email,setEmail,
+        senha,setSenha,
+        confirSenha,setConfirSenha,
+        loading,
+    } = useContext(SteperContext);
+    const [senhaVisivel,setSenhaVisivel] = useState(false);
+    const [confirSenhaVisivel,setConfirSenhaVisivel] = useState(false);
+      
+
+    return(
+        <>
+            <Text>Nome</Text>
+            <TextInput editable={!loading} style={estilos.inputContainer} value={nome} onChangeText={setNome} />
+            <Text>Email</Text>
+            <TextInput editable={!loading} style={estilos.inputContainer} value={email} onChangeText={setEmail} />
+            <Text>Senha</Text>
+            <View style={estilos.inputContainer}>
+                <TextInput editable={!loading} value={senha} secureTextEntry={!senhaVisivel} onChangeText={setSenha} />
+                <TouchableOpacity onPress={()=>setSenhaVisivel(!senhaVisivel)} style={estilos.visibleIcon}>
+                    <MaterialIcons name={senhaVisivel?"visibility":"visibility-off" } size={24} color="white" />
+                </TouchableOpacity>
+            </View>
+            <Text>Confirme Sua Senha</Text>
+            <View style={estilos.inputContainer}>
+                <TextInput editable={!loading} value={confirSenha} secureTextEntry={!confirSenhaVisivel} onChangeText={setConfirSenha} />
+                <TouchableOpacity onPress={()=>setConfirSenhaVisivel(!confirSenhaVisivel)} style={estilos.visibleIcon}>
+                    <MaterialIcons name={confirSenhaVisivel?"visibility":"visibility-off"} size={24} color="white" />
+                </TouchableOpacity>
+            </View>
+        </>
+    )
+}
+
+
+
 
 const esquemaPassageiro = Yup.object({
     nome: Yup.string().required("Informe seu nome."),
     email:Yup.string().email("Email inválido").required("Informe seu email."),
-    cpf:Yup.string().required("Informe seu cpf."),
     senha:Yup.string().required("Informe a senha com a qual pretende se altenticar."),
     confirmacao:Yup.string().required("Confirme sua senha")
 })
@@ -24,23 +204,41 @@ const successMessageStyle = {backgroundColor:"#1f6334",textColor:"#FFFFFF",durat
 export default function CadastroPassageiro() {
     const [nome,setNome] = useState(null);
     const [email,setEmail] = useState(null);
-    const [cpf,setCPF] = useState("");
+    const [phone,setPhone] = useState("");
     const [senha,setSenha] = useState("");
     const [confirSenha,setConfirSenha] = useState("");
-    const [senhaVisivel,setSenhaVisivel] = useState(false);
-    const [confirSenhaVisivel,setConfirSenhaVisivel] = useState(false);
     const [loading,setLoading] = useState(false);
-    const [lat,setLat] = useState(null);
-    const [lon,setLon] = useState(null);
-    const mapRef = useRef(null);
+    const [endereco,setEndereco] = useState({latitude:null,longitude:null});
+    const [complemento,setComplemento] = useState(null);
+    const [selectedCampus, setSelectedCampus] = useState(campus[0].id);
+    const [step,setStep] = useState(0);
 
     const navigation = useNavigation();
+    const lastStep = 1
+	function ChoseConp(key) {
+		switch (key) {
+			case 0:
+				return <UserData/> ;
+			case 1:
+				return <Adress/>;
+		}
+	}
+
+    function nextFunction(){
+        const condition = step<lastStep;
+        if(condition) setStep(step+1);
+        return condition;
+    }
+    function prevStep(){
+        const condition = step>0;
+        if(condition) setStep(step-1);
+        return condition;
+    }
 
     const validarForm = async ()=>{
         const form = {
             nome : nome,
             email : email,
-            cpf : cpf,
             senha : senha,
             confirmacao : confirSenha
         }
@@ -68,116 +266,67 @@ export default function CadastroPassageiro() {
     const cadastrar = async () => {
         const validacao = await validarForm();
         if (validacao.result) {
-            setLoading(true);
-            const requestPayload = {
-                name: nome,
-                email: email,
-                password: senha,
-                cpf: cpf
-            };
-            console.log("payload", requestPayload);
-            api.post("auth/singup?profile=passenger", requestPayload)
+            const isNotLast = nextFunction();
+            if(!isNotLast){
+                // setLoading(true);
+                const requestPayload = {
+                    name: nome,
+                    email: email,
+                    phone:phone,
+                    password: senha,
+                    campus_id:selectedCampus
+                };
+                if(endereco)requestPayload.address={...endereco,complemento}
+                api.post("auth/singup?profile=passenger", requestPayload)
                 .then(() => {
-                    navigation.navigate('Login');
-                    Toast.show(validacao.message, successMessageStyle);
-                })
+                        navigation.navigate('Login');
+                        Toast.show(validacao.message, successMessageStyle);
+                    })
                 .catch((e) => {
-                    if (e.response && e.response.data) Toast.show(e.response.data.message, errorMessageStyle);
-                    else Toast.show("Ocorreu um erro", errorMessageStyle);
-                })
+                        if (e.response && e.response.data) Toast.show(e.response.data.message, errorMessageStyle);
+                        else Toast.show("Ocorreu um erro", errorMessageStyle);
+                    })
                 .finally(() => {
-                    setLoading(false);
-                });
+                        setLoading(false);
+                    });
+            }
         } else {
             Toast.show(validacao.message, errorMessageStyle);
         }
     }
 
-    const aplicarCPFMascara = (valor) => {
-        setCPF(valor.replace(/[^\d]/g, "").replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, "$1.$2.$3-$4"));
-    }
-
     return (
-        
-        <View style={estilos.page}> 
-             <GoBackButton/> 
-             <View style={estilos.form}>  
-                 <Text>Nome</Text>
-                 <TextInput editable={!loading} style={estilos.inputContainer} value={nome} onChangeText={setNome} />
-                 <Text>Email</Text>
-                 <TextInput editable={!loading} style={estilos.inputContainer} value={email} onChangeText={setEmail} />
-                 <Text>CPF</Text>
-                 <TextInput editable={!loading} style={estilos.inputContainer} value={cpf} onChangeText={aplicarCPFMascara} maxLength={14}/>
-                 <Text>Senha</Text>
-                 <View style={estilos.inputContainer}>
-                     <TextInput editable={!loading} value={senha} secureTextEntry={!senhaVisivel} onChangeText={setSenha} />
-                     <TouchableOpacity onPress={()=>setSenhaVisivel(!senhaVisivel)} style={estilos.visibleIcon}>
-                         <MaterialIcons name={senhaVisivel?"visibility":"visibility-off" } size={24} color="white" />
-                     </TouchableOpacity>
-                 </View>
-                 <Text>Confirme Sua Senha</Text>
-                    <View style={estilos.inputContainer}>
-                         <TextInput editable={!loading} value={confirSenha} secureTextEntry={!confirSenhaVisivel} onChangeText={setConfirSenha} />
-                         <TouchableOpacity onPress={()=>setConfirSenhaVisivel(!confirSenhaVisivel)} style={estilos.visibleIcon}>
-                             <MaterialIcons name={confirSenhaVisivel?"visibility":"visibility-off"} size={24} color="white" />
-                         </TouchableOpacity>
-                     </View>
-                     <View>
-                     <GooglePlacesAutocomplete
-                        styles={
-                            {
-                                container:{flex:0,},
-                                listView:{position:"absolute",top:45,zIndex:999,height:100}
-                            }
-                        }
-                        placeholder='Search'
-                        fetchDetails
-                        onPress={(data,details = null) => {
-                            // 'details' is provided when fetchDetails = true
-                            console.log("geometry",details.geometry);
-                            console.log(details.address_components);
-                            const {location} = details.geometry;
-                            setLat(location.lat);
-                            setLon(location.lng); 
-                            mapRef.current?.animateToRegion({
-                                latitude: location.lat,
-                                longitude: location.lng,
-                                latitudeDelta: 0.00009, 
-                                longitudeDelta: 0.00009, 
-                            })
-                        }}
-                        query={{
-                            key: 'AIzaSyCRQi-6BPBTDYPF4SRAPOoEqnZhQeVyphk',
-                            language: 'pt-br',
-                            type:"geocode"
-                        }}
-                        />
-                        <MapView ref={mapRef} style={{width:"100%",height:200,zIndex:-1}} provider={PROVIDER_GOOGLE} >
-                            {lat && lon && (
-                                <Marker
-                                coordinate={{
-                                    latitude:lat,
-                                    longitude:lon
-                                }}
-                                />
-                            )}
-                        </MapView>
-                    </View>
+        <SteperContext.Provider value={{
+            nome,setNome,
+            email,setEmail,
+            phone,setPhone,
+            senha,setSenha,
+            confirSenha,setConfirSenha,
+            loading,setLoading,
+            endereco,setEndereco,
+            complemento,setComplemento,
+            selectedCampus, setSelectedCampus
 
-             </View>
+        }}>
+            <View style={estilos.page}> 
+                <GoBackButton onGoBack={prevStep}/> 
+                <View style={estilos.form}>  
+                    {ChoseConp(step)}
+                </View>
 
-             <View style={estilos.signupBtn}>
-                 {
-                     loading?
-                         <ActivityIndicator size="large" color="#2196f3"/>:
-                         <TouchableOpacity >
-                             <Button title="Cadastrar" onPress={()=>{
-                                 cadastrar()
-                             }}/>
-                         </TouchableOpacity>
-                 }
-             </View>
-         </View>
+                <View style={estilos.signupBtn}>
+                    {
+                        loading?
+                            <ActivityIndicator size="large" color="#2196f3"/>:
+                            <TouchableOpacity >
+                                <Button title={step===lastStep?"Cadastrar":"Continuar"} onPress={()=>{
+                                    cadastrar()
+                                }}/>
+                            </TouchableOpacity>
+                    }
+                </View>
+            </View>
+         </SteperContext.Provider>
     )
 }
 
@@ -207,12 +356,13 @@ const estilos = StyleSheet.create({
     },
     form:{
         paddingHorizontal:'2.5%',
-        paddingVertical:"3%",
         marginBottom:'10%',
         borderWidth:1,
         borderColor:"#2196f3",
         borderRadius:5,
-        overflow:"visible"
+        overflow:"visible",
+        marginTop:40,
+        padding:25
     },
     page:{
         height:'100%',
@@ -220,6 +370,6 @@ const estilos = StyleSheet.create({
         paddingHorizontal:'5%',
     },
     signupBtn:{
-        paddingHorizontal:"25%"
+        paddingHorizontal:"25%",
     }
 })

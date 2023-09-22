@@ -3,9 +3,19 @@ import { StyleSheet, TouchableOpacity, Text, KeyboardAvoidingView, Platform, Key
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 
-export default function GoBackButton({ style }) {
+export default function GoBackButton({ style, onGoBack }) {
   const navigation = useNavigation();
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  const onPress = () =>{
+    if(typeof onGoBack==="function"){
+      const canRedirect = onGoBack();
+      if(!canRedirect) navigation.goBack();
+    }
+    else{
+      navigation.goBack()
+    }
+  }
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -28,8 +38,8 @@ export default function GoBackButton({ style }) {
       style={style ? style : estilo.default}
     >
       {keyboardVisible ? null : (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={40} color="white" />
+        <TouchableOpacity onPress={onPress}>
+          <AntDesign name="arrowleft" size={55} color="white" />
         </TouchableOpacity>
       )}
     </KeyboardAvoidingView>
