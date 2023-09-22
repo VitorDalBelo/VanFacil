@@ -268,7 +268,7 @@ export default function CadastroPassageiro() {
         if (validacao.result) {
             const isNotLast = nextFunction();
             if(!isNotLast){
-                // setLoading(true);
+                setLoading(true);
                 const requestPayload = {
                     name: nome,
                     email: email,
@@ -309,7 +309,7 @@ export default function CadastroPassageiro() {
 
         }}>
             <View style={estilos.page}> 
-                <GoBackButton onGoBack={prevStep}/> 
+                {!loading && <GoBackButton onGoBack={prevStep}/>} 
                 <View style={estilos.form}>  
                     {ChoseConp(step)}
                 </View>
