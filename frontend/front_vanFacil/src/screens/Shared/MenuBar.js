@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 import Texto from '../../components/Texto';
 
@@ -7,15 +7,16 @@ import FotoPerfil from '../../../assets/teste/Gataruga.png';
 import cores from '../../../assets/cores';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import useMotoristas from '../../hooks/useMotoristas';
 
-export default function MenuBar({ nomeTela, mostraBtnPerfil = true }) {
+export default function MenuBar({ nomeTela, mostraBtnPerfil = true, telaMotorista = true }) {
    return (
       <View style={estilos.menuBar}>
          <Texto style={estilos.nomeTela}>{nomeTela}</Texto>
 
          <BotaoMenu />
 
-         {mostraBtnPerfil && <BotaoPerfil />}
+         {mostraBtnPerfil && <BotaoPerfil telaMotorista={telaMotorista} />}
       </View>
    );
 }
@@ -36,9 +37,20 @@ function BotaoMenu() {
    );
 }
 
-function BotaoPerfil() {
+function BotaoPerfil({ telaMotorista }) {
+   const navigation = useNavigation();
+   const motoristas = useMotoristas();
+
+   const defineCaminho = () => {
+      if (telaMotorista) {
+         return navigation.navigate('M_Perfil', motoristas[1]);
+      } else {
+         return navigation.navigate('Perfil');
+      }
+   };
+
    return (
-      <TouchableOpacity style={estilos.botaoPerfil}>
+      <TouchableOpacity style={estilos.botaoPerfil} onPress={defineCaminho}>
          <Image source={FotoPerfil} style={estilos.fotoPerfil} />
       </TouchableOpacity>
    );

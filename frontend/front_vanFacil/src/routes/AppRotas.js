@@ -6,8 +6,9 @@ import Navegação from '../screens/testeNavegação';
 import Cadastro from '../screens/cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
-import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
+import M_Perfil from '../screens/Motorista/Perfil/Perfil';
 import M_Rota from '../screens/Motorista/Rota';
+import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
 import CapturaMapa from '../screens/testeCapturaMapa';
 import DesenhaMapa from '../screens/Motorista/Perfil/DesenhaMapa';
 
@@ -38,6 +39,7 @@ export default function AppRotas() {
                <Stack.Screen name="Cadastro" component={Cadastro} />
 
                <Stack.Screen name="M_Inicial" component={M_Inicial} />
+               <Stack.Screen name="M_Perfil" component={M_Perfil} />
                <Stack.Screen name="DesenhaMapa" component={DesenhaMapa} />
                <Stack.Screen name="CapturaMapa" component={CapturaMapa} />
 

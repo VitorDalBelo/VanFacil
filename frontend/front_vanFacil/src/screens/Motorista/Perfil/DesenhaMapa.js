@@ -18,20 +18,20 @@ const googleApiKey = Constants.manifest.android.config.googleMaps.apiKey;
 export default function DesenhaMapa() {
    const route = useRoute();
    const { regiaoDeAtuacao } = route.params;
-   const centro = {
+
+   const [region, setRegion] = useState({
       latitude: -23.65199226671823,
       longitude: -46.57039785158304,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
-   };
+   });
 
    useEffect(() => {
       if (regiaoDeAtuacao === undefined) {
          console.log('Primeira vez desenhando');
       } else {
          setMarcadores(regiaoDeAtuacao);
-         centro = calculaCentro(regiaoDeAtuacao);
-         console.log('Alteração do desenho');
+         setRegion(calculaCentro(regiaoDeAtuacao));
       }
    }, []);
 
@@ -41,8 +41,6 @@ export default function DesenhaMapa() {
 
    var desabilitaEdicao = selecionarLocal || marcadores.length <= 0;
    var habilitaSalvar = selecionarLocal && marcadores.length >= 3;
-
-   const [region, setRegion] = useState(centro);
 
    const handleLocationSelect = (data, details) => {
       const { lat, lng } = details.geometry.location;
