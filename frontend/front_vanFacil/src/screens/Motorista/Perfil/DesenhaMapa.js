@@ -1,32 +1,48 @@
-import React, { useReducer, useState } from 'react';
-import { Dimensions, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useReducer, useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-
-const googleApiKey = Constants.manifest.android.config.googleMaps.apiKey;
-
-const Color = require('color');
 
 import cores from '../../../../assets/cores';
 import Texto from '../../../components/Texto';
 import BotaoQuadrado from '../../../components/BotaoQuadrado';
 import ModalConfirmacao from '../../../components/ModalConfirmacao';
+import { calculaCentro } from '../../../helpers/calculaCentro';
+
+const Color = require('color');
+const googleApiKey = Constants.manifest.android.config.googleMaps.apiKey;
 
 export default function DesenhaMapa() {
+   const route = useRoute();
+   const { regiaoDeAtuacao } = route.params;
+   const centro = {
+      latitude: -23.65199226671823,
+      longitude: -46.57039785158304,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+   };
+
+   useEffect(() => {
+      if (regiaoDeAtuacao === undefined) {
+         console.log('Primeira vez desenhando');
+      } else {
+         setMarcadores(regiaoDeAtuacao);
+         centro = calculaCentro(regiaoDeAtuacao);
+         console.log('Alteração do desenho');
+      }
+   }, []);
+
+   const navigation = useNavigation();
    const [selecionarLocal, setSelecionarLocal] = useReducer((selecionarLocal) => !selecionarLocal, true);
    const [marcadores, setMarcadores] = useState([]);
 
    var desabilitaEdicao = selecionarLocal || marcadores.length <= 0;
    var habilitaSalvar = selecionarLocal && marcadores.length >= 3;
 
-   const [region, setRegion] = useState({
-      latitude: -23.65199226671823,
-      longitude: -46.57039785158304,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-   });
+   const [region, setRegion] = useState(centro);
 
    const handleLocationSelect = (data, details) => {
       const { lat, lng } = details.geometry.location;
@@ -66,6 +82,11 @@ export default function DesenhaMapa() {
 
    const desfazUltimo = () => {
       setMarcadores(marcadores.slice(0, -1));
+   };
+
+   const salvarArea = () => {
+      var regiaoDeAtuacao = marcadores;
+      navigation.navigate('CapturaMapa', { regiaoDeAtuacao });
    };
 
    const [modalVisible, setModalVisible] = useState(false);
@@ -122,14 +143,14 @@ export default function DesenhaMapa() {
                <View style={{ flexDirection: 'row' }}>
                   <BotaoQuadrado
                      tipo={'Ionicons'}
-                     nomeIcone={'color-palette'}
+                     icone={'color-palette'}
                      style={[estiloBotaoToggle, { marginRight: 10 }]}
                      onPress={setSelecionarLocal}
                   />
 
                   <BotaoQuadrado
                      tipo={'Feather'}
-                     nomeIcone={'trash-2'}
+                     icone={'trash-2'}
                      style={[estiloBotaoEdicao, { marginRight: 10 }]}
                      disabled={desabilitaEdicao}
                      onPress={mostrarModal}
@@ -137,7 +158,7 @@ export default function DesenhaMapa() {
 
                   <BotaoQuadrado
                      tipo={'Ionicons'}
-                     nomeIcone={'arrow-undo'}
+                     icone={'arrow-undo'}
                      style={estiloBotaoEdicao}
                      disabled={desabilitaEdicao}
                      onPress={desfazUltimo}
@@ -150,7 +171,7 @@ export default function DesenhaMapa() {
                         <MaterialCommunityIcons name="arrow-right-bottom-bold" size={20} color={cores.azul} />
                      </View>
                   )}
-                  <BotaoQuadrado tipo={'Feather'} nomeIcone={'save'} disabled={!habilitaSalvar} onPress={() => {}} />
+                  <BotaoQuadrado tipo={'Feather'} icone={'save'} disabled={!habilitaSalvar} onPress={salvarArea} />
                </View>
             </View>
          </View>

@@ -6,7 +6,7 @@ import cores from '../../assets/cores';
 
 const tamanhoIcone = 24;
 
-export default function BotaoQuadrado({ style = {}, tipo, nomeIcone, disabled, onPress }) {
+export default function BotaoQuadrado({ style = {}, tipo, icone, disabled, onPress }) {
    estiloPadrao = { backgroundColor: disabled ? 'gray' : cores.azulProfundo };
 
    const estiloVazio = Object.keys(style).length === 0;
@@ -16,7 +16,7 @@ export default function BotaoQuadrado({ style = {}, tipo, nomeIcone, disabled, o
 
    return (
       <TouchableOpacity style={[estilos.botao, estiloPadrao]} onPress={onPress} disabled={disabled}>
-         <IconeBotao tipo={tipo} nome={nomeIcone} />
+         <IconeBotao tipo={tipo} nome={icone} />
       </TouchableOpacity>
    );
 }

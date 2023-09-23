@@ -21,7 +21,7 @@ export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacao,
          </View>
          <Texto style={estilos.legendaMapa}>Área de atuação do motorista:</Texto>
          <View style={estilos.caixaMapa}>
-            <MapaRegiao regiao={regiaoDeAtuacao} />
+            <MapaRegiao regiao={regiaoDeAtuacao} movimentar={false} />
          </View>
       </TouchableOpacity>
    );
