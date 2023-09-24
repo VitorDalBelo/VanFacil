@@ -6,9 +6,11 @@ import Texto from '../../../components/Texto';
 import ImagemFalha from '../../../../assets/icon.png';
 import cores from '../../../../assets/cores';
 
+import MapaRegiao from './MapaRegiao';
+
 var img = ImagemFalha;
 
-export default function CardPesquisa({ foto, nome, descrição, aoPressionar }) {
+export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacao, aoPressionar }) {
    img = foto;
 
    return (
@@ -17,8 +19,9 @@ export default function CardPesquisa({ foto, nome, descrição, aoPressionar }) 
             <Image source={foto} style={estilos.imagem} />
             <Texto style={estilos.texto}>{nome}</Texto>
          </View>
-         <View style={estilos.descCaixa}>
-            <Texto style={estilos.desc}>{descrição}</Texto>
+         <Texto style={estilos.legendaMapa}>Área de atuação do motorista:</Texto>
+         <View style={estilos.caixaMapa}>
+            <MapaRegiao regiao={regiaoDeAtuacao} movimentar={false} />
          </View>
       </TouchableOpacity>
    );
@@ -26,19 +29,13 @@ export default function CardPesquisa({ foto, nome, descrição, aoPressionar }) 
 
 const larguraTela = Dimensions.get('screen').width;
 
-const alturaImagem = Image.resolveAssetSource(img).height;
-const larguraImagem = Image.resolveAssetSource(img).width;
-
-const alturaCard = ((alturaImagem - 120) / larguraImagem) * larguraTela - 140;
-
 const estilos = StyleSheet.create({
    cardPesquisa: {
       width: larguraTela - 40,
-      height: alturaCard,
-      marginVertical: 10,
-      marginHorizontal: 10,
+      margin: 10,
+      padding: 10,
       borderRadius: 10,
-      backgroundColor: 'white',
+      backgroundColor: cores.branco,
       overflow: 'hidden',
       alignItems: 'baseline',
 
@@ -56,10 +53,9 @@ const estilos = StyleSheet.create({
    },
    topoCard: {
       flexDirection: 'row',
-      padding: 10,
-      backgroundColor: cores.branco,
       width: '100%',
-      height: 60,
+      height: 40,
+      marginBottom: 15,
    },
    imagem: {
       width: 40,
@@ -70,23 +66,25 @@ const estilos = StyleSheet.create({
       marginRight: 10,
    },
    texto: {
-      color: '#000',
-      paddingLeft: 8,
+      flex: 1,
+      color: cores.preto,
+      paddingHorizontal: 10,
       fontSize: 20,
       textAlignVertical: 'center',
-      width: larguraTela - 110,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
       borderRadius: 5,
    },
-   descCaixa: {
-      flex: 1,
-      width: larguraTela - 60,
+   legendaMapa: {
+      fontSize: 16,
+      marginBottom: 5,
+   },
+   caixaMapa: {
+      width: '100%',
+      height: larguraTela * 0.6,
+      overflow: 'hidden',
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      borderRadius: 5,
-      margin: 10,
-      padding: 10,
+      borderRadius: 10,
    },
-   desc: {},
 });
