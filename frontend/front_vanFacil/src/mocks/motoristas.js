@@ -1,5 +1,7 @@
 import Paulo from '../../assets/teste/passageiros/Paulo.png';
 import Adiler from '../../assets/teste/passageiros/Adiler.png';
+import RegiaoDeAtuacao1 from '../../assets/teste/motoristas/RegiaoDeAtuacao1.jpeg';
+import RegiaoDeAtuacao2 from '../../assets/teste/motoristas/RegiaoDeAtuacao2.jpeg';
 
 const Motoristas = [
    {
@@ -16,6 +18,7 @@ const Motoristas = [
          coordnateFabric('-24.31673706885831, -46.01162369871083'),
          coordnateFabric('-24.19633178049377, -47.44879741896254'),
       ],
+      regiaoDeAtuacaoImg: RegiaoDeAtuacao1,
    },
    {
       foto: Adiler,
@@ -32,6 +35,7 @@ const Motoristas = [
          coordnateFabric('-23.632461046629444, -46.55134059297241'),
          coordnateFabric('-23.63812246867974, -46.58644534220242'),
       ],
+      regiaoDeAtuacaoImg: RegiaoDeAtuacao2,
    },
 ];
 
