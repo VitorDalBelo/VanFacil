@@ -17,6 +17,11 @@ import GoBackButton from "../../components/GoBackButton";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView , {PROVIDER_GOOGLE , Marker}from 'react-native-maps';
 import {Picker} from '@react-native-picker/picker';
+import {
+    GoogleSignin,
+    statusCodes,
+  } from '@react-native-google-signin/google-signin';
+
 
 const SteperContext = createContext();
 const campus = [{id:1,nome:"Barcelona"},{id:2,nome:"Centro"},{id:3,nome:"Conceição"}]
@@ -158,6 +163,7 @@ function UserData(){
         email,setEmail,
         senha,setSenha,
         confirSenha,setConfirSenha,
+        cadastroGoogle,
         loading,
     } = useContext(SteperContext);
     const [senhaVisivel,setSenhaVisivel] = useState(false);
@@ -167,19 +173,19 @@ function UserData(){
     return(
         <>
             <Text>Nome</Text>
-            <TextInput editable={!loading} style={estilos.inputContainer} value={nome} onChangeText={setNome} />
+            <TextInput editable={!(loading||cadastroGoogle)} style={estilos.inputContainer} value={nome} onChangeText={setNome} />
             <Text>Email</Text>
-            <TextInput editable={!loading} style={estilos.inputContainer} value={email} onChangeText={setEmail} />
+            <TextInput editable={!(loading||cadastroGoogle)} style={estilos.inputContainer} value={email} onChangeText={setEmail} />
             <Text>Senha</Text>
             <View style={estilos.inputContainer}>
-                <TextInput editable={!loading} value={senha} secureTextEntry={!senhaVisivel} onChangeText={setSenha} />
+                <TextInput editable={!(loading||cadastroGoogle)} value={senha} secureTextEntry={!senhaVisivel} onChangeText={setSenha} />
                 <TouchableOpacity onPress={()=>setSenhaVisivel(!senhaVisivel)} style={estilos.visibleIcon}>
                     <MaterialIcons name={senhaVisivel?"visibility":"visibility-off" } size={24} color="white" />
                 </TouchableOpacity>
             </View>
             <Text>Confirme Sua Senha</Text>
             <View style={estilos.inputContainer}>
-                <TextInput editable={!loading} value={confirSenha} secureTextEntry={!confirSenhaVisivel} onChangeText={setConfirSenha} />
+                <TextInput editable={!(loading||cadastroGoogle)} value={confirSenha} secureTextEntry={!confirSenhaVisivel} onChangeText={setConfirSenha} />
                 <TouchableOpacity onPress={()=>setConfirSenhaVisivel(!confirSenhaVisivel)} style={estilos.visibleIcon}>
                     <MaterialIcons name={confirSenhaVisivel?"visibility":"visibility-off"} size={24} color="white" />
                 </TouchableOpacity>
@@ -212,6 +218,7 @@ export default function CadastroPassageiro() {
     const [complemento,setComplemento] = useState(null);
     const [selectedCampus, setSelectedCampus] = useState(campus[0].id);
     const [step,setStep] = useState(0);
+    const [cadastroGoogle,setCadastroGoogle] =  useState(false)
 
     const navigation = useNavigation();
     const lastStep = 1
@@ -247,18 +254,19 @@ export default function CadastroPassageiro() {
             result:true ,
             message: "Usuário cadastrado com sucesso",
         }
-        await esquemaPassageiro.validate(form)
-        .then(()=>{
-            if(form.senha != form.confirmacao){
+        if(!cadastroGoogle){
+            await esquemaPassageiro.validate(form)
+            .then(()=>{
+                if(form.senha != form.confirmacao){
+                    validation.result = false;
+                    validation.message= "A confirmação da senha não corresponde com a senha informada.";                
+                }
+            })
+            .catch(e=>{
                 validation.result = false;
-                validation.message= "A confirmação da senha não corresponde com a senha informada.";                
-            }
-        })
-        .catch(e=>{
-            validation.result = false;
-            validation.message= e.errors[0];
-        });
-
+                validation.message= e.errors[0];
+            }); 
+        }
         return validation
     }
 
@@ -305,8 +313,8 @@ export default function CadastroPassageiro() {
             loading,setLoading,
             endereco,setEndereco,
             complemento,setComplemento,
-            selectedCampus, setSelectedCampus
-
+            selectedCampus, setSelectedCampus,
+            cadastroGoogle,setCadastroGoogle,
         }}>
             <View style={estilos.page}> 
                 {!loading && <GoBackButton onGoBack={prevStep}/>} 
@@ -323,6 +331,31 @@ export default function CadastroPassageiro() {
                                     cadastrar()
                                 }}/>
                             </TouchableOpacity>
+                    }
+                    {
+                        step==0 && !cadastroGoogle &&
+                        <TouchableOpacity style={{marginTop:10}}>
+                        <Button title={'Cadastrar com google'} onPress={() =>  {
+                            GoogleSignin.hasPlayServices().then((hasPlayService) => {
+                                    if (hasPlayService) {
+                                        GoogleSignin.signIn().then( async(userInfo) => {
+                                            console.log(userInfo.user.email,userInfo.user.name)
+                                            if(userInfo.user && userInfo.user.email && userInfo.user.name){
+                                                setEmail(userInfo.user.email);
+                                                setNome(userInfo.user.name);
+                                                setCadastroGoogle(true);
+                                                nextFunction()
+                                            }
+                                            GoogleSignin.signOut()
+                                        }).catch((e) => {
+                                        console.log("ERROR IS 123: " + JSON.stringify(e));
+                                        })
+                                    }
+                            }).catch((e) => {
+                                console.log("ERROR IS: " + JSON.stringify(e));
+                            })
+                            }} />
+                        </TouchableOpacity>
                     }
                 </View>
             </View>

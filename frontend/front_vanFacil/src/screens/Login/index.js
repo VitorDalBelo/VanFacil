@@ -6,6 +6,10 @@ import toast from "../../helpers/toast";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation} from "@react-navigation/native";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import {
+    GoogleSignin,
+    statusCodes,
+  } from '@react-native-google-signin/google-signin';
 
 const esquemaLogin = Yup.object({
     senha:Yup.string().required("Informe a senha do seu usuário"),
@@ -65,11 +69,30 @@ export default function Login(){
                 {
                         loading?
                             <ActivityIndicator size="large" color="#2196f3"/>:
+                            <>
                             <TouchableOpacity >
                                 <Button title="Entrar" onPress={()=>{
                                     login()
                                 }}/>
                             </TouchableOpacity>
+                            <TouchableOpacity >
+                                  <Button title={'Entre com o google'} onPress={() =>  {
+                                    GoogleSignin.hasPlayServices().then((hasPlayService) => {
+                                            if (hasPlayService) {
+                                                GoogleSignin.signIn().then( async(userInfo) => {
+                                                  const a = await GoogleSignin.getTokens()
+                                                          console.log(JSON.stringify(a.accessToken))
+                                                  GoogleSignin.signOut()
+                                                }).catch((e) => {
+                                                console.log("ERROR IS: " + JSON.stringify(e));
+                                                })
+                                            }
+                                    }).catch((e) => {
+                                        console.log("ERROR IS: " + JSON.stringify(e));
+                                    })
+                                    }} />
+                            </TouchableOpacity>
+                            </>
                 }
 
                     <Text onPress={()=> {if(!loading)navigation.navigate('Navegação');}}>Não possue conta ainda? Cadastre-se! </Text>
