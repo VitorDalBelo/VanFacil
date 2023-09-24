@@ -2,38 +2,37 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 
 import Texto from '../../../components/Texto';
-
-import ImagemFalha from '../../../../assets/icon.png';
 import cores from '../../../../assets/cores';
 
-import MapaRegiao from './MapaRegiao';
-
-var img = ImagemFalha;
-
-export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacao, aoPressionar }) {
-   img = foto;
-
+export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacaoImg, aoPressionar }) {
    return (
       <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
-         <View style={estilos.topoCard}>
-            <Image source={foto} style={estilos.imagem} />
-            <Texto style={estilos.texto}>{nome}</Texto>
+         <View style={estilos.info}>
+            <View style={estilos.topoCard}>
+               <Image source={foto} style={estilos.imagem} />
+               <Texto style={estilos.textoNome}>{nome}</Texto>
+            </View>
+            {/* <View style={estilos.descCaixa}>
+               <Texto style={estilos.desc}>{descrição}</Texto>
+            </View> */}
+            <Texto style={estilos.legendaMapa}>Área de atuação do motorista:</Texto>
          </View>
-         <Texto style={estilos.legendaMapa}>Área de atuação do motorista:</Texto>
          <View style={estilos.caixaMapa}>
-            <MapaRegiao regiao={regiaoDeAtuacao} movimentar={false} />
+            <Image style={estilos.imagemMapa} source={regiaoDeAtuacaoImg} />
          </View>
       </TouchableOpacity>
    );
 }
 
 const larguraTela = Dimensions.get('screen').width;
+const larguraCard = larguraTela - 20;
 
 const estilos = StyleSheet.create({
    cardPesquisa: {
-      width: larguraTela - 40,
+      width: larguraCard,
       margin: 10,
-      padding: 10,
+      borderWidth: 2,
+      borderColor: cores.azulProfundo,
       borderRadius: 10,
       backgroundColor: cores.branco,
       overflow: 'hidden',
@@ -51,11 +50,14 @@ const estilos = StyleSheet.create({
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
    },
+   info: {
+      padding: 10,
+   },
    topoCard: {
       flexDirection: 'row',
       width: '100%',
       height: 40,
-      marginBottom: 15,
+      marginBottom: 10,
    },
    imagem: {
       width: 40,
@@ -65,7 +67,7 @@ const estilos = StyleSheet.create({
       borderColor: cores.azulProfundo,
       marginRight: 10,
    },
-   texto: {
+   textoNome: {
       flex: 1,
       color: cores.preto,
       paddingHorizontal: 10,
@@ -75,16 +77,29 @@ const estilos = StyleSheet.create({
       borderColor: cores.azulProfundo,
       borderRadius: 5,
    },
-   legendaMapa: {
-      fontSize: 16,
-      marginBottom: 5,
-   },
-   caixaMapa: {
-      width: '100%',
-      height: larguraTela * 0.6,
-      overflow: 'hidden',
+   descCaixa: {
+      height: larguraCard * 0.3,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
+      borderRadius: 5,
+      padding: 10,
+   },
+   desc: {},
+   legendaMapa: {
+      fontSize: 16,
+      marginTop: 10,
+   },
+   caixaMapa: {
+      width: larguraCard,
+      height: larguraCard * 0.8,
+      overflow: 'hidden',
+      borderTopWidth: 2,
+      borderColor: cores.azulProfundo,
+   },
+   imagemMapa: {
+      width: larguraCard,
+      height: larguraCard * 0.8,
       borderRadius: 10,
+      alignSelf: 'center',
    },
 });

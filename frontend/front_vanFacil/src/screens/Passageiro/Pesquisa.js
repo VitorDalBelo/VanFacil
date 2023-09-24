@@ -27,7 +27,7 @@ function ListaPesquisa() {
                <CardPesquisa
                   {...item}
                   aoPressionar={() => {
-                     navigation.navigate('Perfil', item);
+                     navigation.navigate('M_Perfil', { ...item, donoDoPerfil: false });
                   }}
                />
             );

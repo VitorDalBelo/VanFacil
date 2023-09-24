@@ -43,9 +43,9 @@ function BotaoPerfil({ telaMotorista }) {
 
    const defineCaminho = () => {
       if (telaMotorista) {
-         return navigation.navigate('M_Perfil', motoristas[1]);
+         return navigation.navigate('M_Perfil', { ...motoristas[1], donoDoPerfil: true });
       } else {
-         return navigation.navigate('Perfil');
+         return navigation.navigate('Perfil', { ...motoristas[1] });
       }
    };
 

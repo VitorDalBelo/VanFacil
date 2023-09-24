@@ -10,8 +10,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Perfil() {
    const route = useRoute();
-   const motorista = route.params;
-   const regiaoDeAtuacao = motorista.regiaoDeAtuacao;
+   const { foto, nome, descrição, regiaoDeAtuacao, donoDoPerfil } = route.params;
 
    const navigation = useNavigation();
 
@@ -20,18 +19,20 @@ export default function Perfil() {
          <MenuBar />
          <View style={estilos.molde}>
             <View style={estilos.topoPerfil}>
-               <Image source={motorista.foto} style={estilos.foto} />
-               <Texto style={estilos.textoNome}>{motorista.nome}</Texto>
+               <Image source={foto} style={estilos.foto} />
+               <Texto style={estilos.textoNome}>{nome}</Texto>
             </View>
             <View style={estilos.info}>
-               <Texto style={estilos.desc}>{motorista.descrição}</Texto>
+               <Texto style={estilos.desc}>{descrição}</Texto>
                <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
                <View style={estilos.caixaMapa}>
                   <MapaRegiao regiao={regiaoDeAtuacao} />
                </View>
-               <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao })}>
-                  <Texto style={estilos.textoBotao}>Editar Dados</Texto>
-               </TouchableOpacity>
+               {donoDoPerfil && (
+                  <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao })}>
+                     <Texto style={estilos.textoBotao}>Editar Dados</Texto>
+                  </TouchableOpacity>
+               )}
             </View>
          </View>
       </>
@@ -40,12 +41,12 @@ export default function Perfil() {
 
 const estilos = StyleSheet.create({
    molde: {
-      marginHorizontal: 20,
-      marginVertical: 10,
+      margin: 10,
       flex: 1,
    },
    topoPerfil: {
       flexDirection: 'row',
+      alignItems: 'center',
    },
    foto: {
       width: 60,
@@ -53,19 +54,17 @@ const estilos = StyleSheet.create({
       borderRadius: 50,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      marginRight: 15,
+      marginRight: 10,
    },
    textoNome: {
-      height: 40,
       flex: 1,
-      marginTop: 10,
-      paddingLeft: 10,
-      paddingBottom: 5,
+      height: 40,
+      backgroundColor: cores.branco,
+      paddingHorizontal: 10,
+      textAlignVertical: 'center',
       borderRadius: 5,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      textAlignVertical: 'bottom',
-      backgroundColor: cores.branco,
       fontSize: 20,
    },
    info: {
@@ -74,32 +73,31 @@ const estilos = StyleSheet.create({
    outraInfo: {
       height: 40,
       marginVertical: 10,
+      textAlignVertical: 'center',
       paddingLeft: 10,
-      paddingBottom: 5,
+      fontSize: 20,
       borderRadius: 5,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      textAlignVertical: 'bottom',
       backgroundColor: cores.branco,
-      fontSize: 20,
    },
    desc: {
-      marginTop: 20,
-      borderRadius: 5,
-      borderWidth: 2,
-      borderColor: cores.azulProfundo,
-      height: 100,
       backgroundColor: cores.branco,
+      marginTop: 10,
+      borderRadius: 5,
       paddingLeft: 10,
       paddingTop: 5,
       fontSize: 15,
+      borderWidth: 2,
+      borderColor: cores.azulProfundo,
+      height: 100,
    },
    caixaMapa: {
       flex: 1,
       overflow: 'hidden',
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      borderRadius: 10,
+      borderRadius: 5,
    },
    botao: {
       alignSelf: 'flex-start',
@@ -107,7 +105,7 @@ const estilos = StyleSheet.create({
       borderRadius: 10,
       backgroundColor: cores.azulProfundo,
       color: cores.preto,
-      marginVertical: 10,
+      marginTop: 10,
 
       // Android
       elevation: 4,
