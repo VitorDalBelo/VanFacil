@@ -5,7 +5,7 @@ import MenuBar from '../../Shared/MenuBar';
 import Texto from '../../../components/Texto';
 
 import cores from '../../../../assets/cores';
-import MapaRegiao from '../../Shared/Pesquisa/MapaRegiao';
+import MapaRegiao from '../../Shared/pesquisa/MapaRegiao';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Perfil() {
