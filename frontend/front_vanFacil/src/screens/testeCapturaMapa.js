@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Button, Dimensions, StyleSheet, TouchableOpacity, View ,Image } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute ,useNavigation} from '@react-navigation/native';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 
@@ -12,6 +12,7 @@ import toast,{toastApiError} from '../helpers/toast';
 
 export default function TesteCapturaMapa() {
    const route = useRoute();
+   const navigation = useNavigation();
    const { regiaoDeAtuacao } = route.params;
 
    const [imagem, setImagem] = useState('');
@@ -56,10 +57,12 @@ export default function TesteCapturaMapa() {
          .then(()=>{
             console.log("Deu certo");
             toast("Alteração feita com sucesso","success")
+            navigation.navigate("M_Perfil");
          })
          .catch((e)=>{
             console.log("Deu errado",e);
-            toastApiError(e)
+            toastApiError(e);
+            navigation.navigate("DesenhaMapa");
          })
       }
    }, [imagem]);
@@ -71,7 +74,6 @@ export default function TesteCapturaMapa() {
          </ViewShot>
          <Texto style={estilos.texto}>Salvando</Texto>
          <ActivityIndicator size="large" color={cores.azulProfundo} />
-         {/* {imagem && <Image source={{uri:imagem}}/>} */}
       </View>
    );
 }

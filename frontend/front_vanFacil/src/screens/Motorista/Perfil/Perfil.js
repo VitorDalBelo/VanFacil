@@ -1,40 +1,61 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Image ,Text} from 'react-native';
 import MenuBar from '../../Shared/MenuBar';
 import Texto from '../../../components/Texto';
-
+import api from '../../../services/api'
 import cores from '../../../../assets/cores';
 import MapaRegiao from '../../Shared/pesquisa/MapaRegiao';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { toastApiError } from '../../../helpers/toast';
 
 export default function Perfil() {
    const route = useRoute();
-   const motorista = route.params;
-   const regiaoDeAtuacao = motorista.regiaoDeAtuacao;
+   const [loading,setLoading] = useState(false);
+   const [motorista,setMotorista] = useState(null)
 
    const navigation = useNavigation();
 
+   useEffect(()=>{
+
+      api.get("/users/drivers/me")
+      .then(resp=>{
+         console.log(resp.data);
+         setMotorista(resp.data)
+      })
+      .catch(e=>{toastApiError(e)})
+      
+      
+      setLoading(false)
+
+   },[])
+
    return (
       <>
+      {
+         motorista?<>
          <MenuBar />
          <View style={estilos.molde}>
             <View style={estilos.topoPerfil}>
-               <Image source={motorista.foto} style={estilos.foto} />
-               <Texto style={estilos.textoNome}>{motorista.nome}</Texto>
+               <Image source={`${process.env.EXPO_PUBLIC_BACKEND_URL}${motorista.user.photo}`} style={estilos.foto} />
+               <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
             </View>
             <View style={estilos.info}>
-               <Texto style={estilos.desc}>{motorista.descrição}</Texto>
+               <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
                <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
                <View style={estilos.caixaMapa}>
-                  <MapaRegiao regiao={regiaoDeAtuacao} />
+                  <MapaRegiao regiao={motorista.driver.regiaoDeAtuacao} />
                </View>
-               <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao })}>
+               <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao:motorista.driver.regiaoDeAtuacao })}>
                   <Texto style={estilos.textoBotao}>Editar Dados</Texto>
                </TouchableOpacity>
             </View>
          </View>
-      </>
+         </>:<Text>{"erro"}</Text>
+
+      }
+      </>         
+
    );
 }
 
