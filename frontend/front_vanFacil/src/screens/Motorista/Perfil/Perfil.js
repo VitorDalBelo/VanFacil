@@ -13,22 +13,28 @@ export default function Perfil() {
    const route = useRoute();
    const [loading,setLoading] = useState(false);
    const [motorista,setMotorista] = useState(null)
-
    const navigation = useNavigation();
 
-   useEffect(()=>{
-
-      api.get("/users/drivers/me")
+   const getData = async () =>{
+      await api.get("/users/drivers/me")
       .then(resp=>{
-         console.log(resp.data);
-         setMotorista(resp.data)
+         setMotorista(resp.data);
       })
       .catch(e=>{toastApiError(e)})
       
-      
       setLoading(false)
+   }
 
+   useEffect(()=>{
+      getData()
    },[])
+
+   useEffect(()=>{
+      if(route.params && route.params.reload){
+         route.params.reload= false;
+         getData()
+      } 
+   },[route.params])
 
    return (
       <>
@@ -37,7 +43,7 @@ export default function Perfil() {
          <MenuBar />
          <View style={estilos.molde}>
             <View style={estilos.topoPerfil}>
-               <Image source={`${process.env.EXPO_PUBLIC_BACKEND_URL}${motorista.user.photo}`} style={estilos.foto} />
+               <Image source={{uri:`${process.env.EXPO_PUBLIC_BACKEND_URL}${motorista.user.photo}`}} style={estilos.foto} />
                <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
             </View>
             <View style={estilos.info}>

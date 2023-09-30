@@ -55,9 +55,9 @@ export default function TesteCapturaMapa() {
             "Content-Type": "multipart/form-data",
          }})
          .then(()=>{
-            console.log("Deu certo");
+            // console.log("Deu certo");
             toast("Alteração feita com sucesso","success")
-            navigation.navigate("M_Perfil");
+            navigation.navigate("M_Perfil",{reload:true});
          })
          .catch((e)=>{
             console.log("Deu errado",e);
