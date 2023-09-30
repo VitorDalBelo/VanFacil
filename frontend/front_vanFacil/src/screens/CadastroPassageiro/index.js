@@ -218,7 +218,8 @@ export default function CadastroPassageiro() {
     const [complemento,setComplemento] = useState(null);
     const [selectedCampus, setSelectedCampus] = useState(campus[0].id);
     const [step,setStep] = useState(0);
-    const [cadastroGoogle,setCadastroGoogle] =  useState(false)
+    const [cadastroGoogle,setCadastroGoogle] =  useState(false);
+    const [googleToken, setGoogleToken] = useState("")
 
     const navigation = useNavigation();
     const lastStep = 1
@@ -270,33 +271,60 @@ export default function CadastroPassageiro() {
         return validation
     }
 
+    const singup = (validacao)=>{
+        setLoading(true);
+        const requestPayload = {
+            name: nome,
+            email: email,
+            phone:phone,
+            password: senha,
+            campus_id:selectedCampus
+        };
+        if(endereco)requestPayload.address={...endereco,complemento}
+        api.post("auth/singup?profile=passenger", requestPayload)
+        .then(() => {
+                navigation.navigate('Login');
+                Toast.show(validacao.message, successMessageStyle);
+            })
+        .catch((e) => {
+            console.log("error",e)
+                if (e.response && e.response.data) Toast.show(e.response.data.message, errorMessageStyle);
+                else Toast.show("Ocorreu um erro", errorMessageStyle);
+            })
+        .finally(() => {
+                setLoading(false);
+            });
+    }
+
+    const singupGoogle = (validacao)=>{
+        setLoading(true);
+        const requestPayload = {googleToken,address:{...endereco,complemento}};
+        api.post("/auth/singup/google?profile=passenger",requestPayload)
+        .then(() => {
+            navigation.navigate('Login');
+            Toast.show(validacao.message, successMessageStyle);
+        })
+        .catch((e) => {
+                console.log("error!!!!!!!",e)
+                if (e.response && e.response.data) Toast.show(e.response.data.message, errorMessageStyle);
+                else Toast.show("Ocorreu um erro", errorMessageStyle);
+            })
+        .finally(() => {
+                setLoading(false);
+            });
+    }
     
     const cadastrar = async () => {
         const validacao = await validarForm();
         if (validacao.result) {
             const isNotLast = nextFunction();
             if(!isNotLast){
-                setLoading(true);
-                const requestPayload = {
-                    name: nome,
-                    email: email,
-                    phone:phone,
-                    password: senha,
-                    campus_id:selectedCampus
-                };
-                if(endereco)requestPayload.address={...endereco,complemento}
-                api.post("auth/singup?profile=passenger", requestPayload)
-                .then(() => {
-                        navigation.navigate('Login');
-                        Toast.show(validacao.message, successMessageStyle);
-                    })
-                .catch((e) => {
-                        if (e.response && e.response.data) Toast.show(e.response.data.message, errorMessageStyle);
-                        else Toast.show("Ocorreu um erro", errorMessageStyle);
-                    })
-                .finally(() => {
-                        setLoading(false);
-                    });
+                if(cadastroGoogle){
+                    singupGoogle(validacao);
+                }
+                else{
+                    singup(validacao);
+                }
             }
         } else {
             Toast.show(validacao.message, errorMessageStyle);
@@ -344,6 +372,7 @@ export default function CadastroPassageiro() {
                                                 setEmail(userInfo.user.email);
                                                 setNome(userInfo.user.name);
                                                 setCadastroGoogle(true);
+                                                setGoogleToken((await GoogleSignin.getTokens()).accessToken)
                                                 nextFunction()
                                             }
                                             GoogleSignin.signOut()
