@@ -21,7 +21,7 @@ export default function Login(){
     const [loading,setLoading] = useState(false);
     const [senhaVisivel,setSenhaVisivel] = useState(false);
     const navigation = useNavigation();
-    const {handleLogin,handleLogout} = useContext(AuthContext);
+    const {handleLogin,handleGoogleLogin,handleLogout} = useContext(AuthContext);
 
     const validarForm = async ()=>{
         const form = {
@@ -80,9 +80,9 @@ export default function Login(){
                                     GoogleSignin.hasPlayServices().then((hasPlayService) => {
                                             if (hasPlayService) {
                                                 GoogleSignin.signIn().then( async(userInfo) => {
-                                                  const a = await GoogleSignin.getTokens()
-                                                          console.log(JSON.stringify(a.accessToken))
+                                                  const {accessToken} = await GoogleSignin.getTokens()
                                                   GoogleSignin.signOut()
+                                                  handleGoogleLogin(accessToken)
                                                 }).catch((e) => {
                                                 console.log("ERROR IS: " + JSON.stringify(e));
                                                 })
