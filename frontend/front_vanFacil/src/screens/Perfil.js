@@ -3,23 +3,23 @@ import { View, StyleSheet, ScrollView, Image } from 'react-native';
 import MenuBar from './Shared/MenuBar';
 import Texto from '../components/Texto';
 import { useRoute } from '@react-navigation/native';
-
+import { AuthContext } from '../context/Auth/AuthContext';
 import cores from '../../assets/cores';
 
 export default function Perfil() {
    const route = useRoute();
-   const { foto, nome, descrição } = route.params;
+   // const { foto, nome, descrição } = route.params;
+   const {photoUri,user} = React.useContext(AuthContext)
 
    return (
       <>
          <MenuBar />
          <ScrollView style={estilos.molde}>
             <View style={estilos.topoPerfil}>
-               <Image source={foto} style={estilos.foto} />
-               <Texto style={estilos.textoNome}>{nome}</Texto>
+               <Image source={{uri:photoUri}} style={estilos.foto} />
+               <Texto style={estilos.textoNome}>{user.name}</Texto>
             </View>
             <View>
-               <Texto style={estilos.desc}>{descrição}</Texto>
                <Texto style={estilos.textoNome}>{'numero telefone'}</Texto>
                <Texto style={estilos.textoNome}>{'outra informação'}</Texto>
                <Texto style={estilos.textoNome}>{'outra informação'}</Texto>
@@ -51,7 +51,7 @@ const estilos = StyleSheet.create({
    },
    textoNome: {
       flex: 1,
-      height: 40,
+      height: 60,
       marginTop: 10,
       paddingLeft: 10,
       paddingBottom: 5,

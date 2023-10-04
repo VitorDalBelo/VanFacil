@@ -33,6 +33,7 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-frontvanFacil/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		5106A352A791497D9FD9B687 /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "frontvanFacil/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		3FB0083C14EF406FB07CEBB9 /* frontvanFacil-Bridging-Header.h */ = {isa = PBXFileReference; name = "frontvanFacil-Bridging-Header.h"; path = "frontvanFacil/frontvanFacil-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +60,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				5106A352A791497D9FD9B687 /* noop-file.swift */,
+				3FB0083C14EF406FB07CEBB9 /* frontvanFacil-Bridging-Header.h */,
 			);
 			name = frontvanFacil;
 			sourceTree = "<group>";
@@ -199,6 +201,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				BD65BBB0BA4F4307B14DAE13 /* frontvanFacil-Bridging-Header.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +330,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				CODE_SIGN_ENTITLEMENTS = frontvanFacil/frontvanFacil.entitlements;
+				SWIFT_OBJC_BRIDGING_HEADER = frontvanFacil/frontvanFacil-Bridging-Header.h;
 			};
 			name = Debug;
 		};
@@ -352,6 +356,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				CODE_SIGN_ENTITLEMENTS = frontvanFacil/frontvanFacil.entitlements;
+				SWIFT_OBJC_BRIDGING_HEADER = frontvanFacil/frontvanFacil-Bridging-Header.h;
 			};
 			name = Release;
 		};
