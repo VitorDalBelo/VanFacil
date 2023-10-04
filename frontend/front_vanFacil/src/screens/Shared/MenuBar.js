@@ -7,15 +7,16 @@ import FotoPerfil from '../../../assets/teste/Gataruga.png';
 import cores from '../../../assets/cores';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import useMotoristas from '../../hooks/useMotoristas';
 
-export default function MenuBar({ nomeTela, mostraBtnPerfil = true }) {
+export default function MenuBar({ nomeTela, mostraBtnPerfil = true, telaMotorista = true }) {
    return (
       <View style={estilos.menuBar}>
          <Texto style={estilos.nomeTela}>{nomeTela}</Texto>
 
          <BotaoMenu />
 
-         {mostraBtnPerfil && <BotaoPerfil />}
+         {mostraBtnPerfil && <BotaoPerfil telaMotorista={telaMotorista} />}
       </View>
    );
 }
