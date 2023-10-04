@@ -37,11 +37,21 @@ function BotaoMenu() {
    );
 }
 
-function BotaoPerfil() {
-   const {photoUri} = React.useContext(AuthContext)
+function BotaoPerfil({ telaMotorista }) {
+   const navigation = useNavigation();
+   const motoristas = useMotoristas();
+   const {photoUri,user} = React.useContext(AuthContext)
+
+   const defineCaminho = () => {
+      if (user.profile=="driver") {
+         return navigation.navigate('M_Perfil', motoristas[1]);
+      } else {
+         return navigation.navigate('Perfil');
+      }
+   };
 
    return (
-      <TouchableOpacity style={estilos.botaoPerfil}>
+      <TouchableOpacity style={estilos.botaoPerfil} onPress={defineCaminho}>
          <Image source={{uri:photoUri}} style={estilos.fotoPerfil} />
       </TouchableOpacity>
    );
