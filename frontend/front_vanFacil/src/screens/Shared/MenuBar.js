@@ -2,8 +2,6 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { AuthContext } from '../../context/Auth/AuthContext';
 import Texto from '../../components/Texto';
-
-import FotoPerfil from '../../../assets/teste/Gataruga.png';
 import cores from '../../../assets/cores';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
