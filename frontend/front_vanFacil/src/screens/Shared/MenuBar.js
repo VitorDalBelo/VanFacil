@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { AuthContext } from '../../context/Auth/AuthContext';
 import Texto from '../../components/Texto';
 
 import FotoPerfil from '../../../assets/teste/Gataruga.png';
@@ -37,21 +37,12 @@ function BotaoMenu() {
    );
 }
 
-function BotaoPerfil({ telaMotorista }) {
-   const navigation = useNavigation();
-   const motoristas = useMotoristas();
-
-   const defineCaminho = () => {
-      if (telaMotorista) {
-         return navigation.navigate('M_Perfil', motoristas[1]);
-      } else {
-         return navigation.navigate('Perfil');
-      }
-   };
+function BotaoPerfil() {
+   const {photoUri} = React.useContext(AuthContext)
 
    return (
-      <TouchableOpacity style={estilos.botaoPerfil} onPress={defineCaminho}>
-         <Image source={FotoPerfil} style={estilos.fotoPerfil} />
+      <TouchableOpacity style={estilos.botaoPerfil}>
+         <Image source={{uri:photoUri}} style={estilos.fotoPerfil} />
       </TouchableOpacity>
    );
 }
