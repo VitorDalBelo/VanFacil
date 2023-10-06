@@ -41,5 +41,3 @@ const estilos = StyleSheet.create({
       color: cores.branco,
    },
 });
-
-// onPress={() => navigation.navigate('P_pesquisa')}
