@@ -79,7 +79,7 @@ export default function TesteCapturaMapa() {
 }
 
 const larguraTela = Dimensions.get('screen').width;
-const alturaCard = larguraTela * 0.8;
+const larguraCard = larguraTela - 40;
 
 const estilos = StyleSheet.create({
    container: {
@@ -95,8 +95,8 @@ const estilos = StyleSheet.create({
       textAlignVertical: 'center',
    },
    caixaMapa: {
-      width: larguraTela - 40,
-      height: alturaCard - 90,
+      width: larguraCard,
+      height: larguraCard * 0.8,
       margin: 10,
       overflow: 'hidden',
       borderWidth: 2,
