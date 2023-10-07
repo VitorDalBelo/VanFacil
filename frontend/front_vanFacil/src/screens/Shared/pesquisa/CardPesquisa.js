@@ -4,7 +4,7 @@ import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-nat
 import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
 
-export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacaoImg, aoPressionar }) {
+export default function CardPesquisa({ foto, nome, descrição, aoPressionar }) {
    return (
       <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
          <View style={estilos.info}>

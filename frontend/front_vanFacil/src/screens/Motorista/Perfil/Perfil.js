@@ -1,6 +1,6 @@
-import React, {useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import MenuBar from '../../Shared/MenuBar';
 import Texto from '../../../components/Texto';
@@ -10,60 +10,63 @@ import api from '../../../services/api';
 import { toastApiError } from '../../../helpers/toast';
 
 export default function Perfil() {
-   const [loading,setLoading] = useState(false);
-   const [motorista,setMotorista] = useState(null);
-   
+   const [loading, setLoading] = useState(false);
+   const [motorista, setMotorista] = useState(null);
+
    const route = useRoute();
    const { donoDoPerfil } = route.params;
 
    const navigation = useNavigation();
 
-   const getData = async () =>{
-      await api.get("/users/drivers/me")
-      .then(resp=>{
-         setMotorista(resp.data);
-      })
-      .catch(e=>{toastApiError(e)})
-      
-      setLoading(false)
-   }
+   const getData = async () => {
+      await api
+         .get('/users/drivers/me')
+         .then((resp) => {
+            setMotorista(resp.data);
+         })
+         .catch((e) => {
+            toastApiError(e);
+         });
 
-   useEffect(()=>{
-      getData()
-   },[])
+      setLoading(false);
+   };
 
-   useEffect(()=>{
-      if(route.params && route.params.reload){
-         route.params.reload= false;
-         getData()
-      } 
-   },[route.params])
+   useEffect(() => {
+      getData();
+   }, []);
+
+   useEffect(() => {
+      if (route.params && route.params.reload) {
+         route.params.reload = false;
+         getData();
+      }
+   }, [route.params]);
 
    return (
       <>
-      {
-         motorista?<>
-         <MenuBar />
-         <View style={estilos.molde}>
-            <View style={estilos.topoPerfil}>
-               <Image source={{uri:`${process.env.EXPO_PUBLIC_BACKEND_URL}${motorista.user.photo}`}} style={estilos.foto} />
-               <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
-            </View>
-            <View style={estilos.info}>
-               <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
-               <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
-               {donoDoPerfil && (
-                  <TouchableOpacity style={estilos.botao} onPress={() => {}}>
-                     <Texto style={estilos.textoBotao}>Editar Perfil</Texto>
-                  </TouchableOpacity>
-               )}
-            </View>
-         </View>
-         </>:<Text>{"erro"}</Text>
-
-      }
-      </>         
-
+         {motorista ? (
+            <>
+               <MenuBar />
+               <View style={estilos.molde}>
+                  <View style={estilos.topoPerfil}>
+                     <Image source={{ uri: `${process.env.EXPO_PUBLIC_BACKEND_URL}${motorista.user.photo}` }} style={estilos.foto} />
+                     <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
+                  </View>
+                  <View style={estilos.info}>
+                     <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
+                     <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
+                     {donoDoPerfil && (
+                        <TouchableOpacity style={estilos.botao} onPress={() => {}}>
+                           <Texto style={estilos.textoBotao}>Editar Perfil</Texto>
+                        </TouchableOpacity>
+                     )}
+                  </View>
+               </View>
+            </>
+         ) : (
+            <Texto>{'erro'}</Texto>
+         )}
+      </>
    );
 }
 
