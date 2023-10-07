@@ -5,7 +5,7 @@ import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 
 import Texto from '../components/Texto';
-import MapaRegiao from './Shared/Pesquisa/MapaRegiao';
+import MapaRegiao from './Shared/pesquisa/MapaRegiao';
 import cores from '../../assets/cores';
 
 export default function TesteCapturaMapa() {

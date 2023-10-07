@@ -18,7 +18,7 @@ import P_Rota from '../screens/Passageiro/Rota';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
 
 import Perfil from '../screens/Perfil';
-import CadastroPassageiro from '../screens/CadastroPassageiro';
+import CadastroPassageiro from '../screens/Cadastro/CadastroPassageiro';
 
 import { AuthProvider } from '../context/Auth/AuthContext';
 
@@ -31,8 +31,8 @@ export default function AppRotas() {
       <NavigationContainer>
          <AuthProvider>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-               <Stack.Screen name="Login" component={Login} />
 
+               <Stack.Screen name="Login" component={Login} />
                <Stack.Screen name="CadastroPassageiro" component={CadastroPassageiro} />
 
                <Stack.Screen name="Navegação" component={Navegação} />

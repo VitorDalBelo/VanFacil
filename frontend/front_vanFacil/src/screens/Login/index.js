@@ -6,6 +6,8 @@ import toast from "../../helpers/toast";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation} from "@react-navigation/native";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import Texto from "../../components/Texto";
+import cores from "../../../assets/cores";
 
 const esquemaLogin = Yup.object({
     senha:Yup.string().required("Informe a senha do seu usuário"),
@@ -51,9 +53,9 @@ export default function Login(){
     return (
         <View style={estilos.page}> 
             <View>
-                <Text>Email</Text>
+                <Texto>Email</Texto>
                 <TextInput editable={!loading} style={estilos.inputContainer} value={email} onChangeText={setEmail} />
-                <Text>Senha</Text>
+                <Texto>Senha</Texto>
                 <View style={estilos.inputContainer}>
                     <TextInput editable={!loading} value={senha} secureTextEntry={!senhaVisivel} onChangeText={setSenha} />
                     <TouchableOpacity onPress={()=>setSenhaVisivel(!senhaVisivel)} style={estilos.visibleIcon}>
@@ -61,10 +63,9 @@ export default function Login(){
                     </TouchableOpacity>
                 </View>
                 <View styles>
-                    <TouchableOpacity >
-                        <Button title="Entrar" onPress={()=>{
-                            login()
-                        }}/>
+                    <TouchableOpacity style={estilos.btnEntrar} onPress={()=>{login() }}>
+                        <Texto style={estilos.txtBotao}>{"ENTRAR"}</Texto>
+                    
                     </TouchableOpacity>
                     <Text onPress={()=> navigation.navigate('Navegação')}>Não possue conta ainda? Cadastre-se! </Text>
                 </View>
@@ -77,7 +78,7 @@ export default function Login(){
 const estilos = StyleSheet.create({
 
     visibleIcon:{
-        backgroundColor:"#2196f3",
+        backgroundColor:cores.azulProfundo,
         position:"absolute",
         right:0,
         height:'100%',
@@ -88,14 +89,14 @@ const estilos = StyleSheet.create({
     inputContainer:{
         position:"relative",
         borderWidth:1,
-        borderColor:"#2196f3",
+        borderColor:cores.azulProfundo,
         borderRadius:5,
         marginBottom:6,
         paddingHorizontal:3
     },
     passwordInput:{
         width:'90%',
-        backgroundColor:"#000000",
+        backgroundColor:cores.branco,
         
     },
     form:{
@@ -103,7 +104,7 @@ const estilos = StyleSheet.create({
         paddingVertical:"3%",
         marginBottom:'22%',
         borderWidth:1,
-        borderColor:"#2196f3",
+        borderColor:cores.azulProfundo,
         borderRadius:5,
     },
     page:{
@@ -111,7 +112,18 @@ const estilos = StyleSheet.create({
         justifyContent:"center",
         paddingHorizontal:'5%'
     },
-    signupBtn:{
-        paddingHorizontal:"25%"
+    btnEntrar:{
+        justifyContent:"center",
+        alignItems: "center",
+        height: 40,
+        backgroundColor:cores.azulProfundo,
+        borderRadius:5,
+        marginVertical:10,
+
+    },
+    txtBotao:{
+        color:cores.branco,
+        fontWeight: "bold",
+
     }
 })
