@@ -12,13 +12,9 @@ export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacaoI
                <Image source={foto} style={estilos.imagem} />
                <Texto style={estilos.textoNome}>{nome}</Texto>
             </View>
-            {/* <View style={estilos.descCaixa}>
+            <View style={estilos.descCaixa}>
                <Texto style={estilos.desc}>{descrição}</Texto>
-            </View> */}
-            <Texto style={estilos.legendaMapa}>Área de atuação do motorista:</Texto>
-         </View>
-         <View style={estilos.caixaMapa}>
-            <Image style={estilos.imagemMapa} source={regiaoDeAtuacaoImg} />
+            </View>
          </View>
       </TouchableOpacity>
    );
@@ -84,7 +80,7 @@ const estilos = StyleSheet.create({
       borderRadius: 5,
       padding: 10,
    },
-   desc: {},
+   desc: { fontSize: 16 },
    legendaMapa: {
       fontSize: 16,
       marginTop: 10,

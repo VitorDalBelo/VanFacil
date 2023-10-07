@@ -1,16 +1,15 @@
 import React from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import MenuBar from '../../Shared/MenuBar';
 import Texto from '../../../components/Texto';
 
 import cores from '../../../../assets/cores';
-import MapaRegiao from '../../Shared/Pesquisa/MapaRegiao';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Perfil() {
    const route = useRoute();
-   const { foto, nome, descrição, regiaoDeAtuacao, donoDoPerfil } = route.params;
+   const { foto, nome, descrição, donoDoPerfil } = route.params;
 
    const navigation = useNavigation();
 
@@ -24,13 +23,10 @@ export default function Perfil() {
             </View>
             <View style={estilos.info}>
                <Texto style={estilos.desc}>{descrição}</Texto>
-               <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
-               <View style={estilos.caixaMapa}>
-                  <MapaRegiao regiao={regiaoDeAtuacao} />
-               </View>
+               <Texto style={estilos.outraInfo}>{'Número telefone'}</Texto>
                {donoDoPerfil && (
-                  <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao })}>
-                     <Texto style={estilos.textoBotao}>Editar Dados</Texto>
+                  <TouchableOpacity style={estilos.botao} onPress={() => {}}>
+                     <Texto style={estilos.textoBotao}>Editar Perfil</Texto>
                   </TouchableOpacity>
                )}
             </View>
