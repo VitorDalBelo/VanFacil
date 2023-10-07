@@ -1,29 +1,57 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+
 import MenuBar from '../../Shared/MenuBar';
 import Texto from '../../../components/Texto';
-
 import cores from '../../../../assets/cores';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import api from '../../../services/api';
+import { toastApiError } from '../../../helpers/toast';
 
 export default function Perfil() {
+   const [loading,setLoading] = useState(false);
+   const [motorista,setMotorista] = useState(null);
+   
    const route = useRoute();
-   const { foto, nome, descrição, donoDoPerfil } = route.params;
+   const { donoDoPerfil } = route.params;
 
    const navigation = useNavigation();
 
+   const getData = async () =>{
+      await api.get("/users/drivers/me")
+      .then(resp=>{
+         setMotorista(resp.data);
+      })
+      .catch(e=>{toastApiError(e)})
+      
+      setLoading(false)
+   }
+
+   useEffect(()=>{
+      getData()
+   },[])
+
+   useEffect(()=>{
+      if(route.params && route.params.reload){
+         route.params.reload= false;
+         getData()
+      } 
+   },[route.params])
+
    return (
       <>
+      {
+         motorista?<>
          <MenuBar />
          <View style={estilos.molde}>
             <View style={estilos.topoPerfil}>
-               <Image source={foto} style={estilos.foto} />
-               <Texto style={estilos.textoNome}>{nome}</Texto>
+               <Image source={{uri:`${process.env.EXPO_PUBLIC_BACKEND_URL}${motorista.user.photo}`}} style={estilos.foto} />
+               <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
             </View>
             <View style={estilos.info}>
-               <Texto style={estilos.desc}>{descrição}</Texto>
-               <Texto style={estilos.outraInfo}>{'Número telefone'}</Texto>
+               <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
+               <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
                {donoDoPerfil && (
                   <TouchableOpacity style={estilos.botao} onPress={() => {}}>
                      <Texto style={estilos.textoBotao}>Editar Perfil</Texto>
@@ -31,7 +59,11 @@ export default function Perfil() {
                )}
             </View>
          </View>
-      </>
+         </>:<Text>{"erro"}</Text>
+
+      }
+      </>         
+
    );
 }
 
