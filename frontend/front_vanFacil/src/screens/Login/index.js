@@ -1,13 +1,16 @@
 import React , {useState,useContext} from "react"
-import { Button , Text, View , TouchableOpacity ,StyleSheet } from "react-native";
+import { Button , Text, View , TouchableOpacity ,StyleSheet , ActivityIndicator } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import * as Yup  from "yup";
 import toast from "../../helpers/toast";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation} from "@react-navigation/native";
 import { AuthContext } from "../../context/Auth/AuthContext";
+
 import Texto from "../../components/Texto";
 import cores from "../../../assets/cores";
+import { GoogleSignin,statusCodes, } from '@react-native-google-signin/google-signin';
+
 
 const esquemaLogin = Yup.object({
     senha:Yup.string().required("Informe a senha do seu usuário"),
@@ -19,7 +22,7 @@ export default function Login(){
     const [loading,setLoading] = useState(false);
     const [senhaVisivel,setSenhaVisivel] = useState(false);
     const navigation = useNavigation();
-    const {handleLogin,handleLogout} = useContext(AuthContext);
+    const {handleLogin,handleGoogleLogin,handleLogout} = useContext(AuthContext);
 
     const validarForm = async ()=>{
         const form = {
@@ -42,8 +45,9 @@ export default function Login(){
     const login = async ()=>{
         const basicValidation = await validarForm();
         if(basicValidation.result){
-            await handleLogin(email,senha);
-            // await handleLogout()
+            setLoading(true)
+            await handleLogin(email,senha)
+            setLoading(false);
         }
         else{
             toast(basicValidation.message,"error");
@@ -63,11 +67,36 @@ export default function Login(){
                     </TouchableOpacity>
                 </View>
                 <View styles>
-                    <TouchableOpacity style={estilos.btnEntrar} onPress={()=>{login() }}>
-                        <Texto style={estilos.txtBotao}>{"ENTRAR"}</Texto>
+                {
+                        loading?
+                            <ActivityIndicator size="large" color="#2196f3"/>:
+                            <>
+                            <TouchableOpacity style={estilos.btnEntrar} onPress={()=>{login() }}>
+                                <Texto style={estilos.txtBotao}>{"ENTRAR"}</Texto>
                     
-                    </TouchableOpacity>
-                    <Text onPress={()=> navigation.navigate('Navegação')}>Não possue conta ainda? Cadastre-se! </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity >
+                                  <Button  title={'Entre com o google'} onPress={() =>  {
+                                    GoogleSignin.hasPlayServices().then((hasPlayService) => {
+                                            if (hasPlayService) {
+                                                GoogleSignin.signIn().then( async(userInfo) => {
+                                                  const {accessToken} = await GoogleSignin.getTokens()
+                                                  GoogleSignin.signOut()
+                                                  handleGoogleLogin(accessToken)
+                                                }).catch((e) => {
+                                                console.log("ERROR IS: " + JSON.stringify(e));
+                                                })
+                                            }
+                                    }).catch((e) => {
+                                        console.log("ERROR IS: " + JSON.stringify(e));
+                                    })
+                                    }} />
+                            </TouchableOpacity>
+                            </>
+                }
+
+                    <Text onPress={()=> {if(!loading)navigation.navigate('Navegação');}}>Não possue conta ainda? Cadastre-se! </Text>
+
                 </View>
             </View> 
         </View>

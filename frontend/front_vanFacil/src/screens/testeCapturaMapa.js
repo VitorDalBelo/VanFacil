@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { ActivityIndicator, Button, Dimensions, StyleSheet, TouchableOpacity, View ,Image } from 'react-native';
+import { useRoute ,useNavigation} from '@react-navigation/native';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 
 import Texto from '../components/Texto';
 import MapaRegiao from './Shared/pesquisa/MapaRegiao';
 import cores from '../../assets/cores';
+import api from '../services/api';
+import toast,{toastApiError} from '../helpers/toast';
 
 export default function TesteCapturaMapa() {
    const route = useRoute();
+   const navigation = useNavigation();
    const { regiaoDeAtuacao } = route.params;
 
    const [imagem, setImagem] = useState('');
@@ -29,7 +32,9 @@ export default function TesteCapturaMapa() {
    const captureView = async () => {
       try {
          const imageURI = await viewShotRef.current.capture();
-         setImagem('file://' + imageURI);
+         // const blob = await fetch(imageURI).then((response) => response.blob()); setImagem(blob);
+         // setImagem('file://' + imageURI);
+         setImagem(imageURI);
       } catch (error) {
          console.error('Erro ao capturar a imagem:', error);
       }
@@ -39,15 +44,32 @@ export default function TesteCapturaMapa() {
       Sharing.shareAsync(imagem);
    };
 
+
    useEffect(() => {
       if (imagem) {
-         enviaDados();
+         const form = new FormData();
+         form.append("regiaoDeAtuacao",JSON.stringify(regiaoDeAtuacao));
+         form.append("imagem",imagem)
+         api.post("/users/drivers/area",form,{					
+            headers: {
+            "Content-Type": "multipart/form-data",
+         }})
+         .then(()=>{
+            // console.log("Deu certo");
+            toast("Alteração feita com sucesso","success")
+            navigation.navigate("M_Perfil",{reload:true});
+         })
+         .catch((e)=>{
+            console.log("Deu errado",e);
+            toastApiError(e);
+            navigation.navigate("DesenhaMapa");
+         })
       }
    }, [imagem]);
 
    return (
       <View style={estilos.container}>
-         <ViewShot style={estilos.caixaMapa} ref={viewShotRef} options={{ fileName: 'TesteCapturaMapa', format: 'png', quality: 0.9 }}>
+         <ViewShot style={estilos.caixaMapa} ref={viewShotRef} options={{ fileName: 'TesteCapturaMapa', format: 'png', result:"base64", quality: 0.9 }}>
             <MapaRegiao regiao={regiaoDeAtuacao} movimentar={false} onMapReady={handleMapReady} />
          </ViewShot>
          <Texto style={estilos.texto}>Salvando</Texto>

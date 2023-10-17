@@ -9,6 +9,7 @@ export default function useAuth(){
     const navigation = useNavigation();
     const [isAuth,setIsAuth] = useState(false);
     const [user,setUser] = useState({});
+    const [photoUri,setPhotoUri] = useState('');
     const [loading, setLoading] = useState(true);
    
 
@@ -22,6 +23,31 @@ export default function useAuth(){
 			const {data} = resp;
 			await AsyncStorage.setItem("access_token", data.access_token);
 			api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
+            setPhotoUri(`${process.env.EXPO_PUBLIC_BACKEND_URL}${data.user.photo}`)
+			setUser({...data.user});
+			setIsAuth(true);
+            if(data.user.profile === "driver") navigation.navigate("M_Inicial");
+            else if(data.user.profile === "passenger") navigation.navigate("P_Inicial");
+            else toast(`O valor ${data.user.profile} não foi reconhecido como um profile`,"error")
+		} catch (err) {
+            console.log(err.response.data)
+			toastApiError(err);
+		}
+        finally{
+            setLoading(false);
+        }
+	};
+
+    const handleGoogleLogin = async (googletoken) => {
+		setLoading(true);
+        await handleLogout()
+
+		try {
+            const resp = await api.post("auth/login/google",{},{headers:{googletoken}})
+			const {data} = resp;
+			await AsyncStorage.setItem("access_token", data.access_token);
+			api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
+            setPhotoUri(data.user.photo)
 			setUser({...data.user});
 			setIsAuth(true);
             if(data.user.profile === "driver") navigation.navigate("M_Inicial");
@@ -80,6 +106,6 @@ export default function useAuth(){
         }
     );
 
-    return {isAuth,user,loading,handleLogin,handleLogout,setUser};
+    return {isAuth,user,loading,handleLogin,handleGoogleLogin,handleLogout,setUser,photoUri};
     
 } 
