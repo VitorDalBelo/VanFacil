@@ -23,6 +23,9 @@ SplashScreen.preventAutoHideAsync();
 console.log("BackEnd",process.env.EXPO_PUBLIC_BACKEND_URL);
 
 export default function App() {
+   // warnings.js
+   console.disableYellowBox = true;
+
    const [fontsLoaded] = useFonts({
       RubikLight: Rubik_300Light,
       RubikRegular: Rubik_400Regular,

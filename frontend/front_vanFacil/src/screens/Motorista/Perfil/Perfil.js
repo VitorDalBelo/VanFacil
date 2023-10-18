@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import React, {useContext, useEffect,useState} from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, StyleSheet, ScrollView, Image ,Text} from 'react-native';
 import MenuBar from '../../Shared/MenuBar';
@@ -8,12 +8,14 @@ import cores from '../../../../assets/cores';
 import MapaRegiao from '../../Shared/pesquisa/MapaRegiao';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { toastApiError } from '../../../helpers/toast';
+import { AuthContext } from '../../../context/Auth/AuthContext';
 
 export default function Perfil() {
    const route = useRoute();
    const [loading,setLoading] = useState(false);
    const [motorista,setMotorista] = useState(null)
    const navigation = useNavigation();
+   const {photoUri} =  useContext(AuthContext)
 
    const getData = async () =>{
       await api.get("/users/drivers/me")
@@ -43,7 +45,7 @@ export default function Perfil() {
          <MenuBar />
          <View style={estilos.molde}>
             <View style={estilos.topoPerfil}>
-               <Image source={{uri:`${process.env.EXPO_PUBLIC_BACKEND_URL}${motorista.user.photo}`}} style={estilos.foto} />
+               <Image source={{uri:photoUri}} style={estilos.foto} />
                <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
             </View>
             <View style={estilos.info}>

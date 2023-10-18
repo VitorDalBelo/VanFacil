@@ -21,6 +21,7 @@ export default function useAuth(){
             const base64Credentials = Buffer.from(`${email}:${senha}`).toString('base64');
             const resp = await api.post("auth/login",{},{headers:{authorization:`Basic ${base64Credentials}`}})
 			const {data} = resp;
+            console.log(`Bearer ${data.access_token}`)
 			await AsyncStorage.setItem("access_token", data.access_token);
 			api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
             setPhotoUri(`${process.env.EXPO_PUBLIC_BACKEND_URL}${data.user.photo}`)
@@ -46,6 +47,7 @@ export default function useAuth(){
             const resp = await api.post("auth/login/google",{},{headers:{googletoken}})
 			const {data} = resp;
 			await AsyncStorage.setItem("access_token", data.access_token);
+            console.log(`Bearer ${data.access_token}`)
 			api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
             setPhotoUri(data.user.photo)
 			setUser({...data.user});

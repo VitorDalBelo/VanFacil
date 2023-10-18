@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef , useState , useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
@@ -10,6 +10,7 @@ import Mapa_teste from '../Shared/Rota/mapa_teste';
 import cores from '../../../assets/cores';
 import MenuBar from '../Shared/MenuBar';
 import { useRoute } from '@react-navigation/native';
+import api from '../../services/api';
 
 function TopoLista() {
    return (
@@ -29,11 +30,28 @@ function TopoLista() {
 
 export default function RotaAtiva() {
    const route = useRoute();
-   const { passageiros } = route.params;
-   const listaPassageiros = passageiros.slice(1);
+   const [passengers,setPassengers] = useState([])
+   const [absences,setAbsences] = useState([])
+   const [userAbsences,setUserAbsences] = useState(null);
+   var { trip_id } = route.params;
+   const listaPassageiros = passengers.slice(1);
 
    const bottomSheetRef = useRef(BottomSheet);
    const snapPoints = useMemo(() => [200, '100%'], []);
+
+   const getTrip = ()=>{
+      api.get(`/trip/${trip_id}`)
+      .then(trip=>{
+         setPassengers(trip.data.passengers);
+         setAbsences(trip.data.absences);
+         setUserAbsences(trip.data.userAbsences)
+      })
+      .catch(e=>toastApiError(e))
+   }
+
+   useEffect(()=>{
+      getTrip();
+   },[])
 
    return (
       <>
@@ -43,21 +61,25 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{passageiros.length}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passengers.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               <CardPassageiro {...passageiros[0]} />
+               {passengers.length > 0 &&
+               <>
+               <CardPassageiro {...passengers[0]} />
 
-               <BottomSheetFlatList
+                  <BottomSheetFlatList
                   ListHeaderComponent={TopoLista}
                   data={listaPassageiros}
                   keyExtractor={({ ordem }) => ordem}
                   renderItem={({ item }) => {
                      return <CardPassageiro {...item} />;
                   }}
-               />
+                  />
+               </>
+            }
             </BottomSheet>
          </View>
       </>

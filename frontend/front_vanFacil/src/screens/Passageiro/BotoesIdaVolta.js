@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import Texto from '../../components/Texto';
@@ -6,14 +6,20 @@ import toast from '../../helpers/toast';
 
 import cores from '../../../assets/cores';
 
-export default function BotoesIdaVolta() {
-   const [vai, inverterVai] = useReducer((vai) => !vai, true);
-   const [volta, inverterVolta] = useReducer((volta) => !volta, true);
+export default function BotoesIdaVolta({userAbsences,onConfirm}) {
+
+   const [vai,setVai] = useState( userAbsences ? userAbsences.go : true);
+   const [volta,setVolta ] = useState(userAbsences ? userAbsences.back : true);
 
    const estilosSwitch = funcaoEstilo(vai, volta);
 
    const [modalVisible, setModalVisible] = useState(false);
    const [idaOuVolta, defineIdaOuVolta] = useState(true);
+
+   useEffect(()=>{
+      setVai(userAbsences ? userAbsences.go : true);
+      setVolta(userAbsences ? userAbsences.back : true);
+   },[userAbsences])
 
    const mostrarModal = () => {
       defineMensagem(idaOuVolta);
@@ -31,9 +37,10 @@ export default function BotoesIdaVolta() {
    };
 
    const confirmar = (ida) => {
-      ida ? inverterVai() : inverterVolta();
+      const go = ida ? !vai : vai;
+      const back = ida ? volta : !volta; 
+      onConfirm(go,back)
       setModalVisible(false);
-      toast('O Motorista foi notificado da sua alteração!', 'success');
    };
 
    const cancelar = () => {

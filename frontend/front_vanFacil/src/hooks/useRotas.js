@@ -1,14 +1,21 @@
-import { useState, useEffect } from 'react';
-
 import { carregaRotas } from '../services/carregaDados';
+import api from '../services/api';
 
-export default function useRotas() {
-   const [rotas, setRotas] = useState({});
+export default async function useRotas() {
+      let resposta = {
+         status:false,
+         trips:[]
+      }
+     await api.get("/users/trips")
+      .then(resp=>{
+         const {trips} = resp.data;
+         resposta  = {
+            status:true,
+            trips
+         }
+      })
 
-   useEffect(() => {
-      const retorno = carregaRotas();
-      setRotas(retorno);
-   }, []);
+      return resposta
+    
 
-   return rotas;
 }

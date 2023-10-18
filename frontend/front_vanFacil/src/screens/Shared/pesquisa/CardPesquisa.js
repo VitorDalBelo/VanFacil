@@ -16,7 +16,7 @@ export default function CardPesquisa({ foto, nome, descrição, regiaoDeAtuacao,
    return (
       <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
          <View style={estilos.topoCard}>
-            <Image source={foto} style={estilos.imagem} />
+            {foto && <Image source={foto} style={estilos.imagem} />}
             <Texto style={estilos.texto}>{nome}</Texto>
          </View>
          <Texto style={estilos.legendaMapa}>Área de atuação do motorista:</Texto>
