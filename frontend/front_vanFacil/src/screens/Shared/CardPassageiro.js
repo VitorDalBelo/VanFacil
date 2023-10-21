@@ -7,6 +7,7 @@ export default function CardPassageiro(props) {
    const [photoUri,setPhotoUri] = useState()
 
    useEffect(()=>{
+      console.log(props)
       if(props.passenger && props.passenger.user.google_account){
          setPhotoUri(props.passenger.user.photo);
       }

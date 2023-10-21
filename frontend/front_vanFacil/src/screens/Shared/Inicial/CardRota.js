@@ -13,7 +13,7 @@ var img = ImagemFalha;
 export default function CardRota({ id, telaMotorista = true, ...props }) {
    img = FundoRota1;
    const navigation = useNavigation();
-   const ativa = false;
+   const ativa = true;
    const defineCaminho = () => {
       const caminhoMotorista = ativa ? 'M_RotaAtiva' : 'M_Rota';
       const caminhoPassageiro = ativa ? 'P_RotaAtiva' : 'P_Rota';

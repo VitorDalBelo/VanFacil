@@ -15,12 +15,13 @@ import { useNavigation} from "@react-navigation/native";
 import * as Yup from "yup";
 import GoBackButton from "../../components/GoBackButton";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MapView , {PROVIDER_GOOGLE , Marker}from 'react-native-maps';
+import MapView , {PROVIDER_GOOGLE , Marker , Polyline}from 'react-native-maps';
 import {Picker} from '@react-native-picker/picker';
 import {
     GoogleSignin,
     statusCodes,
   } from '@react-native-google-signin/google-signin';
+  import { decode } from "@googlemaps/polyline-codec";
 
 
 const SteperContext = createContext();
@@ -35,6 +36,16 @@ function Adress(){
         selectedCampus, setSelectedCampus
     } = useContext(SteperContext);
     const mapRef = useRef(null);
+    const [poly,setPoly] =  useState([]);
+    React.useEffect(()=>{
+        const encoded = "rdeoCphb{G{RlMdFtJ\\SzE_DrB~DwBpAaC~AdDnGdAlB}BeEmBwDhEqCbPiKwIuPsBnAq^vU{@h@}@n@uCfBcBnAaB}CWa@g@]iAk@c@][c@Uo@Gu@@a@hAgI@q@yDc\\pTuCxZcE~CWj@Qd@[JW@[IWOS{@Fe@Q][qEqJuBsEIi@@a@Ru@C[KUiBc@i@K^{BdBiJl@gD?Ut@VlInBsCzNK^GF@BkCh@w@?y@EiBc@SBMPCPT`AQP[NyTbFoC[eH?GA?mAm@Al@@?lAIF@JJ@DEdH@fBRVCnEcAExFBLrEhKx@bBef@vG{JtA}A\\uAb@y@b@wFlD~@j@`Ao@rBoAlBaAn@Uf@MlASjSuCxDb\\C~@gAxH?r@Hl@Pd@Zb@b@\\vAr@XTKR{ArF@NVfAQd@Kj@E|EAzGAxJGrN?fEO|VC\\CjJGfRCd@EjHk@bCUd@eBvBUn@Cr@KjNzGZ|Jf@C`I";
+        console.log("decode",decode(encoded, 5))
+        const a = decode(encoded, 5);
+        const b = a.map(item=>{
+            return {latitude:item[0],longitude:item[1]}
+        })
+        setPoly(b)
+    },[])
     function getAdrresJson(array) {
         const jsonResult = {};
       
@@ -125,7 +136,12 @@ function Adress(){
                     longitude: endereco.longitude,
                     latitudeDelta: 0.0005, 
                     longitudeDelta: 0.0005, 
-                }:undefined}
+                }:{
+                    latitude: -23.62458,
+                    longitude: -46.54745,
+                    latitudeDelta: 0.0005, 
+                    longitudeDelta: 0.0005, 
+                }}
             >
                 {endereco.latitude && endereco.longitude && (
                     <Marker
@@ -135,6 +151,7 @@ function Adress(){
                     }}
                     />
                 )}
+                <Polyline coordinates={poly} />
             </MapView>
             <Text>Complemento</Text>
             <TextInput editable={!loading} style={estilos.inputContainer} value={complemento} onChangeText={setComplemento} />

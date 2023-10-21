@@ -32,7 +32,6 @@ export default function RotaAtiva() {
    const route = useRoute();
    const [passengers,setPassengers] = useState([])
    const [absences,setAbsences] = useState([])
-   const [userAbsences,setUserAbsences] = useState(null);
    var { trip_id } = route.params;
    const listaPassageiros = passengers.slice(1);
 
@@ -44,7 +43,6 @@ export default function RotaAtiva() {
       .then(trip=>{
          setPassengers(trip.data.passengers);
          setAbsences(trip.data.absences);
-         setUserAbsences(trip.data.userAbsences)
       })
       .catch(e=>toastApiError(e))
    }
@@ -61,21 +59,21 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{passengers.length}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passengers.length-absences.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
                {passengers.length > 0 &&
                <>
-               <CardPassageiro {...passengers[0]} />
+               <CardPassageiro {...passengers[0]} ausente={absences.includes(String(passengers[0].passengerid))}/>
 
                   <BottomSheetFlatList
                   ListHeaderComponent={TopoLista}
                   data={listaPassageiros}
                   keyExtractor={({ ordem }) => ordem}
                   renderItem={({ item }) => {
-                     return <CardPassageiro {...item} />;
+                     return <CardPassageiro {...item} ausente={absences.includes(String(item.passengerid))} />;
                   }}
                   />
                </>
