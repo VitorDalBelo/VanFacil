@@ -20,7 +20,7 @@ import CadastroPassageiro from '../screens/CadastroPassageiro';
 
 import { AuthProvider } from '../context/Auth/AuthContext';
 
-import Login from '../screens/Login';
+import Login from '../screens/Shared/Login';
 
 const Stack = createNativeStackNavigator();
 

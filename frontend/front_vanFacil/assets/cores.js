@@ -3,6 +3,7 @@ const cores = {
    branco: '#ffffff',
    azulProfundo: '#0d3956',
    azul: '#1a829a',
+   azulLink: '#16acce',
    gelo: '#caecf6',
    cinza: '#798693',
    cinzaClaro: '#f0f8ff',
