@@ -6,7 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import * as Yup from 'yup';
 import toast from '../../helpers/toast';
 
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../context/Auth/AuthContext';
 
@@ -123,7 +123,7 @@ export default function Login() {
                         <Texto>Não possui conta ainda?</Texto>
                         <TouchableOpacity
                            onPress={() => {
-                              navigation.navigate('Navegação');
+                              navigation.navigate('CaminhoCadastro');
                            }}
                         >
                            <Texto style={estilos.textoLink}>Cadastre-se</Texto>

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Navegação from '../screens/testeNavegação';
+import CaminhoCadastro from '../screens/Shared/CaminhoCadastro';
 import Cadastro from '../screens/cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
@@ -33,7 +33,7 @@ export default function AppRotas() {
 
                <Stack.Screen name="CadastroPassageiro" component={CadastroPassageiro} />
 
-               <Stack.Screen name="Navegação" component={Navegação} />
+               <Stack.Screen name="CaminhoCadastro" component={CaminhoCadastro} />
                <Stack.Screen name="Cadastro" component={Cadastro} />
 
                <Stack.Screen name="M_Inicial" component={M_Inicial} />
