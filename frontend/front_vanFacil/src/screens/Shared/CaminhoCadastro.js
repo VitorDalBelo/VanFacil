@@ -1,59 +1,83 @@
 import React from 'react';
-import { Button, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import GoBackButton from '../../components/GoBackButton';
+
+import cores from '../../../assets/cores';
+import Texto from '../../components/Texto';
 
 export default function TesteNavegação() {
    const navigation = useNavigation();
 
    return (
-      <View style={estilo.page}>
-         <GoBackButton />
-         <View style={estilo.buttonsContainer}>
-            <Text style={estilo.title}>Como deseja utilizar o aplicativo?</Text>
-            <TouchableOpacity style={estilo.btn} onPress={() => navigation.navigate('M_Inicial')}>
-               <Text style={estilo.btnText}>Como motorista</Text>
+      <View style={estilos.container}>
+         <View style={estilos.tituloContainer}>
+            <Texto style={estilos.textoTitulo}>Cadastro</Texto>
+            <View style={estilos.linha}></View>
+         </View>
+
+         <View style={estilos.botoesContainer}>
+            <Texto style={estilos.textoMsg}>Como deseja utilizar o aplicativo?</Texto>
+            <TouchableOpacity style={estilos.button} onPress={() => navigation.navigate('CadastroMotorista')}>
+               <Texto style={estilos.textoBotao}>Como motorista</Texto>
             </TouchableOpacity>
-            <TouchableOpacity style={estilo.btn} onPress={() => navigation.navigate('CadastroPassageiro')}>
-               <Text style={estilo.btnText}>Como passageiro</Text>
+            <TouchableOpacity style={estilos.button} onPress={() => navigation.navigate('CadastroPassageiro')}>
+               <Texto style={estilos.textoBotao}>Como passageiro</Texto>
             </TouchableOpacity>
          </View>
       </View>
    );
 }
 
-const estilo = StyleSheet.create({
-   btn: {
+const alturaTela = Dimensions.get('screen').height;
+
+const estilos = StyleSheet.create({
+   container: {
+      flex: 1,
       justifyContent: 'center',
-      minWidth: '100%',
-      borderRadius: 7,
-      backgroundColor: '#2297ef',
+      paddingHorizontal: '5%',
+      backgroundColor: cores.branco,
+   },
+   tituloContainer: {
+      width: '100%',
+      position: 'absolute',
+      top: alturaTela * 0.1,
+      alignSelf: 'center',
       alignItems: 'center',
-      paddingVertical: 17,
    },
-   btnText: {
-      fontSize: 20,
-      color: 'white',
+   textoTitulo: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: cores.cinzaEscuro,
    },
-   page: {
+   linha: {
+      height: 2,
+      width: '100%',
+      backgroundColor: cores.azulProfundo,
+      borderRadius: 5,
+      marginTop: 10,
+   },
+   botoesContainer: {
+      width: '100%',
+      alignSelf: 'center',
+      alignItems: 'center',
+   },
+   textoMsg: {
+      color: cores.cinzaEscuro,
+      fontSize: 22,
+      paddingBottom: 10,
+   },
+   button: {
+      width: '100%',
+      height: 60,
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100%',
+      backgroundColor: cores.azulProfundo,
+      borderRadius: 5,
+      marginVertical: 10,
    },
-   buttonsContainer: {
-      width: '80%',
-      justifyContent: 'space-evenly',
-      height: '35%',
-      padding: '5%',
-      borderWidth: 1,
-      borderColor: '#2196f3',
-      borderRadius: 10,
-   },
-   title: {
-      minWidth: '100%',
-      textAlign: 'center',
-      fontWeight: 600,
+   textoBotao: {
+      color: cores.branco,
+      fontWeight: 'bold',
       fontSize: 20,
-      color: '#828282',
    },
 });

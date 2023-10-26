@@ -156,7 +156,7 @@ const estilos = StyleSheet.create({
    textoTitulo: {
       fontSize: 24,
       fontWeight: 'bold',
-      color: cores.azulProfundo,
+      color: cores.cinzaEscuro,
    },
    linha: {
       height: 2,
