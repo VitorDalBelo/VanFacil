@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import CaminhoCadastro from '../screens/Shared/CaminhoCadastro';
-import Cadastro from '../screens/cadastro';
+import CadastroPassageiro from '../screens/Passageiro/Cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
 import M_Perfil from '../screens/Motorista/Perfil/Perfil';
@@ -16,7 +16,6 @@ import P_Rota from '../screens/Passageiro/Rota';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
 
 import Perfil from '../screens/Perfil';
-import CadastroPassageiro from '../screens/CadastroPassageiro';
 
 import { AuthProvider } from '../context/Auth/AuthContext';
 
@@ -31,10 +30,8 @@ export default function AppRotas() {
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                <Stack.Screen name="Login" component={Login} />
 
-               <Stack.Screen name="CadastroPassageiro" component={CadastroPassageiro} />
-
                <Stack.Screen name="CaminhoCadastro" component={CaminhoCadastro} />
-               <Stack.Screen name="Cadastro" component={Cadastro} />
+               <Stack.Screen name="CadastroPassageiro" component={CadastroPassageiro} />
 
                <Stack.Screen name="M_Inicial" component={M_Inicial} />
                <Stack.Screen name="M_Perfil" component={M_Perfil} />
