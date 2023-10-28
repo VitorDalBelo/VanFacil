@@ -1,19 +1,9 @@
-import React, { useState, useRef, createContext, useContext } from 'react';
-import { Button, Text, View, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { TextInput } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useRef } from 'react';
+import { View, StyleSheet } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-import Toast from 'react-native-root-toast';
-import * as Yup from 'yup';
-
-import api from '../../../services/api';
-import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
 
 import appConfig from '../../../../app.json';
