@@ -33,15 +33,16 @@ const alturaTela = Dimensions.get('screen').height;
 const estilos = StyleSheet.create({
    container: {
       flex: 1,
-      justifyContent: 'center',
       paddingHorizontal: '5%',
       backgroundColor: cores.branco,
+      justifyContent: 'flex-start',
+      alignItems: 'center',
    },
    tituloContainer: {
       width: '100%',
-      position: 'absolute',
-      top: alturaTela * 0.1,
-      alignSelf: 'center',
+      height: alturaTela * 0.1,
+      justifyContent: 'flex-start',
+      marginTop: alturaTela * 0.1,
       alignItems: 'center',
    },
    textoTitulo: {
@@ -57,9 +58,12 @@ const estilos = StyleSheet.create({
       marginTop: 10,
    },
    botoesContainer: {
+      height: alturaTela * 0.3,
       width: '100%',
-      alignSelf: 'center',
+      flex: 1,
+      justifyContent: 'center',
       alignItems: 'center',
+      paddingBottom: alturaTela * 0.2,
    },
    textoMsg: {
       color: cores.cinzaEscuro,

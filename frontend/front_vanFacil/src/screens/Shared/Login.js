@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -142,15 +142,16 @@ const alturaTela = Dimensions.get('screen').height;
 const estilos = StyleSheet.create({
    container: {
       flex: 1,
-      justifyContent: 'center',
       paddingHorizontal: '5%',
       backgroundColor: cores.branco,
+      justifyContent: 'flex-start',
+      alignItems: 'center',
    },
    tituloContainer: {
       width: '100%',
-      position: 'absolute',
-      top: alturaTela * 0.1,
-      alignSelf: 'center',
+      height: alturaTela * 0.1,
+      justifyContent: 'flex-start',
+      marginTop: alturaTela * 0.1,
       alignItems: 'center',
    },
    textoTitulo: {
@@ -167,6 +168,10 @@ const estilos = StyleSheet.create({
    },
    formContainer: {
       height: alturaTela * 0.3,
+      width: '100%',
+      flex: 1,
+      justifyContent: 'center',
+      paddingBottom: alturaTela * 0.2,
    },
    visibleIcon: {
       position: 'absolute',
