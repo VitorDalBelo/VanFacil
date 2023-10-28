@@ -82,7 +82,9 @@ export default function Login(){
                                                 GoogleSignin.signIn().then( async(userInfo) => {
                                                   const {accessToken} = await GoogleSignin.getTokens()
                                                   GoogleSignin.signOut()
-                                                  handleGoogleLogin(accessToken)
+                                                  setLoading(true)
+                                                  await handleGoogleLogin(accessToken)
+                                                  setLoading(false)
                                                 }).catch((e) => {
                                                 console.log("ERROR IS: " + JSON.stringify(e));
                                                 })

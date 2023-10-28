@@ -24,8 +24,8 @@ console.log("BackEnd",process.env.EXPO_PUBLIC_BACKEND_URL);
 
 export default function App() {
    // warnings.js
-   // console.disableYellowBox = true;
-   // LogBox.ignoreAllLogs()
+   console.disableYellowBox = true;
+   LogBox.ignoreAllLogs()
 
    const [fontsLoaded] = useFonts({
       RubikLight: Rubik_300Light,

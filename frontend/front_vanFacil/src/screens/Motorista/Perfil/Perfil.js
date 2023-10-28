@@ -51,9 +51,7 @@ export default function Perfil() {
             <View style={estilos.info}>
                <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
                <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
-               <View style={estilos.caixaMapa}>
-                  <MapaRegiao regiao={motorista.driver.regiaoDeAtuacao} />
-               </View>
+
                <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao:motorista.driver.regiaoDeAtuacao })}>
                   <Texto style={estilos.textoBotao}>Editar Dados</Texto>
                </TouchableOpacity>

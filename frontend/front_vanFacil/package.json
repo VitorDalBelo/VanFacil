@@ -43,6 +43,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "^13.6.0",
     "react-native-view-shot": "3.5.0",
+    "socket.io-client": "^4.7.2",
     "yup": "^1.2.0"
   },
   "devDependencies": {

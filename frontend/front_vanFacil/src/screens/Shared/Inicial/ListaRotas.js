@@ -12,7 +12,6 @@ export default function ListaRotas() {
          await api.get("/users/trips")
          .then(resp=>{
             const {trips} = resp.data;
-            console.log("aswd",resp.data)
             setTrips(trips)
          })
          .catch(e=>{

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef , useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { Manager } from 'socket.io-client';
 
 import MenuBar from '../Shared/MenuBar';
 import Texto from '../../components/Texto';
@@ -34,6 +35,8 @@ export default function RotaAtiva() {
    const [passengers,setPassengers] = useState([])
    const [absences,setAbsences] = useState([])
    const [userAbsences,setUserAbsences] = useState(null);
+   const [socketConnection,setSocketConnection] = useState(null)
+
    var { trip_id } = route.params;
    var listaPassageiros = passengers.slice(1);
 
@@ -64,12 +67,20 @@ export default function RotaAtiva() {
          "back": back,
          "absence_date": dataFormatada
      }).then(resp=>{
-      getTrip()
+      getTrip();
+      socketConnection.emit("trip",{trip:String(trip_id),message:"absence"});
      }).catch(e=>toastApiError(e))
    }
 
    useEffect(()=>{
       getTrip();
+      const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
+      const socket = manager.socket("/");
+      socket.emit("joinTrip",String(trip_id));
+      socket.on("tripClient",(msg)=>{
+         console.log("msg",msg)
+      })
+      setSocketConnection(socket);
    },[])
 
    return (
