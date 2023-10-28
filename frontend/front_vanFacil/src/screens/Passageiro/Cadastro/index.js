@@ -3,10 +3,10 @@ import { View, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, Back
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-import Toast from 'react-native-root-toast';
 import * as Yup from 'yup';
 
 import api from '../../../services/api';
+import toast from '../../../helpers/toast';
 import DadosPessoais from './DadosPessoais';
 import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
@@ -27,9 +27,6 @@ const esquemaPassageiroGoogle = Yup.object({
    email: Yup.string().email('Email inválido').required('Informe seu email'),
    nome: Yup.string().required('Informe seu nome'),
 });
-
-const errorMessageStyle = { backgroundColor: '#B40000', textColor: '#FFFFFF', duration: 3000 };
-const successMessageStyle = { backgroundColor: '#1f6334', textColor: '#FFFFFF', duration: 3000 };
 
 export default function CadastroPassageiro() {
    const [nome, setNome] = useState(null);
@@ -168,12 +165,12 @@ export default function CadastroPassageiro() {
       api.post('auth/singup?profile=passenger', requestPayload)
          .then(() => {
             navigation.navigate('Login');
-            Toast.show(validacao.message, successMessageStyle);
+            toast(validacao.message, 'success');
          })
          .catch((e) => {
             console.log('error', e);
-            if (e.response && e.response.data) Toast.show(e.response.data.message, errorMessageStyle);
-            else Toast.show('Ocorreu um erro', errorMessageStyle);
+            if (e.response && e.response.data) toast(e.response.data.message, 'error');
+            else toast('Ocorreu um erro', 'error');
          })
          .finally(() => {
             setLoading(false);
@@ -186,12 +183,12 @@ export default function CadastroPassageiro() {
       api.post('/auth/singup/google?profile=passenger', requestPayload)
          .then(() => {
             navigation.navigate('Login');
-            Toast.show(validacao.message, successMessageStyle);
+            toast(validacao.message, 'success');
          })
          .catch((e) => {
             console.log('error!!!!!!!', e);
-            if (e.response && e.response.data) Toast.show(e.response.data.message, errorMessageStyle);
-            else Toast.show('Ocorreu um erro', errorMessageStyle);
+            if (e.response && e.response.data) toast(e.response.data.message, 'error');
+            else toast('Ocorreu um erro', 'error');
          })
          .finally(() => {
             setLoading(false);
@@ -210,7 +207,7 @@ export default function CadastroPassageiro() {
             }
          }
       } else {
-         Toast.show(validacao.message, errorMessageStyle);
+         toast(validacao.message, 'error');
       }
    };
 
