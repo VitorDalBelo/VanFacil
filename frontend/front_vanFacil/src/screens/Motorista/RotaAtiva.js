@@ -11,6 +11,9 @@ import cores from '../../../assets/cores';
 import MenuBar from '../Shared/MenuBar';
 import { useRoute } from '@react-navigation/native';
 import api from '../../services/api';
+import { useNavigation } from '@react-navigation/native';
+
+import {requestForegroundPermissionsAsync} from "expo-location"
 
 function TopoLista() {
    return (
@@ -32,6 +35,8 @@ export default function RotaAtiva() {
    const route = useRoute();
    const [passengers,setPassengers] = useState([])
    const [absences,setAbsences] = useState([])
+   const [location,setLocation] = useState([])
+   const navigation = useNavigation();
    const [socketConnection,setSocketConnection] = useState(null)
    var { trip_id } = route.params;
    const listaPassageiros = passengers.slice(1);
@@ -47,8 +52,19 @@ export default function RotaAtiva() {
       })
       .catch(e=>toastApiError(e))
    }
-
+   // async function requestLocationPermissions() {
+   //    const { granted } = await requestForegroundPermissionsAsync();
+   //    if (granted) {
+   //    const currentPosition = await getCurrentPositionAsync();
+   //    setLocation(currentPosition)
+   //    }
+   //    else{
+   //       navigation.goBack()
+   //    }
+   // }
    useEffect(()=>{
+
+      
       getTrip();
       const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
       const socket = manager.socket("/");

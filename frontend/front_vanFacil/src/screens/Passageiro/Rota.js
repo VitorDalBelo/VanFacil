@@ -67,14 +67,14 @@ export default function Rota() {
                </Texto>
             </View>
 
-            <View style={estilos.linhaDetalhe}>
+            {/* <View style={estilos.linhaDetalhe}>
                <TouchableOpacity style={estilos.botao}>
                   <Texto style={estilos.textoBotao}>Mensagem</Texto>
                </TouchableOpacity>
                <TouchableOpacity style={estilos.botao}>
                   <Texto style={estilos.textoBotao}>Detalhes</Texto>
                </TouchableOpacity>
-            </View>
+            </View> */}
 
             <BotoesIdaVolta userAbsences={userAbsences} onConfirm={registerAbstence}/>
          </View>
