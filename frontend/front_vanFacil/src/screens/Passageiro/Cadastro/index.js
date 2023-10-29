@@ -265,7 +265,7 @@ export default function CadastroPassageiro() {
       >
          <View style={estilos.container}>
             <View style={estilos.tituloContainer}>
-               <Texto style={estilos.textoTitulo}>Cadastro</Texto>
+               <Texto style={estilos.textoTitulo}>{step == 0 ? 'Cadastro - Dados Pessoais' : 'Cadastro - Endereço'}</Texto>
                <View style={estilos.linha}></View>
             </View>
             <View style={estilos.formContainer}>
