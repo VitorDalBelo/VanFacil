@@ -2,7 +2,6 @@ import React, { useState, createContext, useEffect } from 'react';
 import { View, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, BackHandler, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
 import * as Yup from 'yup';
 
 import api from '../../../services/api';
@@ -92,6 +91,8 @@ export default function CadastroPassageiro() {
       return condition;
    }
 
+
+
    useEffect(() => {
       const backAction = () => {
          if (step > 0) prevStep();
@@ -164,8 +165,8 @@ export default function CadastroPassageiro() {
       if (endereco) requestPayload.address = { ...endereco, complemento };
       api.post('auth/singup?profile=passenger', requestPayload)
          .then(() => {
-            navigation.navigate('Login');
             toast(validacao.message, 'success');
+            navigation.navigate('Login');
          })
          .catch((e) => {
             console.log('error', e);
@@ -179,11 +180,12 @@ export default function CadastroPassageiro() {
 
    const singupGoogle = (validacao) => {
       setLoading(true);
-      const requestPayload = { googleToken, address: { ...endereco, complemento } };
+      const requestPayload = { googleToken,campus_id: selectedCampus , address: { ...endereco, complemento } };
       api.post('/auth/singup/google?profile=passenger', requestPayload)
          .then(() => {
-            navigation.navigate('Login');
             toast(validacao.message, 'success');
+            navigation.navigate('Login');
+            
          })
          .catch((e) => {
             console.log('error!!!!!!!', e);
@@ -271,7 +273,7 @@ export default function CadastroPassageiro() {
             <View style={estilos.formContainer}>
                {ChoseConp(step)}
                <View style={estilos.buttonContainer}>
-                  {step === 1 && !cadastroGoogle && !loading && (
+                  {step === 1 && !loading && (
                      <TouchableOpacity style={estilos.button} onPress={() => prevStep()}>
                         <Texto style={estilos.textoBotao}>VOLTAR</Texto>
                      </TouchableOpacity>
@@ -324,7 +326,7 @@ const estilos = StyleSheet.create({
       marginTop: 10,
    },
    formContainer: {
-      paddingTop: alturaTela * 0.1,
+      paddingTop:0,
    },
    buttonContainer: {
       width: '100%',
