@@ -10,11 +10,10 @@ import toast from '../../../helpers/toast';
 import DadosPessoais from '../../Shared/Cadastro/DadosPessoais';
 import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
-import Local from './Local';
+import DadosVan from './DadosVan';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const SteperContext = createContext();
-
-const esquemaPassageiro = Yup.object({
+const esquemaMotorista = Yup.object({
    confirmacao: Yup.string().required('Confirme sua senha'),
    senha: Yup.string().required('Informe a senha com a qual pretende se altenticar'),
    phone: Yup.string().required('Informe seu telefone').min(15, 'Telefone inválido'),
@@ -22,31 +21,30 @@ const esquemaPassageiro = Yup.object({
    nome: Yup.string().required('Informe seu nome'),
 });
 
-const esquemaPassageiroGoogle = Yup.object({
+const esquemaMotoristaGoogle = Yup.object({
    phone: Yup.string().required('Informe seu telefone').min(15, 'Telefone inválido'),
    email: Yup.string().email('Email inválido').required('Informe seu email'),
    nome: Yup.string().required('Informe seu nome'),
 });
 
-const esquemaEndereco = Yup.object({
-   numero: Yup.number().required('Inclua o número da residência'),
-   logradouro: Yup.string().required('Informe seu endereço completo'),
-   bairro: Yup.string().required('Informe seu endereço completo'),
-   cidade: Yup.string().required('Informe seu endereço completo'),
-   uf: Yup.string().required('Informe seu endereço completo'),
-   pais: Yup.string().required('Informe seu endereço completo'),
+const esquemaInfoVan = Yup.object({
+   desc: Yup.string().required('Informe a descrição dos bairros'),
+   modelo: Yup.string().required('Informe o modelo da van'),
+   placa: Yup.string().required('Informe a placa da van').min(7, 'Placa inválida'),
+   cnpj: Yup.string().required('Informe o CNPJ').min(14, 'CNPJ inválido'),
 });
 
-export default function CadastroPassageiro() {
+export default function CadastroMotorista() {
    const [nome, setNome] = useState(null);
    const [email, setEmail] = useState(null);
    const [phone, setPhone] = useState('');
    const [senha, setSenha] = useState('');
    const [confirSenha, setConfirSenha] = useState('');
 
-   const [endereco, setEndereco] = useState({ latitude: null, longitude: null });
-   const [complemento, setComplemento] = useState(null);
-   const [selectedCampus, setSelectedCampus] = useState(null);
+   const [cnpj, setCnpj] = useState('');
+   const [placa, setPlaca] = useState('');
+   const [modelo, setModelo] = useState('');
+   const [desc, setDesc] = useState('');
 
    const [loading, setLoading] = useState(false);
    const [cadastroGoogle, setCadastroGoogle] = useState(false);
@@ -79,14 +77,16 @@ export default function CadastroPassageiro() {
             );
          case 1:
             return (
-               <Local
+               <DadosVan
+                  cnpj={cnpj}
+                  setCnpj={setCnpj}
+                  placa={placa}
+                  setPlaca={setPlaca}
+                  modelo={modelo}
+                  setModelo={setModelo}
+                  desc={desc}
+                  setDesc={setDesc}
                   loading={loading}
-                  endereco={endereco}
-                  setEndereco={setEndereco}
-                  complemento={complemento}
-                  setComplemento={setComplemento}
-                  selectedCampus={selectedCampus}
-                  setSelectedCampus={setSelectedCampus}
                />
             );
       }
@@ -100,7 +100,7 @@ export default function CadastroPassageiro() {
 
    function prevStep() {
       const condition = step > 0;
-      if (condition && !loading) setStep(step - 1);
+      if (condition) setStep(step - 1);
       return condition;
    }
 
@@ -146,7 +146,7 @@ export default function CadastroPassageiro() {
       };
 
       if (!cadastroGoogle) {
-         await esquemaPassageiro
+         await esquemaMotorista
             .validate(dadosPessoais)
             .then(() => {
                if (dadosPessoais.senha != dadosPessoais.confirmacao) {
@@ -159,7 +159,7 @@ export default function CadastroPassageiro() {
                toast(e.errors[0], 'error');
             });
       } else {
-         await esquemaPassageiroGoogle
+         await esquemaMotoristaGoogle
             .validate(dadosPessoais)
             .then(nextStep)
             .catch((e) => {
@@ -168,17 +168,21 @@ export default function CadastroPassageiro() {
       }
    };
 
-   const validaEndereco = async () => {
-      if (selectedCampus == null) {
-         toast('Selecione o campus', 'error');
-      } else {
-         await esquemaEndereco
-            .validate(endereco)
-            .then(cadastrar)
-            .catch((e) => {
-               toast(e.errors[0], 'error');
-            });
-      }
+   const validaInfoVan = async () => {
+      const infoVan = {
+         cnpj: cnpj,
+         placa: placa,
+         modelo: modelo,
+         desc: desc,
+      };
+      await esquemaInfoVan
+         .validate(infoVan)
+         .then(() => {
+            cadastrar();
+         })
+         .catch((e) => {
+            toast(e.errors[0], 'error');
+         });
    };
 
    const cadastrar = async () => {
@@ -207,12 +211,12 @@ export default function CadastroPassageiro() {
                      GoogleSignin.signOut();
                   })
                   .catch((e) => {
-                     console.log('error: ' + JSON.stringify(e));
+                     console.log('ERROR IS 123: ' + JSON.stringify(e));
                   });
             }
          })
          .catch((e) => {
-            console.log('error: ' + JSON.stringify(e));
+            console.log('ERROR IS: ' + JSON.stringify(e));
          });
    };
 
@@ -223,10 +227,11 @@ export default function CadastroPassageiro() {
          email: email,
          phone: phone,
          password: senha,
-         campus_id: selectedCampus,
+         cnpj: cnpj,
+         desc: desc,
+         van: { placa: placa, modelo: modelo },
       };
-      requestPayload.address = { ...endereco, complemento };
-      api.post('auth/singup?profile=passenger', requestPayload)
+      api.post('auth/singup?profile=driver', requestPayload)
          .then(() => {
             navigation.navigate('Login');
             toast('Usuário cadastrado com sucesso', 'success');
@@ -243,8 +248,8 @@ export default function CadastroPassageiro() {
 
    const singupGoogle = () => {
       setLoading(true);
-      const requestPayload = { googleToken, address: { ...endereco, complemento } };
-      api.post('/auth/singup/google?profile=passenger', requestPayload)
+      const requestPayload = { googleToken, van: { placa: placa, modelo: modelo } };
+      api.post('/auth/singup/google?profile=driver', requestPayload)
          .then(() => {
             navigation.navigate('Login');
             toast('Usuário cadastrado com sucesso', 'success');
@@ -262,17 +267,17 @@ export default function CadastroPassageiro() {
    return (
       <View style={estilos.container}>
          <View style={estilos.tituloContainer}>
-            <Texto style={estilos.textoTitulo}>{step == 0 ? 'Passageiro - Dados Pessoais' : 'Passageiro - Endereço'}</Texto>
+            <Texto style={estilos.textoTitulo}>{step == 0 ? 'Motorista - Dados Pessoais' : 'Motorista - Informações da van'}</Texto>
             <View style={estilos.linha}></View>
          </View>
-         <View style={estilos.formContainer}>
+         <ScrollView style={estilos.formContainer}>
             {ChoseConp(step)}
             <View style={estilos.buttonContainer}>
                {loading ? (
                   <ActivityIndicator style={{ justifyContent: 'center' }} size="large" color={cores.azulProfundo} />
                ) : (
                   <>
-                     <TouchableOpacity style={estilos.button} onPress={step === lastStep ? validaEndereco : validaDadosPessoais}>
+                     <TouchableOpacity style={estilos.button} onPress={step === lastStep ? validaInfoVan : validaDadosPessoais}>
                         <Texto style={estilos.textoBotao}>{step === lastStep ? 'CADASTRAR' : 'CONTINUAR'}</Texto>
                      </TouchableOpacity>
 
@@ -289,7 +294,7 @@ export default function CadastroPassageiro() {
                   </TouchableOpacity>
                )}
             </View>
-         </View>
+         </ScrollView>
       </View>
    );
 }
