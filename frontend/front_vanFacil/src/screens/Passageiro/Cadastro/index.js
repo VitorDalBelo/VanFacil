@@ -2,6 +2,7 @@ import React, { useState, createContext, useEffect } from 'react';
 import { View, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, BackHandler, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 import * as Yup from 'yup';
 
 import api from '../../../services/api';
@@ -100,8 +101,6 @@ export default function CadastroPassageiro() {
       if (condition && !loading) setStep(step - 1);
       return condition;
    }
-
-
 
    useEffect(() => {
       const backAction = () => {
@@ -227,9 +226,8 @@ export default function CadastroPassageiro() {
       requestPayload.address = { ...endereco, complemento };
       api.post('auth/singup?profile=passenger', requestPayload)
          .then(() => {
-
-            toast(validacao.message, 'success');
             navigation.navigate('Login');
+            toast('Usuário cadastrado com sucesso', 'success');
          })
          .catch((e) => {
             console.log('error: ', e);
@@ -248,7 +246,6 @@ export default function CadastroPassageiro() {
          .then(() => {
             navigation.navigate('Login');
             toast('Usuário cadastrado com sucesso', 'success');
-
          })
          .catch((e) => {
             console.log('error: ', e);
@@ -261,48 +258,19 @@ export default function CadastroPassageiro() {
    };
 
    return (
-
-      <SteperContext.Provider
-         value={{
-            nome,
-            setNome,
-            email,
-            setEmail,
-            phone,
-            setPhone,
-            senha,
-            setSenha,
-            confirSenha,
-            setConfirSenha,
-            loading,
-            setLoading,
-            endereco,
-            setEndereco,
-            complemento,
-            setComplemento,
-            selectedCampus,
-            setSelectedCampus,
-            cadastroGoogle,
-            setCadastroGoogle,
-         }}
-      >
-         <View style={estilos.container}>
-            <View style={estilos.tituloContainer}>
-               <Texto style={estilos.textoTitulo}>{step == 0 ? 'Cadastro - Dados Pessoais' : 'Cadastro - Endereço'}</Texto>
-               <View style={estilos.linha}></View>
-            </View>
-            <View style={estilos.formContainer}>
-               {ChoseConp(step)}
-               <View style={estilos.buttonContainer}>
-                  {step === 1 && !loading && (
-                     <TouchableOpacity style={estilos.button} onPress={() => prevStep()}>
-                        <Texto style={estilos.textoBotao}>VOLTAR</Texto>
-                     </TouchableOpacity>
-                  )}
-                  {loading ? (
-                     <ActivityIndicator style={{ justifyContent: 'center' }} size="large" color={cores.azulProfundo} />
-                  ) : (
-                     <TouchableOpacity style={estilos.button} onPress={() => cadastrar()}>
+      <View style={estilos.container}>
+         <View style={estilos.tituloContainer}>
+            <Texto style={estilos.textoTitulo}>{step == 0 ? 'Passageiro - Dados Pessoais' : 'Passageiro - Endereço'}</Texto>
+            <View style={estilos.linha}></View>
+         </View>
+         <View style={estilos.formContainer}>
+            {ChoseConp(step)}
+            <View style={estilos.buttonContainer}>
+               {loading ? (
+                  <ActivityIndicator style={{ justifyContent: 'center' }} size="large" color={cores.azulProfundo} />
+               ) : (
+                  <>
+                     <TouchableOpacity style={estilos.button} onPress={step === lastStep ? validaEndereco : validaDadosPessoais}>
                         <Texto style={estilos.textoBotao}>{step === lastStep ? 'CADASTRAR' : 'CONTINUAR'}</Texto>
                      </TouchableOpacity>
 
@@ -352,7 +320,7 @@ const estilos = StyleSheet.create({
       marginTop: 10,
    },
    formContainer: {
-      paddingTop:0,
+      paddingTop: alturaTela * 0.1,
    },
    buttonContainer: {
       width: '100%',
