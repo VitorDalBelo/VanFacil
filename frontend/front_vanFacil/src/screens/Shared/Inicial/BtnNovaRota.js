@@ -13,7 +13,7 @@ export default function BtnNovaRota({ telaMotorista = true }) {
    };
 
    const defineCaminho = () => {
-      const caminho = telaMotorista ? 'M_Rota' : 'P_Pesquisa';
+      const caminho = telaMotorista ? 'M_CriarRota' : 'P_Pesquisa';
       return () => navigation.navigate(caminho);
    };
 

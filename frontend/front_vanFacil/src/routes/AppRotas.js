@@ -8,6 +8,7 @@ import M_Cadastro from '../screens/Motorista/Cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
 import M_Perfil from '../screens/Motorista/Perfil/Perfil';
+import M_CriarRota from '../screens/Motorista/CriarRota';
 import M_Rota from '../screens/Motorista/Rota';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
 
@@ -37,6 +38,7 @@ export default function AppRotas() {
 
                <Stack.Screen name="M_Inicial" component={M_Inicial} />
                <Stack.Screen name="M_Perfil" component={M_Perfil} />
+               <Stack.Screen name="M_CriarRota" component={M_CriarRota} />
 
                <Stack.Screen name="M_Rota" component={M_Rota} />
                <Stack.Screen name="M_RotaAtiva" component={M_RotaAtiva} />

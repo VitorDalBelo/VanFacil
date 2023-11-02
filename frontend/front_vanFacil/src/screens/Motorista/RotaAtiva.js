@@ -48,7 +48,9 @@ export default function RotaAtiva() {
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               <CardPassageiro {...passageiros[0]} />
+               <View style={{ height: 100 }}>
+                  <CardPassageiro {...passageiros[0]} />
+               </View>
 
                <BottomSheetFlatList
                   ListHeaderComponent={TopoLista}

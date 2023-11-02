@@ -2,8 +2,9 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import cores from '../../../assets/cores';
 import Texto from '../../components/Texto';
+import placeholder_photo from '../../../assets/placeholder_user_photo.png';
 
-export default function CardPassageiro({ foto, nome, endereco }) {
+export default function CardPassageiro({ foto = placeholder_photo, nome, endereco }) {
    return (
       <View style={estilos.passageiro}>
          <Image source={foto} style={estilos.fotoPassageiro} />
@@ -16,7 +17,8 @@ export default function CardPassageiro({ foto, nome, endereco }) {
 }
 const estilos = StyleSheet.create({
    passageiro: {
-      width: '100%',
+      backgroundColor: cores.branco,
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
@@ -24,14 +26,14 @@ const estilos = StyleSheet.create({
       borderBottomColor: cores.cinzaBorda,
       alignItems: 'center',
       flexDirection: 'row',
-      paddingHorizontal: 20,
-      paddingVertical: 5,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
    },
    fotoPassageiro: {
       width: 80,
       height: 80,
       borderRadius: 10,
-      borderWidth: 0.3,
+      borderWidth: 0.5,
       borderColor: cores.preto,
       marginRight: 15,
    },
