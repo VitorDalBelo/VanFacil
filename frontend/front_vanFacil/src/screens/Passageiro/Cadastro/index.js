@@ -12,8 +12,6 @@ import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
 import Local from './Local';
 
-const SteperContext = createContext();
-
 const esquemaPassageiro = Yup.object({
    confirmacao: Yup.string().required('Confirme sua senha'),
    senha: Yup.string().required('Informe a senha com a qual pretende se altenticar'),
@@ -243,7 +241,7 @@ export default function CadastroPassageiro() {
 
    const singupGoogle = () => {
       setLoading(true);
-      const requestPayload = { googleToken, address: { ...endereco, complemento } };
+      const requestPayload = { googleToken, phone, campus_id: selectedCampus, address: { ...endereco, complemento } };
       api.post('/auth/singup/google?profile=passenger', requestPayload)
          .then(() => {
             navigation.navigate('Login');

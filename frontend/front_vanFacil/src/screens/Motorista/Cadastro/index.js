@@ -248,7 +248,7 @@ export default function CadastroMotorista() {
 
    const singupGoogle = () => {
       setLoading(true);
-      const requestPayload = { googleToken, van: { placa: placa, modelo: modelo } };
+      const requestPayload = { googleToken, phone, cnpj, desc, van: { placa: placa, modelo: modelo } };
       api.post('/auth/singup/google?profile=driver', requestPayload)
          .then(() => {
             navigation.navigate('Login');
