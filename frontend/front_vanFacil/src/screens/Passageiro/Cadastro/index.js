@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, BackHandler, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
