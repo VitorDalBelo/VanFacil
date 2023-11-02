@@ -17,11 +17,11 @@ export default function TesteNavegação() {
 
          <View style={estilos.botoesContainer}>
             <Texto style={estilos.textoMsg}>Como deseja utilizar o aplicativo?</Texto>
-            <TouchableOpacity style={estilos.button} onPress={() => navigation.navigate('CadastroMotorista')}>
-               <Texto style={estilos.textoBotao}>Como motorista</Texto>
+            <TouchableOpacity style={estilos.button} onPress={() => navigation.navigate('M_Cadastro')}>
+               <Texto style={estilos.textoBotao}>Como Motorista</Texto>
             </TouchableOpacity>
-            <TouchableOpacity style={estilos.button} onPress={() => navigation.navigate('CadastroPassageiro')}>
-               <Texto style={estilos.textoBotao}>Como passageiro</Texto>
+            <TouchableOpacity style={estilos.button} onPress={() => navigation.navigate('P_Cadastro')}>
+               <Texto style={estilos.textoBotao}>Como Passageiro</Texto>
             </TouchableOpacity>
          </View>
       </View>

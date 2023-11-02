@@ -1,22 +1,30 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import cores from '../../../../assets/cores';
 import PesquisaLocal from './PesquisaLocal';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Local(props) {
-   const { loading, setSelectedCampus, endereco, setEndereco, complemento, setComplemento } = props;
+   const { loading, setSelectedCampus, endereco, setEndereco, complemento, selectedCampus, setComplemento } = props;
 
    const [open, setOpen] = useState(false);
    const [value, setValue] = useState(null);
 
+   // mock dos campi disponíveis
    const [items, setItems] = useState([
       { label: 'Campus Barcelona', value: 1 },
       { label: 'Campus Centro', value: 2 },
       { label: 'Campus Conceição', value: 3 },
    ]);
+
+   useFocusEffect(
+      React.useCallback(() => {
+         setValue(selectedCampus);
+      }, [])
+   );
 
    return (
       <View>
@@ -32,6 +40,7 @@ export default function Local(props) {
                style={[estilos.input, { zIndex: 1 }]}
                textStyle={estilos.textoInput}
                onChangeValue={(value) => setSelectedCampus(value)}
+               disabled={loading}
             />
          </View>
          <PesquisaLocal loading={loading} endereco={endereco} setEndereco={setEndereco} />

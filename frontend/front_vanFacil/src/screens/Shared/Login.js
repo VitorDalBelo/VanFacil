@@ -14,8 +14,8 @@ import cores from '../../../assets/cores';
 import Texto from '../../components/Texto';
 
 const esquemaLogin = Yup.object({
+   senha: Yup.string().required('Informe sua senha'),
    email: Yup.string().email('Email inválido.').required('Informe o email cadastrado'),
-   senha: Yup.string().required('Informe a senha do seu usuário'),
 });
 
 export default function Login() {
