@@ -6,6 +6,8 @@ import MenuBar from '../Shared/MenuBar';
 import CardPesquisa from '../Shared/pesquisa/CardPesquisa';
 
 import useMotoristas from '../../hooks/useMotoristas';
+import api from '../../services/api';
+import { toastApiError } from '../../helpers/toast';
 
 export default function Pesquisa() {
    return (
@@ -17,8 +19,26 @@ export default function Pesquisa() {
 }
 
 function ListaPesquisa() {
-   const motoristas = useMotoristas();
+   // const motoristas = useMotoristas();
    const navigation = useNavigation();
+   const [motoristas,setMotoristas] = React.useState([])
+   const [loading,setLoading] = React.useState(false)
+   const getDrivers = async () =>{
+      setLoading(true);
+      await api.get('/users/drivers/search')
+      .then(resp => {
+         setMotoristas(resp.data);
+      })
+      .catch(e=>{
+         toastApiError(e);
+      })
+      setLoading(false);
+   }
+
+   React.useEffect(()=>{
+      getDrivers()
+   },[])
+
    return (
       <FlatList
          data={motoristas}

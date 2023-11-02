@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { StatusBar, StyleSheet, SafeAreaView } from 'react-native';
+import { StatusBar, StyleSheet, SafeAreaView ,LogBox} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import * as SplashScreen from 'expo-splash-screen';
@@ -23,6 +23,10 @@ SplashScreen.preventAutoHideAsync();
 console.log("BackEnd",process.env.EXPO_PUBLIC_BACKEND_URL);
 
 export default function App() {
+   // warnings.js
+   console.disableYellowBox = true;
+   LogBox.ignoreAllLogs()
+
    const [fontsLoaded] = useFonts({
       RubikLight: Rubik_300Light,
       RubikRegular: Rubik_400Regular,
