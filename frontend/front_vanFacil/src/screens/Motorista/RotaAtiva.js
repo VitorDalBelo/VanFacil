@@ -56,28 +56,6 @@ export default function RotaAtiva() {
 
    useEffect(() => {
       getTrip();
-   }, []);
-
-   const getTrip = () => {
-      api.get(`/trip/${trip_id}`)
-         .then((trip) => {
-            setPassengers(trip.data.passengers);
-            setAbsences(trip.data.absences);
-         })
-         .catch((e) => toastApiError(e));
-   };
-   // async function requestLocationPermissions() {
-   //    const { granted } = await requestForegroundPermissionsAsync();
-   //    if (granted) {
-   //    const currentPosition = await getCurrentPositionAsync();
-   //    setLocation(currentPosition)
-   //    }
-   //    else{
-   //       navigation.goBack()
-   //    }
-   // }
-   useEffect(() => {
-      getTrip();
       const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
       const socket = manager.socket('/');
       socket.emit('joinTrip', String(trip_id));
@@ -89,6 +67,7 @@ export default function RotaAtiva() {
       });
       setSocketConnection(socket);
    }, []);
+
    return (
       <>
          <View style={estilos.container}>
