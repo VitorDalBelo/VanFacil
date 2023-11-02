@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import { View, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, BackHandler, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -7,25 +7,32 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 import toast from '../../../helpers/toast';
-import DadosPessoais from './DadosPessoais';
+import DadosPessoais from '../../Shared/Cadastro/DadosPessoais';
 import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
 import Local from './Local';
 
-const SteperContext = createContext();
-
 const esquemaPassageiro = Yup.object({
    confirmacao: Yup.string().required('Confirme sua senha'),
    senha: Yup.string().required('Informe a senha com a qual pretende se altenticar'),
-   phone: Yup.string().required('Informe seu telefone').min(14, 'Telefone inválido'),
+   phone: Yup.string().required('Informe seu telefone').min(15, 'Telefone inválido'),
    email: Yup.string().email('Email inválido').required('Informe seu email'),
    nome: Yup.string().required('Informe seu nome'),
 });
 
 const esquemaPassageiroGoogle = Yup.object({
-   phone: Yup.string().required('Informe seu telefone').min(14, 'Telefone inválido'),
+   phone: Yup.string().required('Informe seu telefone').min(15, 'Telefone inválido'),
    email: Yup.string().email('Email inválido').required('Informe seu email'),
    nome: Yup.string().required('Informe seu nome'),
+});
+
+const esquemaEndereco = Yup.object({
+   numero: Yup.number().required('Inclua o número da residência'),
+   logradouro: Yup.string().required('Informe seu endereço completo'),
+   bairro: Yup.string().required('Informe seu endereço completo'),
+   cidade: Yup.string().required('Informe seu endereço completo'),
+   uf: Yup.string().required('Informe seu endereço completo'),
+   pais: Yup.string().required('Informe seu endereço completo'),
 });
 
 export default function CadastroPassageiro() {
@@ -34,10 +41,12 @@ export default function CadastroPassageiro() {
    const [phone, setPhone] = useState('');
    const [senha, setSenha] = useState('');
    const [confirSenha, setConfirSenha] = useState('');
-   const [loading, setLoading] = useState(false);
+
    const [endereco, setEndereco] = useState({ latitude: null, longitude: null });
    const [complemento, setComplemento] = useState(null);
    const [selectedCampus, setSelectedCampus] = useState(null);
+
+   const [loading, setLoading] = useState(false);
    const [cadastroGoogle, setCadastroGoogle] = useState(false);
    const [googleToken, setGoogleToken] = useState('');
 
@@ -74,6 +83,7 @@ export default function CadastroPassageiro() {
                   setEndereco={setEndereco}
                   complemento={complemento}
                   setComplemento={setComplemento}
+                  selectedCampus={selectedCampus}
                   setSelectedCampus={setSelectedCampus}
                />
             );
@@ -88,21 +98,31 @@ export default function CadastroPassageiro() {
 
    function prevStep() {
       const condition = step > 0;
-      if (condition) setStep(step - 1);
+      if (condition && !loading) setStep(step - 1);
       return condition;
    }
 
    useEffect(() => {
       const backAction = () => {
-         if (step > 0) prevStep();
-         else {
-            Alert.alert('Sair', 'Tem certeza de que quer sair do cadastro?\nOs dados não serão salvos.', [
+         if (!loading) {
+            if (step > 0) prevStep();
+            else {
+               Alert.alert('Sair', 'Tem certeza de que quer sair do cadastro?\nOs dados não serão salvos.', [
+                  {
+                     text: 'Cancelar',
+                     onPress: () => null,
+                     style: 'cancel',
+                  },
+                  { text: 'Sim', onPress: () => navigation.goBack() },
+               ]);
+            }
+         } else {
+            Alert.alert('Sair', 'Aguarde enquanto finalizamos seu cadastro.', [
                {
-                  text: 'Cancelar',
+                  text: 'OK',
                   onPress: () => null,
                   style: 'cancel',
                },
-               { text: 'Sim', onPress: () => navigation.goBack() },
             ]);
          }
 
@@ -112,10 +132,10 @@ export default function CadastroPassageiro() {
       const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
 
       return () => backHandler.remove();
-   }, [step]);
+   }, [step, loading]);
 
-   const validarForm = async () => {
-      const form = {
+   const validaDadosPessoais = async () => {
+      const dadosPessoais = {
          nome: nome,
          email: email,
          phone: phone,
@@ -123,92 +143,47 @@ export default function CadastroPassageiro() {
          confirmacao: confirSenha,
       };
 
-      const validation = {
-         result: true,
-         message: 'Usuário cadastrado com sucesso',
-      };
       if (!cadastroGoogle) {
          await esquemaPassageiro
-            .validate(form)
+            .validate(dadosPessoais)
             .then(() => {
-               if (form.senha != form.confirmacao) {
-                  validation.result = false;
-                  validation.message = 'A confirmação da senha não corresponde com a senha informada.';
+               if (dadosPessoais.senha != dadosPessoais.confirmacao) {
+                  toast('A confirmação da senha não corresponde com a senha informada', 'error');
+               } else {
+                  nextStep();
                }
             })
             .catch((e) => {
-               validation.result = false;
-               validation.message = e.errors[0];
+               toast(e.errors[0], 'error');
             });
       } else {
          await esquemaPassageiroGoogle
-            .validate(form)
-            .then()
+            .validate(dadosPessoais)
+            .then(nextStep)
             .catch((e) => {
-               validation.result = false;
-               validation.message = e.errors[0];
+               toast(e.errors[0], 'error');
             });
       }
-      return validation;
    };
 
-   const singup = (validacao) => {
-      setLoading(true);
-      const requestPayload = {
-         name: nome,
-         email: email,
-         phone: phone,
-         password: senha,
-         campus_id: selectedCampus,
-      };
-      if (endereco) requestPayload.address = { ...endereco, complemento };
-      api.post('auth/singup?profile=passenger', requestPayload)
-         .then(() => {
-            toast(validacao.message, 'success');
-            navigation.navigate('Login');
-         })
-         .catch((e) => {
-            console.log('error', e);
-            if (e.response && e.response.data) toast(e.response.data.message, 'error');
-            else toast('Ocorreu um erro', 'error');
-         })
-         .finally(() => {
-            setLoading(false);
-         });
-   };
-
-   const singupGoogle = (validacao) => {
-      setLoading(true);
-      const requestPayload = { googleToken,phone, campus_id: selectedCampus , address: { ...endereco, complemento } };
-      api.post('/auth/singup/google?profile=passenger', requestPayload)
-         .then(() => {
-            toast(validacao.message, 'success');
-            navigation.navigate('Login');
-            
-         })
-         .catch((e) => {
-            console.log('error!!!!!!!', e);
-            if (e.response && e.response.data) toast(e.response.data.message, 'error');
-            else toast('Ocorreu um erro', 'error');
-         })
-         .finally(() => {
-            setLoading(false);
-         });
+   const validaEndereco = async () => {
+      if (selectedCampus == null) {
+         toast('Selecione o campus', 'error');
+      } else {
+         await esquemaEndereco
+            .validate(endereco)
+            .then(cadastrar)
+            .catch((e) => {
+               toast(e.errors[0], 'error');
+            });
+      }
    };
 
    const cadastrar = async () => {
-      const validacao = await validarForm();
-      if (validacao.result) {
-         const isNotLast = nextStep();
-         if (!isNotLast) {
-            if (cadastroGoogle) {
-               singupGoogle(validacao);
-            } else {
-               singup(validacao);
-            }
-         }
+      if (cadastroGoogle) {
+         singupGoogle();
       } else {
-         toast(validacao.message, 'error');
+         singup();
       }
    };
 
@@ -230,7 +205,7 @@ export default function CadastroPassageiro() {
                      GoogleSignin.signOut();
                   })
                   .catch((e) => {
-                     console.log('ERROR IS 123: ' + JSON.stringify(e));
+                     console.log('error: ' + JSON.stringify(e));
                   });
             }
          })
@@ -298,17 +273,22 @@ export default function CadastroPassageiro() {
                      <TouchableOpacity style={estilos.button} onPress={step === lastStep ? validaEndereco : validaDadosPessoais}>
                         <Texto style={estilos.textoBotao}>{step === lastStep ? 'CADASTRAR' : 'CONTINUAR'}</Texto>
                      </TouchableOpacity>
-                  )}
 
-                  {step === 0 && !cadastroGoogle && (
-                     <TouchableOpacity style={estilos.button} onPress={() => cadastrarGoogle()}>
-                        <Texto style={estilos.textoBotao}>CADASTRAR COM GOOGLE</Texto>
-                     </TouchableOpacity>
-                  )}
-               </View>
+                     {step === 0 && !cadastroGoogle && (
+                        <TouchableOpacity style={estilos.button} onPress={() => cadastrarGoogle()}>
+                           <Texto style={estilos.textoBotao}>CADASTRAR COM GOOGLE</Texto>
+                        </TouchableOpacity>
+                     )}
+                  </>
+               )}
+               {step === 1 && !loading && (
+                  <TouchableOpacity style={estilos.button} onPress={() => prevStep()}>
+                     <Texto style={estilos.textoBotao}>VOLTAR</Texto>
+                  </TouchableOpacity>
+               )}
             </View>
          </View>
-      </SteperContext.Provider>
+      </View>
    );
 }
 
