@@ -1,7 +1,7 @@
-import React, { useMemo, useRef , useState , useEffect } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
-
+import { Manager } from 'socket.io-client';
 import Texto from '../../components/Texto';
 import CardPassageiro from '../Shared/CardPassageiro';
 
@@ -11,6 +11,9 @@ import cores from '../../../assets/cores';
 import MenuBar from '../Shared/MenuBar';
 import { useRoute } from '@react-navigation/native';
 import api from '../../services/api';
+import { useNavigation } from '@react-navigation/native';
+
+import { requestForegroundPermissionsAsync } from 'expo-location';
 
 function TopoLista() {
    return (
@@ -30,29 +33,62 @@ function TopoLista() {
 
 export default function RotaAtiva() {
    const route = useRoute();
-   const [passengers,setPassengers] = useState([])
-   const [absences,setAbsences] = useState([])
-   const [userAbsences,setUserAbsences] = useState(null);
+   const [passengers, setPassengers] = useState([]);
+   const [absences, setAbsences] = useState([]);
+   const [location, setLocation] = useState([]);
+   const navigation = useNavigation();
+   const [socketConnection, setSocketConnection] = useState(null);
    var { trip_id } = route.params;
    const listaPassageiros = passengers.slice(1);
 
    const bottomSheetRef = useRef(BottomSheet);
    const snapPoints = useMemo(() => [200, '100%'], []);
 
-   const getTrip = ()=>{
+   const getTrip = () => {
       api.get(`/trip/${trip_id}`)
-      .then(trip=>{
-         setPassengers(trip.data.passengers);
-         setAbsences(trip.data.absences);
-         setUserAbsences(trip.data.userAbsences)
-      })
-      .catch(e=>toastApiError(e))
-   }
+         .then((trip) => {
+            setPassengers(trip.data.passengers);
+            setAbsences(trip.data.absences);
+            setUserAbsences(trip.data.userAbsences);
+         })
+         .catch((e) => toastApiError(e));
+   };
 
-   useEffect(()=>{
+   useEffect(() => {
       getTrip();
-   },[])
+   }, []);
 
+   const getTrip = () => {
+      api.get(`/trip/${trip_id}`)
+         .then((trip) => {
+            setPassengers(trip.data.passengers);
+            setAbsences(trip.data.absences);
+         })
+         .catch((e) => toastApiError(e));
+   };
+   // async function requestLocationPermissions() {
+   //    const { granted } = await requestForegroundPermissionsAsync();
+   //    if (granted) {
+   //    const currentPosition = await getCurrentPositionAsync();
+   //    setLocation(currentPosition)
+   //    }
+   //    else{
+   //       navigation.goBack()
+   //    }
+   // }
+   useEffect(() => {
+      getTrip();
+      const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
+      const socket = manager.socket('/');
+      socket.emit('joinTrip', String(trip_id));
+      socket.on('tripClient', (msg) => {
+         if (msg === 'absence') {
+            getTrip();
+         }
+         console.log('msg', msg);
+      });
+      setSocketConnection(socket);
+   }, []);
    return (
       <>
          <View style={estilos.container}>
@@ -61,25 +97,27 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{passengers.length}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passengers.length - absences.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               {passengers.length > 0 &&
-               <>
-               <CardPassageiro {...passengers[0]} />
+               {passengers.length > 0 && (
+                  <>
+                     <View style={{ height: 100 }}>
+                        <CardPassageiro {...passengers[0]} ausente={absences.includes(String(passengers[0].passengerid))} />
+                     </View>
 
-                  <BottomSheetFlatList
-                  ListHeaderComponent={TopoLista}
-                  data={listaPassageiros}
-                  keyExtractor={({ ordem }) => ordem}
-                  renderItem={({ item }) => {
-                     return <CardPassageiro {...item} />;
-                  }}
-                  />
-               </>
-            }
+                     <BottomSheetFlatList
+                        ListHeaderComponent={TopoLista}
+                        data={listaPassageiros}
+                        keyExtractor={({ ordem }) => ordem}
+                        renderItem={({ item }) => {
+                           return <CardPassageiro {...item} ausente={absences.includes(String(item.passengerid))} />;
+                        }}
+                     />
+                  </>
+               )}
             </BottomSheet>
          </View>
       </>

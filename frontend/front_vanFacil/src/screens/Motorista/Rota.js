@@ -26,7 +26,7 @@ export default function Rota() {
                </Texto>
             </View>
 
-            <View style={estilos.linhaDetalhe}>
+            {/* <View style={estilos.linhaDetalhe}>
                <Texto style={estilos.textoDetalhes}>Tempo Estimado:</Texto>
                <Texto style={estilos.textoDetalhes}>
                   {hora}:{minuto}
@@ -36,14 +36,11 @@ export default function Rota() {
             <View style={estilos.linhaDetalhe}>
                <Texto style={estilos.textoDetalhes}>Distância Estimada:</Texto>
                <Texto style={estilos.textoDetalhes}>{distancia} km</Texto>
-            </View>
+            </View> */}
 
             <View style={estilos.linhaDetalhe}>
                <TouchableOpacity style={estilos.botao}>
                   <Texto style={estilos.textoBotao}>Iniciar Rota</Texto>
-               </TouchableOpacity>
-               <TouchableOpacity style={estilos.botao}>
-                  <Texto style={estilos.textoBotao}>Editar Rota</Texto>
                </TouchableOpacity>
             </View>
          </View>
@@ -63,7 +60,7 @@ const estilos = StyleSheet.create({
       width: '100%',
       borderBottomWidth: 1,
       borderBottomColor: '#ECECEC',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
       paddingHorizontal: 20,

@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useRef , useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { Manager } from 'socket.io-client';
 
 import MenuBar from '../Shared/MenuBar';
 import Texto from '../../components/Texto';
@@ -31,26 +32,28 @@ function TopoLista() {
 
 export default function RotaAtiva() {
    const route = useRoute();
-   const [passengers,setPassengers] = useState([])
-   const [absences,setAbsences] = useState([])
-   const [userAbsences,setUserAbsences] = useState(null);
+   const [passengers, setPassengers] = useState([]);
+   const [absences, setAbsences] = useState([]);
+   const [userAbsences, setUserAbsences] = useState(null);
+   const [socketConnection, setSocketConnection] = useState(null);
+
    var { trip_id } = route.params;
    var listaPassageiros = passengers.slice(1);
 
    const bottomSheetRef = useRef(BottomSheet);
    const snapPoints = useMemo(() => [202, '100%'], []);
 
-   const getTrip = ()=>{
+   const getTrip = () => {
       api.get(`/trip/${trip_id}`)
-      .then(trip=>{
-         setPassengers(trip.data.passengers);
-         setAbsences(trip.data.absences);
-         setUserAbsences(trip.data.userAbsences)
-      })
-      .catch(e=>toastApiError(e))
-   }
+         .then((trip) => {
+            setPassengers(trip.data.passengers);
+            setAbsences(trip.data.absences);
+            setUserAbsences(trip.data.userAbsences);
+         })
+         .catch((e) => toastApiError(e));
+   };
 
-   const registerAbstence = (go,back)=>{
+   const registerAbstence = (go, back) => {
       const data = new Date();
       const ano = data.getFullYear();
       const mes = (data.getMonth() + 1).toString().padStart(2, '0'); // O mês é baseado em zero, por isso é necessário adicionar 1.
@@ -58,19 +61,28 @@ export default function RotaAtiva() {
 
       const dataFormatada = `${ano}-${mes}-${dia}`;
 
+      api.post(`/trip/${trip_id}/absence`, {
+         go: go,
+         back: back,
+         absence_date: dataFormatada,
+      })
+         .then((resp) => {
+            getTrip();
+            socketConnection.emit('trip', { trip: String(trip_id), message: 'absence' });
+         })
+         .catch((e) => toastApiError(e));
+   };
 
-      api.post(`/trip/${trip_id}/absence`,{
-         "go": go,
-         "back": back,
-         "absence_date": dataFormatada
-     }).then(resp=>{
-      getTrip()
-     }).catch(e=>toastApiError(e))
-   }
-
-   useEffect(()=>{
+   useEffect(() => {
       getTrip();
-   },[])
+      const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
+      const socket = manager.socket('/');
+      socket.emit('joinTrip', String(trip_id));
+      socket.on('tripClient', (msg) => {
+         console.log('msg', msg);
+      });
+      setSocketConnection(socket);
+   }, []);
 
    return (
       <>
@@ -81,25 +93,27 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{passengers.length-absences.length}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passengers.length - absences.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               {passengers.length > 0 &&
-               <>
-               <CardPassageiro {...passengers[0]} ausente={absences.includes(String(passengers[0].passengerid))}/>
+               {passengers.length > 0 && (
+                  <>
+                     <View style={{ height: 100 }}>
+                        <CardPassageiro {...passengers[0]} ausente={absences.includes(String(passengers[0].passengerid))} />
+                     </View>
 
-               <BottomSheetFlatList
-                  ListHeaderComponent={TopoLista}
-                  data={listaPassageiros}
-                  keyExtractor={({ ordem }) => ordem}
-                  renderItem={({ item }) => {
-                     return <CardPassageiro {...item} ausente={absences.includes(String(item.passengerid))} />;
-                  }}
-               />
-               </>
-               }
+                     <BottomSheetFlatList
+                        ListHeaderComponent={TopoLista}
+                        data={listaPassageiros}
+                        keyExtractor={({ ordem }) => ordem}
+                        renderItem={({ item }) => {
+                           return <CardPassageiro {...item} ausente={absences.includes(String(item.passengerid))} />;
+                        }}
+                     />
+                  </>
+               )}
             </BottomSheet>
          </View>
 
@@ -151,10 +165,3 @@ const estilos = StyleSheet.create({
       shadowRadius: 2.62,
    },
 });
-[
-   {"location":{"latLng":{"latitude":-23.6226412,"longitude":-46.5514371}}}
-,{"location":{"latLng":{"latitude":-23.6244463,"longitude":-46.55439}}}
-,{"location":{"latLng":{"latitude":-23.6215939,"longitude":-46.53613499999999}}}
-,{"location":{"latLng":{"latitude":-23.6215939,"longitude":-46.53613499999999}}}
-,{"location":{"latLng":{"latitude":-23.6154004,"longitude":-46.53830019999999}}}
-]

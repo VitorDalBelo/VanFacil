@@ -1,38 +1,41 @@
 {
-  "expo": {
-    "name": "front_vanFacil",
-    "slug": "front_vanFacil",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.VanFacil"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+   "expo": {
+      "name": "front_vanFacil",
+      "slug": "front_vanFacil",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",
+      "userInterfaceStyle": "light",
+      "splash": {
+         "image": "./assets/splash.png",
+         "resizeMode": "contain",
+         "backgroundColor": "#ffffff"
       },
-      "package": "com.VanFacil",
-      "config":{
-        "googleMaps":{
-          "apiKey":"AIzaSyAeb9UnZtFM_mxCX7c1SRI8sx45wsEkv40"
-        }
+      "assetBundlePatterns": ["**/*"],
+      "ios": {
+         "supportsTablet": true,
+         "bundleIdentifier": "com.VanFacil"
+      },
+      "android": {
+         "adaptiveIcon": {
+            "foregroundImage": "./assets/adaptive-icon.png",
+            "backgroundColor": "#ffffff"
+         },
+         "package": "com.VanFacil",
+         "config": {
+            "googleMaps": {
+               "apiKey": "AIzaSyAeb9UnZtFM_mxCX7c1SRI8sx45wsEkv40"
+            }
+         }
+      },
+      "web": {
+         "favicon": "./assets/favicon.png"
+      },
+      "plugins": ["@react-native-google-signin/google-signin"]
+   },
+   "config": {
+      "googleMaps": {
+         "apiKey": "AIzaSyCRQi-6BPBTDYPF4SRAPOoEqnZhQeVyphk"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": ["@react-native-google-signin/google-signin"]
-  }
+   }
 }

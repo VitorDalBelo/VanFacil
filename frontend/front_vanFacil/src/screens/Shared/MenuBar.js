@@ -40,13 +40,13 @@ function BotaoMenu() {
 function BotaoPerfil({ telaMotorista }) {
    const navigation = useNavigation();
    const motoristas = useMotoristas();
-   const {photoUri,user} = React.useContext(AuthContext)
+   const {photoUri, user} = React.useContext(AuthContext)
 
    const defineCaminho = () => {
       if (user.profile=="driver") {
-         return navigation.navigate('M_Perfil', motoristas[1]);
+         return navigation.navigate('M_Perfil', { ...motoristas[1], donoDoPerfil: true });
       } else {
-         return navigation.navigate('Perfil');
+         return navigation.navigate('Perfil', { ...motoristas[1] });
       }
    };
 

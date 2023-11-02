@@ -1,45 +1,52 @@
 import React, {useContext, useEffect,useState} from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Image ,Text} from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+
 import MenuBar from '../../Shared/MenuBar';
 import Texto from '../../../components/Texto';
-import api from '../../../services/api'
 import cores from '../../../../assets/cores';
-import MapaRegiao from '../../Shared/pesquisa/MapaRegiao';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import api from '../../../services/api';
 import { toastApiError } from '../../../helpers/toast';
 import { AuthContext } from '../../../context/Auth/AuthContext';
 
 export default function Perfil() {
+   const [loading, setLoading] = useState(false);
+   const [motorista, setMotorista] = useState(null);
+
    const route = useRoute();
-   const [loading,setLoading] = useState(false);
-   const [motorista,setMotorista] = useState(null)
+   const { donoDoPerfil } = route.params;
+
    const navigation = useNavigation();
    const {photoUri} =  useContext(AuthContext)
 
-   const getData = async () =>{
-      await api.get("/users/drivers/me")
-      .then(resp=>{
-         setMotorista(resp.data);
-      })
-      .catch(e=>{toastApiError(e)})
-      
-      setLoading(false)
-   }
+   const getData = async () => {
+      await api
+         .get('/users/drivers/me')
+         .then((resp) => {
+            setMotorista(resp.data);
+         })
+         .catch((e) => {
+            toastApiError(e);
+         });
 
-   useEffect(()=>{
-      getData()
-   },[])
+      setLoading(false);
+   };
 
-   useEffect(()=>{
-      if(route.params && route.params.reload){
-         route.params.reload= false;
-         getData()
-      } 
-   },[route.params])
+   useEffect(() => {
+      getData();
+   }, []);
+
+   useEffect(() => {
+      if (route.params && route.params.reload) {
+         route.params.reload = false;
+         getData();
+      }
+   }, [route.params]);
 
    return (
       <>
+
       {
          motorista?<>
          <MenuBar />
@@ -51,9 +58,7 @@ export default function Perfil() {
             <View style={estilos.info}>
                <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
                <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
-               <View style={estilos.caixaMapa}>
-                  <MapaRegiao regiao={motorista.driver.regiaoDeAtuacao} />
-               </View>
+
                <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao:motorista.driver.regiaoDeAtuacao })}>
                   <Texto style={estilos.textoBotao}>Editar Dados</Texto>
                </TouchableOpacity>
@@ -63,18 +68,17 @@ export default function Perfil() {
 
       }
       </>         
-
    );
 }
 
 const estilos = StyleSheet.create({
    molde: {
-      marginHorizontal: 20,
-      marginVertical: 10,
+      margin: 10,
       flex: 1,
    },
    topoPerfil: {
       flexDirection: 'row',
+      alignItems: 'center',
    },
    foto: {
       width: 60,
@@ -82,19 +86,17 @@ const estilos = StyleSheet.create({
       borderRadius: 50,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      marginRight: 15,
+      marginRight: 10,
    },
    textoNome: {
-      height: 40,
       flex: 1,
-      marginTop: 10,
-      paddingLeft: 10,
-      paddingBottom: 5,
+      height: 40,
+      backgroundColor: cores.branco,
+      paddingHorizontal: 10,
+      textAlignVertical: 'center',
       borderRadius: 5,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      textAlignVertical: 'bottom',
-      backgroundColor: cores.branco,
       fontSize: 20,
    },
    info: {
@@ -103,32 +105,31 @@ const estilos = StyleSheet.create({
    outraInfo: {
       height: 40,
       marginVertical: 10,
+      textAlignVertical: 'center',
       paddingLeft: 10,
-      paddingBottom: 5,
+      fontSize: 20,
       borderRadius: 5,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      textAlignVertical: 'bottom',
       backgroundColor: cores.branco,
-      fontSize: 20,
    },
    desc: {
-      marginTop: 20,
-      borderRadius: 5,
-      borderWidth: 2,
-      borderColor: cores.azulProfundo,
-      height: 100,
       backgroundColor: cores.branco,
+      marginTop: 10,
+      borderRadius: 5,
       paddingLeft: 10,
       paddingTop: 5,
       fontSize: 15,
+      borderWidth: 2,
+      borderColor: cores.azulProfundo,
+      height: 100,
    },
    caixaMapa: {
       flex: 1,
       overflow: 'hidden',
       borderWidth: 2,
       borderColor: cores.azulProfundo,
-      borderRadius: 10,
+      borderRadius: 5,
    },
    botao: {
       alignSelf: 'flex-start',
@@ -136,7 +137,7 @@ const estilos = StyleSheet.create({
       borderRadius: 10,
       backgroundColor: cores.azulProfundo,
       color: cores.preto,
-      marginVertical: 10,
+      marginTop: 10,
 
       // Android
       elevation: 4,
