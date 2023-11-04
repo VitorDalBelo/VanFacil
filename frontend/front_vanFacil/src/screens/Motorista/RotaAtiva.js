@@ -14,6 +14,7 @@ import api from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
 
 import { requestForegroundPermissionsAsync } from 'expo-location';
+import { toastApiError } from '../../helpers/toast';
 
 function TopoLista() {
    return (
@@ -32,14 +33,15 @@ function TopoLista() {
 }
 
 export default function RotaAtiva() {
-   const route = useRoute();
-   const [passengers, setPassengers] = useState([]);
-   const [absences, setAbsences] = useState([]);
-   const [location, setLocation] = useState([]);
    const navigation = useNavigation();
-   const [socketConnection, setSocketConnection] = useState(null);
+   const route = useRoute();
    var { trip_id } = route.params;
-   const listaPassageiros = passengers.slice(1);
+
+   const [socketConnection, setSocketConnection] = useState(null);
+
+   const [passageiros, setPassageiros] = useState([]);
+
+   const listaPassageiros = passageiros.slice(1);
 
    const bottomSheetRef = useRef(BottomSheet);
    const snapPoints = useMemo(() => [200, '100%'], []);
@@ -47,13 +49,28 @@ export default function RotaAtiva() {
    const getTrip = () => {
       api.get(`/trip/${trip_id}`)
          .then((trip) => {
-            setPassengers(trip.data.passengers);
-            setAbsences(trip.data.absences);
-            setUserAbsences(trip.data.userAbsences);
+            setPassageiros(formataLista(trip.data.passengers));
          })
          .catch((e) => toastApiError(e));
    };
 
+   const formataLista = (lista) => {
+      var passageiros = [];
+      lista.forEach((objeto) => {
+         address = objeto.passenger.address;
+         passageiros.push({
+            google_account: objeto.passenger.user.google_account,
+            photo: objeto.passenger.user.photo,
+            name: objeto.passenger.user.name,
+            address: `${address.cidade} - ${address.bairro}\n${address.logradouro} nº ${address.numero} ${
+               address.complemento ? address.complemento : ''
+            }`,
+         });
+      });
+      return passageiros;
+   };
+
+   // Verifica se algum passageiro alterou sua presença na rota
    useEffect(() => {
       getTrip();
       const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
@@ -76,15 +93,15 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{passengers.length - absences.length}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passageiros.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               {passengers.length > 0 && (
+               {passageiros.length > 0 && (
                   <>
                      <View style={{ height: 100 }}>
-                        <CardPassageiro {...passengers[0]} ausente={absences.includes(String(passengers[0].passengerid))} />
+                        <CardPassageiro {...passageiros[0]} />
                      </View>
 
                      <BottomSheetFlatList
@@ -92,7 +109,7 @@ export default function RotaAtiva() {
                         data={listaPassageiros}
                         keyExtractor={({ ordem }) => ordem}
                         renderItem={({ item }) => {
-                           return <CardPassageiro {...item} ausente={absences.includes(String(item.passengerid))} />;
+                           return <CardPassageiro {...item} />;
                         }}
                      />
                   </>

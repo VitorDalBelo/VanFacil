@@ -16,7 +16,7 @@ export default function CardPassageiro(props) {
    return (
       <View style={estilos.passageiro}>
          <Image source={photoUri} style={estilos.fotoPassageiro} />
-         <View>
+         <View style={{ flex: 1 }}>
             <Texto style={estilos.texto}>{props.name}</Texto>
             <Texto style={estilos.textoAbaixo}>{props.address}</Texto>
          </View>
