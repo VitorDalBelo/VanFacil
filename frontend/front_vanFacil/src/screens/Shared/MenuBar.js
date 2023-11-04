@@ -5,7 +5,7 @@ import Texto from '../../components/Texto';
 
 import FotoPerfil from '../../../assets/teste/Gataruga.png';
 import cores from '../../../assets/cores';
-import { Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useMotoristas from '../../hooks/useMotoristas';
 
@@ -14,14 +14,14 @@ export default function MenuBar({ nomeTela, mostraBtnPerfil = true, telaMotorist
       <View style={estilos.menuBar}>
          <Texto style={estilos.nomeTela}>{nomeTela}</Texto>
 
-         <BotaoMenu />
+         <BotaoVoltar />
 
          {mostraBtnPerfil && <BotaoPerfil telaMotorista={telaMotorista} />}
       </View>
    );
 }
 
-function BotaoMenu() {
+function BotaoVoltar() {
    const navigation = useNavigation();
    return (
       <TouchableOpacity
@@ -32,7 +32,7 @@ function BotaoMenu() {
             }
          }}
       >
-         <Feather name="menu" style={estilos.iconeMenu} />
+         <Ionicons name="arrow-back" style={estilos.iconeMenu} />
       </TouchableOpacity>
    );
 }
@@ -40,10 +40,10 @@ function BotaoMenu() {
 function BotaoPerfil({ telaMotorista }) {
    const navigation = useNavigation();
    const motoristas = useMotoristas();
-   const {photoUri, user} = React.useContext(AuthContext)
+   const { photoUri, user } = React.useContext(AuthContext);
 
    const defineCaminho = () => {
-      if (user.profile=="driver") {
+      if (user.profile == 'driver') {
          return navigation.navigate('M_Perfil', { ...motoristas[1], donoDoPerfil: true });
       } else {
          return navigation.navigate('Perfil', { ...motoristas[1] });
@@ -52,7 +52,7 @@ function BotaoPerfil({ telaMotorista }) {
 
    return (
       <TouchableOpacity style={estilos.botaoPerfil} onPress={defineCaminho}>
-         <Image source={{uri:photoUri}} style={estilos.fotoPerfil} />
+         <Image source={{ uri: photoUri }} style={estilos.fotoPerfil} />
       </TouchableOpacity>
    );
 }
