@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, StyleSheet, View, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, ActivityIndicator, Keyboard } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
@@ -31,8 +31,9 @@ export default function ModalRota({ handleClose, setNovoPassageiro }) {
                   return null;
                });
             if (passageiros) {
-               console.log('Passageiros: ', passageiros);
-            } else console.log('Sem passageiros');
+               setListaResultados(passageiros);
+               if (passageiros.length != 0) Keyboard.dismiss();
+            }
          }, 2000);
 
          return () => clearTimeout(pesquisaNome);
@@ -44,11 +45,11 @@ export default function ModalRota({ handleClose, setNovoPassageiro }) {
          <TouchableOpacity style={estilos.btnFechar} onPress={handleClose}></TouchableOpacity>
          <View style={estilos.container}>
             <View style={estilos.linhaTexto}>
-               <Texto style={estilos.textoGeral}>Pesquise o nome do Passageiro</Texto>
+               <Texto style={estilos.textoGeral}>Pesquise o nome do(a) passageiro(a)</Texto>
             </View>
             <TextInput style={estilos.input} value={pesquisa} onChangeText={setPesquisa} placeholder="Digite o nome do Passageiro" />
             <View style={estilos.linhaTexto}>
-               <Texto style={estilos.textoGeral}>Clique no passageiro para adiciona-lo</Texto>
+               <Texto style={estilos.textoGeral}>Toque no nome para adicionar à rota</Texto>
             </View>
             <View style={estilos.containerLista}>
                {loading ? (
@@ -68,7 +69,7 @@ export default function ModalRota({ handleClose, setNovoPassageiro }) {
                                        handleClose();
                                     }}
                                  >
-                                    <CardPassageiro nome={item.nome} endereco={item.endereco} />
+                                    <CardPassageiro {...item} />
                                  </TouchableOpacity>
                               );
                            }}
@@ -114,7 +115,6 @@ const estilos = StyleSheet.create({
    },
    textoGeral: {
       fontSize: 20,
-      fontWeight: 'bold',
    },
    containerLista: {
       flex: 1,

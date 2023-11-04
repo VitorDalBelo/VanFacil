@@ -16,53 +16,56 @@ export default function useAuth() {
       setLoading(true);
       await handleLogout();
 
-
-		try {
-            const base64Credentials = Buffer.from(`${email}:${senha}`).toString('base64');
-            const resp = await api.post("auth/login",{},{headers:{authorization:`Basic ${base64Credentials}`}})
-			const {data} = resp;
-            console.log(`Bearer ${data.access_token}`)
-			await AsyncStorage.setItem("access_token", data.access_token);
-			api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
-            setPhotoUri(`${process.env.EXPO_PUBLIC_BACKEND_URL}${data.user.photo}`)
-			setUser({...data.user});
-			setIsAuth(true);
-            if(data.user.profile === "driver") navigation.navigate("M_Inicial");
-            else if(data.user.profile === "passenger") navigation.navigate("P_Inicial");
-            else toast(`O valor ${data.user.profile} não foi reconhecido como um profile`,"error")
-		} catch (err) {
-            console.log(err.response.data)
-			toastApiError(err);
-		}
-        finally{
-            setLoading(false);
-        }
-	};
+      try {
+         const base64Credentials = Buffer.from(`${email}:${senha}`).toString('base64');
+         const resp = await api
+            .post('auth/login', {}, { headers: { authorization: `Basic ${base64Credentials}` } })
+            .then((resp) => resp)
+            .catch((e) => {
+               console.log('Erro: ', e.response.data);
+               return null;
+            });
+         if (!resp) throw new Error({ data: { message: 'erro' } });
+         const { data } = resp;
+         console.log(`Bearer ${data.access_token}`);
+         await AsyncStorage.setItem('access_token', data.access_token);
+         api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
+         setPhotoUri(`${process.env.EXPO_PUBLIC_BACKEND_URL}${data.user.photo}`);
+         setUser({ ...data.user });
+         setIsAuth(true);
+         if (data.user.profile === 'driver') navigation.navigate('M_Inicial');
+         else if (data.user.profile === 'passenger') navigation.navigate('P_Inicial');
+         else toast(`O valor ${data.user.profile} não foi reconhecido como um profile`, 'error');
+      } catch (err) {
+         toastApiError(err);
+      } finally {
+         setLoading(false);
+      }
+   };
 
    const handleGoogleLogin = async (googletoken) => {
       setLoading(true);
       await handleLogout();
 
-		try {
-            const resp = await api.post("auth/login/google",{},{headers:{googletoken}})
-			const {data} = resp;
-			await AsyncStorage.setItem("access_token", data.access_token);
-            console.log(`Bearer ${data.access_token}`)
-			api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
-            setPhotoUri(data.user.photo)
-			setUser({...data.user});
-			setIsAuth(true);
-            if(data.user.profile === "driver") navigation.navigate("M_Inicial");
-            else if(data.user.profile === "passenger") navigation.navigate("P_Inicial");
-            else toast(`O valor ${data.user.profile} não foi reconhecido como um profile`,"error")
-		} catch (err) {
-            console.log(err.response.data)
-			toastApiError(err);
-		}
-        finally{
-            setLoading(false);
-        }
-	};
+      try {
+         const resp = await api.post('auth/login/google', {}, { headers: { googletoken } });
+         const { data } = resp;
+         await AsyncStorage.setItem('access_token', data.access_token);
+         console.log(`Bearer ${data.access_token}`);
+         api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
+         setPhotoUri(data.user.photo);
+         setUser({ ...data.user });
+         setIsAuth(true);
+         if (data.user.profile === 'driver') navigation.navigate('M_Inicial');
+         else if (data.user.profile === 'passenger') navigation.navigate('P_Inicial');
+         else toast(`O valor ${data.user.profile} não foi reconhecido como um profile`, 'error');
+      } catch (err) {
+         console.log(err.response.data);
+         toastApiError(err);
+      } finally {
+         setLoading(false);
+      }
+   };
 
    const handleLogout = async () => {
       await AsyncStorage.clear();
@@ -88,7 +91,6 @@ export default function useAuth() {
    api.interceptors.response.use(
       (response) => response,
       async (error) => {
-         // const oldToken = await AsyncStorage.getItem("");
          const originalRequest = error.config;
          if (error?.response?.status === 401) {
             if (!originalRequest._retry) {

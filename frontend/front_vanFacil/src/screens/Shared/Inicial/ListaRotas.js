@@ -7,10 +7,21 @@ import CardRota from '../../Shared/Inicial/CardRota';
 import Texto from '../../../components/Texto';
 import api from '../../../services/api';
 import { toastApiError } from '../../../helpers/toast';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ListaRotas({ telaMotorista = true }) {
    const { user } = useContext(AuthContext);
    const [trips, setTrips] = useState([]);
+
+   const navigation = useNavigation();
+
+   useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+         getTrips();
+      });
+
+      return unsubscribe;
+   }, [navigation]);
 
    const getTrips = async () => {
       await api
@@ -24,10 +35,6 @@ export default function ListaRotas({ telaMotorista = true }) {
             toastApiError(e);
          });
    };
-
-   useEffect(() => {
-      getTrips();
-   }, []);
 
    return (
       <>

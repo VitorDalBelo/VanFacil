@@ -11,6 +11,7 @@ import cores from '../../../../assets/cores';
 import { TextInput } from 'react-native-gesture-handler';
 import ModalRota from './ModalRota';
 import toast from '../../../helpers/toast';
+import api from '../../../services/api';
 
 export default function CriarRota() {
    const [nomeRota, setNomeRota] = useState('');
@@ -24,8 +25,8 @@ export default function CriarRota() {
 
    useEffect(() => {
       if (novoPassageiro != null) {
-         if (idJaExiste(novoPassageiro.id)) {
-            toast('O Passageiro já está na lista da rota', 'error');
+         if (idJaExiste(novoPassageiro.p_passenger_id)) {
+            toast('O(A) Passageiro(a) já está na lista da rota', 'error');
          } else {
             listaRota.push(novoPassageiro);
          }
@@ -36,7 +37,15 @@ export default function CriarRota() {
    const separaIds = () => {
       var listaIds = [];
       listaRota.forEach((passageiro) => {
-         listaIds.push(passageiro.id);
+         listaIds.push(passageiro.p_passenger_id);
+      });
+      return listaIds;
+   };
+
+   const montaListaId = () => {
+      var listaIds = [];
+      listaRota.forEach((passageiro) => {
+         listaIds.push({ passengerid: passageiro.p_passenger_id });
       });
       return listaIds;
    };
@@ -58,23 +67,27 @@ export default function CriarRota() {
       ]);
    };
 
-   // Mudar endpoint
    const finalizarRota = async () => {
-      setLoading(true);
-      const requestPayload = { nomeRota, listaRota };
-      api.post('/trip/', requestPayload)
-         .then(() => {
-            navigation.navigate('M_Inicial');
-            toast('Rota cadastrada com sucesso', 'success');
-         })
-         .catch((e) => {
-            console.log('error: ', e);
-            if (e.response && e.response.data) toast(e.response.data.message, 'error');
-            else toast('Ocorreu um erro', 'error');
-         })
-         .finally(() => {
-            setLoading(false);
-         });
+      if (nomeRota == '') {
+         toast('Dê um nome para sua Rota', 'error');
+      } else {
+         setLoading(true);
+         const requestPayload = { name: nomeRota, passengers: montaListaId() };
+         console.log(requestPayload);
+         api.post('/trip', requestPayload)
+            .then(() => {
+               navigation.navigate('M_Inicial');
+               toast('Rota cadastrada com sucesso', 'success');
+            })
+            .catch((e) => {
+               console.log('error: ', e);
+               if (e.response && e.response.data) toast(e.response.data.message, 'error');
+               else toast('Ocorreu um erro', 'error');
+            })
+            .finally(() => {
+               setLoading(false);
+            });
+      }
    };
 
    // Aviso para sair da criação de rota
@@ -132,7 +145,7 @@ export default function CriarRota() {
                      renderItem={({ item }) => {
                         return (
                            <View style={estilos.cardComBotao}>
-                              <CardPassageiro nome={item.nome} endereco={item.endereco} />
+                              <CardPassageiro {...item} />
                               <View style={estilos.fundoBotao}>
                                  <TouchableOpacity style={estilos.btnExcluir} onPress={() => excluiPassageiro(item)} disabled={loading}>
                                     <Feather name="x" size={30} color="white" />
