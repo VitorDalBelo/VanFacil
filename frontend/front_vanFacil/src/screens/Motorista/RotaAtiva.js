@@ -2,18 +2,16 @@ import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { Manager } from 'socket.io-client';
+import { useRoute } from '@react-navigation/native';
+
 import Texto from '../../components/Texto';
+import MenuBar from '../Shared/MenuBar';
+import Mapa_teste from '../Shared/Rota/mapa_teste';
 import CardPassageiro from '../Shared/CardPassageiro';
 
-import Mapa_teste from '../Shared/Rota/mapa_teste';
-
 import cores from '../../../assets/cores';
-import MenuBar from '../Shared/MenuBar';
-import { useRoute } from '@react-navigation/native';
 import api from '../../services/api';
-import { useNavigation } from '@react-navigation/native';
 
-import { requestForegroundPermissionsAsync } from 'expo-location';
 import { toastApiError } from '../../helpers/toast';
 
 function TopoLista() {
@@ -33,7 +31,6 @@ function TopoLista() {
 }
 
 export default function RotaAtiva() {
-   const navigation = useNavigation();
    const route = useRoute();
    var { trip_id } = route.params;
 
