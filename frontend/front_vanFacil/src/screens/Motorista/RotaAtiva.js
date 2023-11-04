@@ -1,8 +1,8 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { Manager } from 'socket.io-client';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import Texto from '../../components/Texto';
 import MenuBar from '../Shared/MenuBar';
@@ -13,6 +13,7 @@ import cores from '../../../assets/cores';
 import api from '../../services/api';
 
 import { toastApiError } from '../../helpers/toast';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function TopoLista() {
    return (
@@ -33,6 +34,7 @@ function TopoLista() {
 export default function RotaAtiva() {
    const route = useRoute();
    var { trip_id } = route.params;
+   const navigation = useNavigation();
 
    const [socketConnection, setSocketConnection] = useState(null);
 
@@ -82,6 +84,24 @@ export default function RotaAtiva() {
       setSocketConnection(socket);
    }, []);
 
+   const pararRota = () => {
+      api.post(`/trip/${trip_id}/statustrip?status=false`)
+         .then(() => navigation.navigate('M_Rota', { trip_id: trip_id }))
+         .catch((e) => toastApiError(e));
+   };
+
+   // Direciona o caminho de volta para a tela inicial
+   useEffect(() => {
+      const backAction = () => {
+         navigation.navigate('M_Inicial');
+
+         return true;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      return () => backHandler.remove();
+   }, []);
+
    return (
       <>
          <View style={estilos.container}>
@@ -113,9 +133,16 @@ export default function RotaAtiva() {
                )}
             </BottomSheet>
          </View>
+         <View style={estilos.linhaBotao}>
+            <TouchableOpacity style={estilos.botao} onPress={pararRota}>
+               <Texto style={estilos.textoBotao}>Parar Rota</Texto>
+            </TouchableOpacity>
+         </View>
       </>
    );
 }
+
+const larguraTela = Dimensions.get('screen').width;
 
 const estilos = StyleSheet.create({
    container: {
@@ -136,5 +163,42 @@ const estilos = StyleSheet.create({
    textoDetalhes: {
       fontSize: 18,
       lineHeight: 42,
+   },
+   linhaBotao: {
+      width: '100%',
+      borderBottomWidth: 1,
+      borderBottomColor: '#ECECEC',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      backgroundColor: cores.branco,
+      paddingHorizontal: 10,
+   },
+   botao: {
+      alignSelf: 'center',
+      alignItems: 'center',
+      width: larguraTela - 20,
+      padding: 10,
+      borderRadius: 10,
+      backgroundColor: cores.azulProfundo,
+      color: cores.preto,
+      marginVertical: 10,
+
+      // Android
+      elevation: 4,
+
+      //iOS
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 2,
+      },
+      shadowOpacity: 0.23,
+      shadowRadius: 2.62,
+   },
+   textoBotao: {
+      color: cores.branco,
+      fontWeight: 'bold',
+      fontSize: 18,
    },
 });

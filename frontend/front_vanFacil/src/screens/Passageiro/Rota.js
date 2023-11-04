@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { BackHandler, StyleSheet, View } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { toastApiError } from '../../helpers/toast';
 import Texto from '../../components/Texto';
@@ -14,6 +14,7 @@ import cores from '../../../assets/cores';
 export default function Rota() {
    const route = useRoute();
    var { trip_id } = route.params;
+   const navigation = useNavigation();
 
    const [userAbsences, setUserAbsences] = React.useState(undefined);
    const [numTotal, setTotal] = useState(0);
@@ -49,6 +50,19 @@ export default function Rota() {
    React.useEffect(() => {
       getTrip();
    }, []);
+
+   // Direciona o caminho de volta para a tela inicial
+   useEffect(() => {
+      const backAction = () => {
+         navigation.navigate('P_Inicial');
+
+         return true;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      return () => backHandler.remove();
+   }, []);
+
    return (
       <>
          <MenuBar nomeTela={'Rota Inativa Passageiro'} mostraBtnPerfil={false} />

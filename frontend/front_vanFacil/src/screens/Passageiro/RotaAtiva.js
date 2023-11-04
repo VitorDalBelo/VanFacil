@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { BackHandler, StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { Manager } from 'socket.io-client';
 
@@ -10,7 +10,7 @@ import CardPassageiro from '../Shared/CardPassageiro';
 import BotoesIdaVolta from './BotoesIdaVolta';
 
 import cores from '../../../assets/cores';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import api from '../../services/api';
 import { toastApiError } from '../../helpers/toast';
 
@@ -32,6 +32,8 @@ function TopoLista() {
 
 export default function RotaAtiva() {
    const route = useRoute();
+   const navigation = useNavigation();
+
    const [userAbsences, setUserAbsences] = useState(null);
    const [passageiros, setPassageiros] = useState([]);
    const [socketConnection, setSocketConnection] = useState(null);
@@ -97,6 +99,18 @@ export default function RotaAtiva() {
          console.log('msg', msg);
       });
       setSocketConnection(socket);
+   }, []);
+
+   // Direciona o caminho de volta para a tela inicial
+   useEffect(() => {
+      const backAction = () => {
+         navigation.navigate('P_Inicial');
+
+         return true;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      return () => backHandler.remove();
    }, []);
 
    return (

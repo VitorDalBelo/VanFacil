@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { BackHandler, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Manager } from 'socket.io-client';
 
 import Texto from '../../components/Texto';
@@ -13,6 +13,7 @@ import api from '../../services/api';
 export default function Rota() {
    const route = useRoute();
    var { trip_id } = route.params;
+   const navigation = useNavigation();
 
    const [numTotal, setTotal] = useState(0);
    const [numConfirmados, setConfirmados] = useState(0);
@@ -40,6 +41,24 @@ export default function Rota() {
       setSocketConnection(socket);
    }, []);
 
+   const iniciarRota = () => {
+      api.post(`/trip/${trip_id}/statustrip?status=true`)
+         .then(() => navigation.navigate('M_RotaAtiva', { trip_id: trip_id }))
+         .catch((e) => toastApiError(e));
+   };
+
+   // Direciona o caminho de volta para a tela inicial
+   useEffect(() => {
+      const backAction = () => {
+         navigation.navigate('M_Inicial');
+
+         return true;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      return () => backHandler.remove();
+   }, []);
+
    return (
       <>
          <MenuBar nomeTela={'Rota Inativa Motorista'} mostraBtnPerfil={false} />
@@ -53,7 +72,7 @@ export default function Rota() {
             </View>
 
             <View style={estilos.linhaDetalhe}>
-               <TouchableOpacity style={estilos.botao}>
+               <TouchableOpacity style={estilos.botao} onPress={iniciarRota}>
                   <Texto style={estilos.textoBotao}>Iniciar Rota</Texto>
                </TouchableOpacity>
             </View>
