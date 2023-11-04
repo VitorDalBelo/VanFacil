@@ -8,7 +8,7 @@ import BtnNovaRota from '../Shared/Inicial/BtnNovaRota';
 export default function Inicial() {
    return (
       <View style={estilos.container}>
-         <MenuBar nomeTela={'Home Motorista'} />
+         <MenuBar nomeTela={'Home Motorista'} telaInicial={true} />
          <ListaRotas />
          <BtnNovaRota />
       </View>

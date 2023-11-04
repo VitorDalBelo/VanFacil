@@ -9,19 +9,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useMotoristas from '../../hooks/useMotoristas';
 
-export default function MenuBar({ nomeTela, mostraBtnPerfil = true, telaMotorista = true }) {
+export default function MenuBar({ nomeTela, mostraBtnPerfil = true, telaMotorista = true, telaInicial = false }) {
    return (
       <View style={estilos.menuBar}>
          <Texto style={estilos.nomeTela}>{nomeTela}</Texto>
 
-         <BotaoVoltar />
+         <BotaoVoltar telaInicial={telaInicial} />
 
          {mostraBtnPerfil && <BotaoPerfil telaMotorista={telaMotorista} />}
       </View>
    );
 }
 
-function BotaoVoltar() {
+function BotaoVoltar({ telaInicial }) {
    const navigation = useNavigation();
    return (
       <TouchableOpacity
@@ -32,7 +32,11 @@ function BotaoVoltar() {
             }
          }}
       >
-         <Ionicons name="arrow-back" style={estilos.iconeMenu} />
+         {telaInicial ? (
+            <Ionicons name="log-out-outline" style={estilos.iconeMenu} />
+         ) : (
+            <Ionicons name="arrow-back" style={estilos.iconeMenu} />
+         )}
       </TouchableOpacity>
    );
 }
