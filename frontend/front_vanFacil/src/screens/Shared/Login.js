@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
@@ -27,6 +27,16 @@ export default function Login() {
 
    const navigation = useNavigation();
    const { handleLogin, handleGoogleLogin, handleLogout } = useContext(AuthContext);
+
+   // Limpa os dados quando o usuário voltar de outra tela
+   useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+         setEmail('');
+         setSenha('');
+      });
+
+      return unsubscribe;
+   }, [navigation]);
 
    const validarForm = async () => {
       const form = {
