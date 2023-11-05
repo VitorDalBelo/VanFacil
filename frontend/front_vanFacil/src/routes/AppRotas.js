@@ -19,8 +19,6 @@ import P_Pesquisa from '../screens/Passageiro/Pesquisa';
 import P_Rota from '../screens/Passageiro/Rota';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
 
-import Perfil from '../screens/Perfil';
-
 import { AuthProvider } from '../context/Auth/AuthContext';
 
 import Login from '../screens/Shared/Login';
@@ -51,8 +49,6 @@ export default function AppRotas() {
 
                <Stack.Screen name="P_Rota" component={P_Rota} />
                <Stack.Screen name="P_RotaAtiva" component={P_RotaAtiva} />
-
-               <Stack.Screen name="Perfil" component={Perfil} />
             </Stack.Navigator>
          </AuthProvider>
       </NavigationContainer>
