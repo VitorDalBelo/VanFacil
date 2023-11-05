@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import MenuBar from '../Shared/MenuBar';
-import CardPesquisa from '../Shared/pesquisa/CardPesquisa';
+import CardMotorista from '../Shared/CardMotorista';
 
 import useMotoristas from '../../hooks/useMotoristas';
 import api from '../../services/api';
@@ -84,7 +84,7 @@ function ListaPesquisa() {
             data={listaMotoristas}
             renderItem={({ item }) => {
                return (
-                  <CardPesquisa
+                  <CardMotorista
                      {...item}
                      aoPressionar={() => {
                         navigation.navigate('M_Perfil', { ...item, donoDoPerfil: false });

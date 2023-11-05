@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 
-import Texto from '../../../components/Texto';
+import Texto from '../../components/Texto';
 
-import cores from '../../../../assets/cores';
+import cores from '../../../assets/cores';
 
 export default function CardPesquisa({ photo, name, description, google_account, van_model, license_plate, aoPressionar }) {
    const photoUri = google_account ? photo : `${process.env.EXPO_PUBLIC_BACKEND_URL}${photo}`;
