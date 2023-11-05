@@ -21,7 +21,6 @@ export default function Pesquisa() {
 }
 
 function ListaPesquisa() {
-   // const motoristas = useMotoristas();
    const navigation = useNavigation();
    const [listaMotoristas, setListaMotoristas] = React.useState([]);
    const [pesquisa, setPesquisa] = useState('');
@@ -41,9 +40,9 @@ function ListaPesquisa() {
       setLoading(false);
    };
 
-   React.useEffect(() => {
-      getDrivers();
-   }, []);
+   // React.useEffect(() => {
+   //    getDrivers();
+   // }, []);
 
    useEffect(() => {
       if (pesquisa != '') {
@@ -82,21 +81,28 @@ function ListaPesquisa() {
             </View>
             <TextInput style={estilos.input} value={pesquisa} onChangeText={setPesquisa} placeholder="Digite o nome do(a) Motorista" />
          </View>
-         <FlatList
-            style={{ flex: 1 }}
-            data={listaMotoristas}
-            renderItem={({ item }) => {
-               return (
-                  <CardMotorista
-                     {...item}
-                     aoPressionar={() => {
-                        navigation.navigate('M_Perfil', { ...item, donoDoPerfil: false });
-                     }}
-                  />
-               );
-            }}
-            keyExtractor={({ nome }) => nome}
-         />
+         {listaMotoristas.length != 0 ? (
+            <FlatList
+               style={{ flex: 1 }}
+               data={listaMotoristas}
+               renderItem={({ item }) => {
+                  return (
+                     <CardMotorista
+                        {...item}
+                        aoPressionar={() => {
+                           navigation.navigate('M_Perfil', { ...item, donoDoPerfil: false });
+                           // console.log({ ...item });
+                        }}
+                     />
+                  );
+               }}
+               keyExtractor={({ name }) => name}
+            />
+         ) : (
+            <View style={estilos.listaVazia}>
+               <Texto style={estilos.textoListaVazia}>Nenhum resultado encontrado</Texto>
+            </View>
+         )}
       </View>
    );
 }
@@ -135,5 +141,15 @@ const estilos = StyleSheet.create({
       borderRadius: 5,
       fontSize: 16,
       fontFamily: 'RubikRegular',
+   },
+   listaVazia: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+   },
+   textoListaVazia: {
+      fontSize: 18,
+      color: cores.cinza,
+      marginBottom: 10,
    },
 });

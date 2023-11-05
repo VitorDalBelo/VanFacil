@@ -7,7 +7,7 @@ import P_Cadastro from '../screens/Passageiro/Cadastro';
 import M_Cadastro from '../screens/Motorista/Cadastro';
 
 import M_Inicial from '../screens/Motorista/Inicial';
-import M_Perfil from '../screens/Motorista/Perfil/Perfil';
+import M_Perfil from '../screens/Motorista/Perfil';
 import M_CriarRota from '../screens/Motorista/CriarRota';
 import M_Rota from '../screens/Motorista/Rota';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';

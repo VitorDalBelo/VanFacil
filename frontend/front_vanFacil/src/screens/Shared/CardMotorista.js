@@ -2,16 +2,16 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 
 import Texto from '../../components/Texto';
-
+import placeholder_photo from '../../../assets/placeholder_user_photo.png';
 import cores from '../../../assets/cores';
 
 export default function CardPesquisa({ photo, name, description, google_account, van_model, license_plate, aoPressionar }) {
-   const photoUri = google_account ? photo : `${process.env.EXPO_PUBLIC_BACKEND_URL}${photo}`;
+   const photoUri = google_account ? { uri: photo } : placeholder_photo;
 
    return (
       <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
          <View style={[estilos.topoCard, estilos.bordaAbaixo]}>
-            {photo && <Image source={{ uri: photoUri }} style={estilos.imagem} />}
+            {photo && <Image source={photoUri} style={estilos.imagem} />}
             <Texto style={estilos.textoNome}>{name}</Texto>
          </View>
          <View style={[estilos.infoContainer, estilos.bordaAbaixo]}>

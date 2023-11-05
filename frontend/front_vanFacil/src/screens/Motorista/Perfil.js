@@ -1,36 +1,46 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 
-import MenuBar from '../../Shared/MenuBar';
-import Texto from '../../../components/Texto';
-import cores from '../../../../assets/cores';
+import MenuBar from '../Shared/MenuBar';
+import Texto from '../../components/Texto';
+import cores from '../../../assets/cores';
 
-import api from '../../../services/api';
-import { toastApiError } from '../../../helpers/toast';
-import { AuthContext } from '../../../context/Auth/AuthContext';
+import api from '../../services/api';
+import { toastApiError } from '../../helpers/toast';
+import { AuthContext } from '../../context/Auth/AuthContext';
+import placeholder_photo from '../../../assets/placeholder_user_photo.png';
 
 export default function Perfil() {
-   const [loading, setLoading] = useState(false);
-   const [motorista, setMotorista] = useState(null);
-
    const route = useRoute();
    const { donoDoPerfil } = route.params;
+   const [loading, setLoading] = useState(false);
+
+   const [dadosMotorista, setDadosMotorista] = useState(null);
+   const [dadosGerais, setDadosGerais] = useState(null);
+   const [dadosProntos, setDadosProntos] = useState(false);
+   const [photoUri, setPhotoUri] = useState(placeholder_photo);
 
    const navigation = useNavigation();
-   const { photoUri } = useContext(AuthContext);
 
    const getData = async () => {
+      setLoading(true);
       await api
-         .get('/users/drivers/me')
+         .get(`/users/drivers/driver/${route.params.user_id}`)
          .then((resp) => {
-            setMotorista(resp.data);
+            setDadosMotorista(resp.data.driver);
+            setDadosGerais(resp.data.user);
+            if (resp.data.user.google_account) {
+               setPhotoUri({ uri: props.photo });
+            }
+            setDadosProntos(true);
+         })
+         .finally(() => {
+            setLoading(false);
          })
          .catch((e) => {
             toastApiError(e);
          });
-
-      setLoading(false);
    };
 
    useEffect(() => {
@@ -46,29 +56,28 @@ export default function Perfil() {
 
    return (
       <>
-         {motorista ? (
-            <>
-               <MenuBar />
-               <View style={estilos.molde}>
-                  <View style={estilos.topoPerfil}>
-                     <Image source={{ uri: photoUri }} style={estilos.foto} />
-                     <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
-                  </View>
-                  <View style={estilos.info}>
-                     <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
-                     <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
-
-                     <TouchableOpacity
-                        style={estilos.botao}
-                        onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao: motorista.driver.regiaoDeAtuacao })}
-                     >
-                        <Texto style={estilos.textoBotao}>Editar Dados</Texto>
-                     </TouchableOpacity>
-                  </View>
-               </View>
-            </>
+         <MenuBar nomeTela={'Perfil Motorista'} mostraBtnPerfil={!donoDoPerfil} />
+         {loading ? (
+            <ActivityIndicator style={{ justifyContent: 'center', flex: 1 }} size="large" color={cores.azulProfundo} />
          ) : (
-            <Texto>erro</Texto>
+            <>
+               {dadosProntos ? (
+                  <View style={estilos.molde}>
+                     <View style={estilos.topoPerfil}>
+                        <Image source={photoUri} style={estilos.foto} />
+                        <Texto style={estilos.textoNome}>{dadosGerais.name}</Texto>
+                     </View>
+                     <View style={estilos.info}>
+                        <Texto style={estilos.desc}>{dadosMotorista.descricao}</Texto>
+                        <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
+                     </View>
+                  </View>
+               ) : (
+                  <View style={estilos.listaVazia}>
+                     <Texto style={estilos.textoListaVazia}>Ocorreu um erro ao carregar o perfil</Texto>
+                  </View>
+               )}
+            </>
          )}
       </>
    );
@@ -158,5 +167,15 @@ const estilos = StyleSheet.create({
       color: cores.branco,
       fontWeight: 'bold',
       fontSize: 18,
+   },
+   listaVazia: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+   },
+   textoListaVazia: {
+      fontSize: 18,
+      color: cores.cinza,
+      marginBottom: 10,
    },
 });
