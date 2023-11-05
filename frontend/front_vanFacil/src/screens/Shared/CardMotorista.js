@@ -10,11 +10,11 @@ export default function CardPesquisa({ photo, name, description, google_account,
 
    return (
       <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
-         <View style={estilos.topoCard}>
+         <View style={[estilos.topoCard, estilos.bordaAbaixo]}>
             {photo && <Image source={{ uri: photoUri }} style={estilos.imagem} />}
             <Texto style={estilos.textoNome}>{name}</Texto>
          </View>
-         <View style={estilos.infoContainer}>
+         <View style={[estilos.infoContainer, estilos.bordaAbaixo]}>
             <View style={{ flex: 2 }}>
                <Texto style={estilos.label}>Modelo da Van</Texto>
                <Texto style={estilos.infoText}>{van_model}</Texto>
@@ -60,13 +60,15 @@ const estilos = StyleSheet.create({
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
    },
+   bordaAbaixo: {
+      borderBottomColor: cores.cinza,
+      borderBottomWidth: 1,
+   },
    topoCard: {
       width: '100%',
       flexDirection: 'row',
       alignItems: 'center',
       padding: 10,
-      borderBottomColor: cores.azulProfundo,
-      borderBottomWidth: 1,
    },
    imagem: {
       width: 60,
@@ -96,8 +98,6 @@ const estilos = StyleSheet.create({
       marginTop: 10,
       paddingHorizontal: 10,
       paddingBottom: 10,
-      borderBottomColor: cores.azulProfundo,
-      borderBottomWidth: 1,
    },
    infoText: {
       fontSize: 16,
@@ -106,12 +106,5 @@ const estilos = StyleSheet.create({
    descContainer: {
       padding: 10,
       height: larguraCard * 0.33,
-   },
-   descCaixa: {
-      height: larguraCard * 0.3,
-      borderWidth: 2,
-      borderColor: cores.azulProfundo,
-      borderRadius: 5,
-      padding: 10,
    },
 });
