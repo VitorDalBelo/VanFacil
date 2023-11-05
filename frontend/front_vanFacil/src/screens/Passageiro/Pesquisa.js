@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import MenuBar from '../Shared/MenuBar';
 import CardMotorista from '../Shared/CardMotorista';
 
-import useMotoristas from '../../hooks/useMotoristas';
 import api from '../../services/api';
 import { toastApiError } from '../../helpers/toast';
 import Texto from '../../components/Texto';
@@ -76,11 +75,12 @@ function ListaPesquisa() {
       <View style={estilos.pesquisaContainer}>
          <View style={estilos.inputContainer}>
             <View style={estilos.linhaTexto}>
-               <Texto style={estilos.textoGeral}>Pesquise o nome do Passageiro</Texto>
+               <Texto style={estilos.textoGeral}>Pesquise o nome do(a) Motorista</Texto>
             </View>
-            <TextInput style={estilos.input} value={pesquisa} onChangeText={setPesquisa} placeholder="Digite o nome do Passageiro" />
+            <TextInput style={estilos.input} value={pesquisa} onChangeText={setPesquisa} placeholder="Digite o nome do(a) Motorista" />
          </View>
          <FlatList
+            style={{ flex: 1 }}
             data={listaMotoristas}
             renderItem={({ item }) => {
                return (
@@ -104,16 +104,16 @@ const estilos = StyleSheet.create({
       alignItems: 'center',
    },
    pesquisaContainer: {
-      backgroundColor: cores.branco,
-
       width: '100%',
+      flex: 1,
+      backgroundColor: cores.branco,
    },
    inputContainer: {
-      borderBottomColor: cores.azulProfundo,
-      borderBottomWidth: 1,
       width: '100%',
       paddingHorizontal: 10,
       paddingBottom: 10,
+      borderBottomColor: cores.azulProfundo,
+      borderBottomWidth: 1,
    },
    linhaTexto: {
       justifyContent: 'center',

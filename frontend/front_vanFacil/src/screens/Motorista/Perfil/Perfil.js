@@ -1,4 +1,4 @@
-import React, {useContext, useEffect,useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
@@ -18,7 +18,7 @@ export default function Perfil() {
    const { donoDoPerfil } = route.params;
 
    const navigation = useNavigation();
-   const {photoUri} =  useContext(AuthContext)
+   const { photoUri } = useContext(AuthContext);
 
    const getData = async () => {
       await api
@@ -46,28 +46,31 @@ export default function Perfil() {
 
    return (
       <>
+         {motorista ? (
+            <>
+               <MenuBar />
+               <View style={estilos.molde}>
+                  <View style={estilos.topoPerfil}>
+                     <Image source={{ uri: photoUri }} style={estilos.foto} />
+                     <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
+                  </View>
+                  <View style={estilos.info}>
+                     <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
+                     <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
 
-      {
-         motorista?<>
-         <MenuBar />
-         <View style={estilos.molde}>
-            <View style={estilos.topoPerfil}>
-               <Image source={{uri:photoUri}} style={estilos.foto} />
-               <Texto style={estilos.textoNome}>{motorista.user.name}</Texto>
-            </View>
-            <View style={estilos.info}>
-               <Texto style={estilos.desc}>{motorista.driver.descricao}</Texto>
-               <Texto style={estilos.outraInfo}>{'numero telefone'}</Texto>
-
-               <TouchableOpacity style={estilos.botao} onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao:motorista.driver.regiaoDeAtuacao })}>
-                  <Texto style={estilos.textoBotao}>Editar Dados</Texto>
-               </TouchableOpacity>
-            </View>
-         </View>
-         </>:<Text>{"erro"}</Text>
-
-      }
-      </>         
+                     <TouchableOpacity
+                        style={estilos.botao}
+                        onPress={() => navigation.navigate('DesenhaMapa', { regiaoDeAtuacao: motorista.driver.regiaoDeAtuacao })}
+                     >
+                        <Texto style={estilos.textoBotao}>Editar Dados</Texto>
+                     </TouchableOpacity>
+                  </View>
+               </View>
+            </>
+         ) : (
+            <Texto>erro</Texto>
+         )}
+      </>
    );
 }
 

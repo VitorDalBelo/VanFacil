@@ -12,25 +12,23 @@ export default function CardPesquisa({ photo, name, description, google_account,
       <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
          <View style={estilos.topoCard}>
             {photo && <Image source={{ uri: photoUri }} style={estilos.imagem} />}
+            <Texto style={estilos.textoNome}>{name}</Texto>
+         </View>
+         <View style={estilos.infoContainer}>
+            <View style={{ flex: 2 }}>
+               <Texto style={estilos.label}>Modelo da Van</Texto>
+               <Texto style={estilos.infoText}>{van_model}</Texto>
+            </View>
 
-            <View style={estilos.infoContainer}>
-               <View style={estilos.column}>
-                  <Texto style={estilos.label}>Nome:</Texto>
-                  <Texto style={estilos.text}>{name}</Texto>
-
-                  <Texto style={estilos.label}>Modelo da Van:</Texto>
-                  <Texto style={estilos.text}>{van_model}</Texto>
-               </View>
-
-               <View style={estilos.column}>
-                  <Texto style={estilos.label}>Placa:</Texto>
-                  <Texto style={estilos.text}>{license_plate}</Texto>
-               </View>
+            <View style={{ flex: 1 }}>
+               <Texto style={estilos.label}>Placa</Texto>
+               <Texto style={estilos.infoText}>{license_plate}</Texto>
             </View>
          </View>
-         <View style={{ width: '100%', overflow: 'scroll', height: 60 }}>
-            <Texto style={estilos.label}>Descrição:</Texto>
-            <Texto style={estilos.descriptionText}>{description}</Texto>
+
+         <View style={estilos.descContainer}>
+            <Texto style={estilos.label}>Descrição</Texto>
+            <Texto style={estilos.infoText}>{description}</Texto>
          </View>
       </TouchableOpacity>
    );
@@ -42,6 +40,7 @@ const larguraCard = larguraTela - 20;
 const estilos = StyleSheet.create({
    cardPesquisa: {
       width: larguraCard,
+      alignSelf: 'center',
       margin: 10,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
@@ -62,21 +61,26 @@ const estilos = StyleSheet.create({
       shadowOpacity: 0.23,
       shadowRadius: 2.62,
    },
-   info: {
-      padding: 10,
-   },
    topoCard: {
-      flexDirection: 'row',
       width: '100%',
-      marginBottom: 0,
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 10,
+      borderBottomColor: cores.azulProfundo,
+      borderBottomWidth: 1,
    },
    imagem: {
-      width: 40,
-      height: 40,
-      borderRadius: 50,
-      borderWidth: 2,
+      width: 60,
+      height: 60,
+      borderRadius: 10,
+      borderWidth: 1,
       borderColor: cores.azulProfundo,
-      marginRight: 10,
+   },
+   label: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 4,
+      color: cores.preto,
    },
    textoNome: {
       flex: 1,
@@ -84,9 +88,25 @@ const estilos = StyleSheet.create({
       paddingHorizontal: 10,
       fontSize: 20,
       textAlignVertical: 'center',
-      borderWidth: 2,
-      borderColor: cores.azulProfundo,
-      borderRadius: 5,
+      marginLeft: 10,
+   },
+   infoContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 10,
+      paddingHorizontal: 10,
+      paddingBottom: 10,
+      borderBottomColor: cores.azulProfundo,
+      borderBottomWidth: 1,
+   },
+   infoText: {
+      fontSize: 16,
+      color: cores.cinzaEscuro,
+   },
+   descContainer: {
+      padding: 10,
+      height: larguraCard * 0.33,
    },
    descCaixa: {
       height: larguraCard * 0.3,
@@ -94,58 +114,5 @@ const estilos = StyleSheet.create({
       borderColor: cores.azulProfundo,
       borderRadius: 5,
       padding: 10,
-   },
-   desc: { fontSize: 16 },
-   legendaMapa: {
-      fontSize: 16,
-      marginTop: 10,
-   },
-   caixaMapa: {
-      width: larguraCard,
-      height: larguraCard * 0.8,
-      overflow: 'hidden',
-      borderTopWidth: 2,
-      borderColor: cores.azulProfundo,
-   },
-   imagemMapa: {
-      width: larguraCard,
-      height: larguraCard * 0.8,
-      borderRadius: 10,
-      alignSelf: 'center',
-   },
-   container: {
-      padding: 16,
-      backgroundColor: '#fff',
-      borderRadius: 8,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      elevation: 5,
-   },
-   label: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginBottom: 4,
-   },
-   text: {
-      fontSize: 16,
-      marginBottom: 16,
-   },
-
-   infoContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-   },
-   column: {
-      flex: 1,
-   },
-   descriptionText: {
-      fontSize: 16,
-      marginBottom: 16,
-      numberOfLines: 1,
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
    },
 });
