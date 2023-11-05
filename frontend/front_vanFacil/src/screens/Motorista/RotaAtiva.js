@@ -1,19 +1,19 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { Manager } from 'socket.io-client';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
 import Texto from '../../components/Texto';
+import MenuBar from '../Shared/MenuBar';
+import Mapa_teste from '../Shared/Rota/mapa_teste';
 import CardPassageiro from '../Shared/CardPassageiro';
 
-import Mapa_teste from '../Shared/Rota/mapa_teste';
-
 import cores from '../../../assets/cores';
-import MenuBar from '../Shared/MenuBar';
-import { useRoute } from '@react-navigation/native';
 import api from '../../services/api';
-import { useNavigation } from '@react-navigation/native';
 
-import { requestForegroundPermissionsAsync } from 'expo-location';
+import { toastApiError } from '../../helpers/toast';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function TopoLista() {
    return (
@@ -33,13 +33,14 @@ function TopoLista() {
 
 export default function RotaAtiva() {
    const route = useRoute();
-   const [passengers, setPassengers] = useState([]);
-   const [absences, setAbsences] = useState([]);
-   const [location, setLocation] = useState([]);
-   const navigation = useNavigation();
-   const [socketConnection, setSocketConnection] = useState(null);
    var { trip_id } = route.params;
-   const listaPassageiros = passengers.slice(1);
+   const navigation = useNavigation();
+
+   const [socketConnection, setSocketConnection] = useState(null);
+
+   const [passageiros, setPassageiros] = useState([]);
+
+   const listaPassageiros = passageiros.slice(1);
 
    const bottomSheetRef = useRef(BottomSheet);
    const snapPoints = useMemo(() => [200, '100%'], []);
@@ -47,13 +48,28 @@ export default function RotaAtiva() {
    const getTrip = () => {
       api.get(`/trip/${trip_id}`)
          .then((trip) => {
-            setPassengers(trip.data.passengers);
-            setAbsences(trip.data.absences);
-            setUserAbsences(trip.data.userAbsences);
+            setPassageiros(formataLista(trip.data.passengers));
          })
          .catch((e) => toastApiError(e));
    };
 
+   const formataLista = (lista) => {
+      var passageiros = [];
+      lista.forEach((objeto) => {
+         address = objeto.passenger.address;
+         passageiros.push({
+            google_account: objeto.passenger.user.google_account,
+            photo: objeto.passenger.user.photo,
+            name: objeto.passenger.user.name,
+            address: `${address.cidade} - ${address.bairro}\n${address.logradouro} nº ${address.numero} ${
+               address.complemento ? address.complemento : ''
+            }`,
+         });
+      });
+      return passageiros;
+   };
+
+   // Verifica se algum passageiro alterou sua presença na rota
    useEffect(() => {
       getTrip();
       const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
@@ -68,6 +84,24 @@ export default function RotaAtiva() {
       setSocketConnection(socket);
    }, []);
 
+   const pararRota = () => {
+      api.post(`/trip/${trip_id}/statustrip?status=false`)
+         .then(() => navigation.navigate('M_Rota', { trip_id: trip_id }))
+         .catch((e) => toastApiError(e));
+   };
+
+   // Direciona o caminho de volta para a tela inicial
+   useEffect(() => {
+      const backAction = () => {
+         navigation.navigate('M_Inicial');
+
+         return true;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      return () => backHandler.remove();
+   }, []);
+
    return (
       <>
          <View style={estilos.container}>
@@ -76,15 +110,15 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{passengers.length - absences.length}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passageiros.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               {passengers.length > 0 && (
+               {passageiros.length > 0 && (
                   <>
                      <View style={{ height: 100 }}>
-                        <CardPassageiro {...passengers[0]} ausente={absences.includes(String(passengers[0].passengerid))} />
+                        <CardPassageiro {...passageiros[0]} />
                      </View>
 
                      <BottomSheetFlatList
@@ -92,16 +126,23 @@ export default function RotaAtiva() {
                         data={listaPassageiros}
                         keyExtractor={({ ordem }) => ordem}
                         renderItem={({ item }) => {
-                           return <CardPassageiro {...item} ausente={absences.includes(String(item.passengerid))} />;
+                           return <CardPassageiro {...item} />;
                         }}
                      />
                   </>
                )}
             </BottomSheet>
          </View>
+         <View style={estilos.linhaBotao}>
+            <TouchableOpacity style={estilos.botao} onPress={pararRota}>
+               <Texto style={estilos.textoBotao}>Parar Rota</Texto>
+            </TouchableOpacity>
+         </View>
       </>
    );
 }
+
+const larguraTela = Dimensions.get('screen').width;
 
 const estilos = StyleSheet.create({
    container: {
@@ -122,5 +163,42 @@ const estilos = StyleSheet.create({
    textoDetalhes: {
       fontSize: 18,
       lineHeight: 42,
+   },
+   linhaBotao: {
+      width: '100%',
+      borderBottomWidth: 1,
+      borderBottomColor: '#ECECEC',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      backgroundColor: cores.branco,
+      paddingHorizontal: 10,
+   },
+   botao: {
+      alignSelf: 'center',
+      alignItems: 'center',
+      width: larguraTela - 20,
+      padding: 10,
+      borderRadius: 10,
+      backgroundColor: cores.azulProfundo,
+      color: cores.preto,
+      marginVertical: 10,
+
+      // Android
+      elevation: 4,
+
+      //iOS
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 2,
+      },
+      shadowOpacity: 0.23,
+      shadowRadius: 2.62,
+   },
+   textoBotao: {
+      color: cores.branco,
+      fontWeight: 'bold',
+      fontSize: 18,
    },
 });

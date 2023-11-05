@@ -1,57 +1,85 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, ActivityIndicator, Keyboard } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import Texto from '../../../components/Texto';
 import cores from '../../../../assets/cores';
 import CardPassageiro from '../../Shared/CardPassageiro';
-
-var lista = [
-   {
-      id: '3',
-      nome: 'Teste 3',
-   },
-   {
-      id: '4',
-      nome: 'Teste 4',
-   },
-];
+import { toastApiError } from '../../../helpers/toast';
+import api from '../../../services/api';
 
 export default function ModalRota({ handleClose, setNovoPassageiro }) {
    const [pesquisa, setPesquisa] = useState('');
    const [listaResultados, setListaResultados] = useState([]);
+
+   const [loading, setLoading] = useState(false);
+
+   useEffect(() => {
+      if (pesquisa != '') {
+         setLoading(true);
+         const pesquisaNome = setTimeout(async () => {
+            const passageiros = await api
+               .get(`/users/passenger/search?name=${pesquisa}`)
+               .then((response) => {
+                  return response.data;
+               })
+               .finally(() => {
+                  setLoading(false);
+               })
+               .catch((e) => {
+                  toastApiError(e);
+                  console.log('Erro: ' + e);
+                  return null;
+               });
+            if (passageiros) {
+               setListaResultados(passageiros);
+               if (passageiros.length != 0) Keyboard.dismiss();
+            }
+         }, 2000);
+
+         return () => clearTimeout(pesquisaNome);
+      }
+   }, [pesquisa]);
 
    return (
       <>
          <TouchableOpacity style={estilos.btnFechar} onPress={handleClose}></TouchableOpacity>
          <View style={estilos.container}>
             <View style={estilos.linhaTexto}>
-               <Texto style={estilos.textoGeral}>Pesquise o nome do Passageiro</Texto>
+               <Texto style={estilos.textoGeral}>Pesquise o nome do(a) passageiro(a)</Texto>
             </View>
             <TextInput style={estilos.input} value={pesquisa} onChangeText={setPesquisa} placeholder="Digite o nome do Passageiro" />
             <View style={estilos.linhaTexto}>
-               <Texto style={estilos.textoGeral}>Clique no passageiro para adiciona-lo</Texto>
+               <Texto style={estilos.textoGeral}>Toque no nome para adicionar à rota</Texto>
             </View>
             <View style={estilos.containerLista}>
-               {lista.length != 0 ? (
-                  <FlatList
-                     data={lista}
-                     renderItem={({ item }) => {
-                        return (
-                           <TouchableOpacity
-                              onPress={() => {
-                                 setNovoPassageiro(item);
-                                 handleClose();
-                              }}
-                           >
-                              <CardPassageiro nome={item.nome} endereco={item.endereco} />
-                           </TouchableOpacity>
-                        );
-                     }}
-                  />
-               ) : (
+               {loading ? (
                   <View style={estilos.listaVazia}>
-                     <Texto style={estilos.textoListaVazia}>Nenhum resultado encontrado ou pesquisado</Texto>
+                     <ActivityIndicator style={{ justifyContent: 'center' }} size="large" color={cores.azulProfundo} />
                   </View>
+               ) : (
+                  <>
+                     {listaResultados.length != 0 ? (
+                        <FlatList
+                           data={listaResultados}
+                           renderItem={({ item }) => {
+                              return (
+                                 <TouchableOpacity
+                                    onPress={() => {
+                                       setNovoPassageiro(item);
+                                       handleClose();
+                                    }}
+                                 >
+                                    <CardPassageiro {...item} />
+                                 </TouchableOpacity>
+                              );
+                           }}
+                        />
+                     ) : (
+                        <View style={estilos.listaVazia}>
+                           <Texto style={estilos.textoListaVazia}>Nenhum resultado encontrado ou pesquisado</Texto>
+                        </View>
+                     )}
+                  </>
                )}
             </View>
          </View>
@@ -87,7 +115,6 @@ const estilos = StyleSheet.create({
    },
    textoGeral: {
       fontSize: 20,
-      fontWeight: 'bold',
    },
    containerLista: {
       flex: 1,

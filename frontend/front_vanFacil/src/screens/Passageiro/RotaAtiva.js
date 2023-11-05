@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { BackHandler, StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { Manager } from 'socket.io-client';
 
@@ -10,7 +10,7 @@ import CardPassageiro from '../Shared/CardPassageiro';
 import BotoesIdaVolta from './BotoesIdaVolta';
 
 import cores from '../../../assets/cores';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import api from '../../services/api';
 import { toastApiError } from '../../helpers/toast';
 
@@ -32,25 +32,41 @@ function TopoLista() {
 
 export default function RotaAtiva() {
    const route = useRoute();
-   const [passengers, setPassengers] = useState([]);
-   const [absences, setAbsences] = useState([]);
+   const navigation = useNavigation();
+
    const [userAbsences, setUserAbsences] = useState(null);
+   const [passageiros, setPassageiros] = useState([]);
    const [socketConnection, setSocketConnection] = useState(null);
 
    var { trip_id } = route.params;
-   var listaPassageiros = passengers.slice(1);
+   const listaPassageiros = passageiros.slice(1);
 
    const bottomSheetRef = useRef(BottomSheet);
-   const snapPoints = useMemo(() => [202, '100%'], []);
+   const snapPoints = useMemo(() => [200, '100%'], []);
 
    const getTrip = () => {
       api.get(`/trip/${trip_id}`)
          .then((trip) => {
-            setPassengers(trip.data.passengers);
-            setAbsences(trip.data.absences);
+            setPassageiros(formataLista(trip.data.passengers));
             setUserAbsences(trip.data.userAbsences);
          })
          .catch((e) => toastApiError(e));
+   };
+
+   const formataLista = (lista) => {
+      var passageiros = [];
+      lista.forEach((objeto) => {
+         address = objeto.passenger.address;
+         passageiros.push({
+            google_account: objeto.passenger.user.google_account,
+            photo: objeto.passenger.user.photo,
+            name: objeto.passenger.user.name,
+            address: `${address.cidade} - ${address.bairro}\n${address.logradouro} nº ${address.numero} ${
+               address.complemento ? address.complemento : ''
+            }`,
+         });
+      });
+      return passageiros;
    };
 
    const registerAbstence = (go, back) => {
@@ -73,6 +89,7 @@ export default function RotaAtiva() {
          .catch((e) => toastApiError(e));
    };
 
+   // Verifica se algum passageiro alterou sua presença na rota
    useEffect(() => {
       getTrip();
       const manager = new Manager(String(process.env.EXPO_PUBLIC_BACKEND_URL));
@@ -84,6 +101,18 @@ export default function RotaAtiva() {
       setSocketConnection(socket);
    }, []);
 
+   // Direciona o caminho de volta para a tela inicial
+   useEffect(() => {
+      const backAction = () => {
+         navigation.navigate('P_Inicial');
+
+         return true;
+      };
+
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+      return () => backHandler.remove();
+   }, []);
+
    return (
       <>
          <MenuBar nomeTela={'Rota Ativa Passageiro'} mostraBtnPerfil={false} />
@@ -93,15 +122,15 @@ export default function RotaAtiva() {
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>
-                  <Texto style={estilos.textoDetalhes}>{passengers.length - absences.length}</Texto>
+                  <Texto style={estilos.textoDetalhes}>{passageiros.length}</Texto>
                </View>
                <View style={estilos.linhaDetalhe}>
                   <Texto style={estilos.textoDetalhes}>Próximo(a) passageiro(a):</Texto>
                </View>
-               {passengers.length > 0 && (
+               {passageiros.length > 0 && (
                   <>
                      <View style={{ height: 100 }}>
-                        <CardPassageiro {...passengers[0]} ausente={absences.includes(String(passengers[0].passengerid))} />
+                        <CardPassageiro {...passageiros[0]} />
                      </View>
 
                      <BottomSheetFlatList
@@ -109,7 +138,7 @@ export default function RotaAtiva() {
                         data={listaPassageiros}
                         keyExtractor={({ ordem }) => ordem}
                         renderItem={({ item }) => {
-                           return <CardPassageiro {...item} ausente={absences.includes(String(item.passengerid))} />;
+                           return <CardPassageiro {...item} />;
                         }}
                      />
                   </>

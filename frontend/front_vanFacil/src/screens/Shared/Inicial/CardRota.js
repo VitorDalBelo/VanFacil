@@ -1,4 +1,4 @@
-import React , {useEffect} from 'react';
+import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 
 import Texto from '../../../components/Texto';
@@ -13,22 +13,21 @@ var img = ImagemFalha;
 export default function CardRota({ id, telaMotorista = true, ...props }) {
    img = FundoRota1;
    const navigation = useNavigation();
-   const ativa = false;
+   var ativa = props.trip.status;
+
    const defineCaminho = () => {
       const caminhoMotorista = ativa ? 'M_RotaAtiva' : 'M_Rota';
       const caminhoPassageiro = ativa ? 'P_RotaAtiva' : 'P_Rota';
       const caminho = telaMotorista ? caminhoMotorista : caminhoPassageiro;
-      return () => navigation.navigate(caminho,{trip_id:props.trip.trip_id})
-      // {tripId:props.trip.trip_id};
+      return () => navigation.navigate(caminho, { trip_id: props.trip.trip_id });
    };
-
 
    return (
       <TouchableOpacity style={estilos.cardRota} onPress={defineCaminho()}>
          {img && <Image source={img} style={estilos.imagem} />}
          <View style={estilos.textContainer}>
             <Texto style={estilos.texto}>{props.trip.name}</Texto>
-            {/* {ativa && <Texto style={estilos.texto}>Ativa</Texto>} */}
+            {ativa && <Texto style={[estilos.texto, { color: cores.cinza }]}>Ativa</Texto>}
          </View>
       </TouchableOpacity>
    );

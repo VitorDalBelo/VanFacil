@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, BackHandler, FlatList, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, BackHandler, FlatList, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 import Texto from '../../../components/Texto';
 import MenuBar from '../../Shared/MenuBar';
@@ -10,21 +11,12 @@ import cores from '../../../../assets/cores';
 import { TextInput } from 'react-native-gesture-handler';
 import ModalRota from './ModalRota';
 import toast from '../../../helpers/toast';
-
-var lista = [
-   {
-      id: '1',
-      nome: 'Teste 1',
-   },
-   {
-      id: '2',
-      nome: 'Teste 2',
-   },
-];
+import api from '../../../services/api';
 
 export default function CriarRota() {
    const [nomeRota, setNomeRota] = useState('');
-   const [listaRota, setListaRota] = useState(lista);
+   const [listaRota, setListaRota] = useState([]);
+   const navigation = useNavigation();
 
    const [modalVisible, setModalVisible] = useState(false);
    const [loading, setLoading] = useState(false);
@@ -33,8 +25,8 @@ export default function CriarRota() {
 
    useEffect(() => {
       if (novoPassageiro != null) {
-         if (idJaExiste(novoPassageiro.id)) {
-            toast('O Passageiro já está na lista da rota', 'error');
+         if (idJaExiste(novoPassageiro.p_passenger_id)) {
+            toast('O(A) Passageiro(a) já está na lista da rota', 'error');
          } else {
             listaRota.push(novoPassageiro);
          }
@@ -45,7 +37,15 @@ export default function CriarRota() {
    const separaIds = () => {
       var listaIds = [];
       listaRota.forEach((passageiro) => {
-         listaIds.push(passageiro.id);
+         listaIds.push(passageiro.p_passenger_id);
+      });
+      return listaIds;
+   };
+
+   const montaListaId = () => {
+      var listaIds = [];
+      listaRota.forEach((passageiro) => {
+         listaIds.push({ passengerid: passageiro.p_passenger_id });
       });
       return listaIds;
    };
@@ -67,8 +67,27 @@ export default function CriarRota() {
       ]);
    };
 
-   const finalizarRota = () => {
-      console.log(listaRota);
+   const finalizarRota = async () => {
+      if (nomeRota == '') {
+         toast('Dê um nome para sua Rota', 'error');
+      } else {
+         setLoading(true);
+         const requestPayload = { name: nomeRota, passengers: montaListaId() };
+         console.log(requestPayload);
+         api.post('/trip', requestPayload)
+            .then(() => {
+               navigation.navigate('M_Inicial');
+               toast('Rota cadastrada com sucesso', 'success');
+            })
+            .catch((e) => {
+               console.log('error: ', e);
+               if (e.response && e.response.data) toast(e.response.data.message, 'error');
+               else toast('Ocorreu um erro', 'error');
+            })
+            .finally(() => {
+               setLoading(false);
+            });
+      }
    };
 
    // Aviso para sair da criação de rota
@@ -84,7 +103,7 @@ export default function CriarRota() {
                { text: 'Sim', onPress: () => navigation.goBack() },
             ]);
          } else {
-            Alert.alert('Sair', 'Aguarde enquanto realizamos a pesquisa.', [
+            Alert.alert('Sair', 'Aguarde enquanto realizamos o cadastro da nova rota.', [
                {
                   text: 'OK',
                   onPress: () => null,
@@ -126,9 +145,9 @@ export default function CriarRota() {
                      renderItem={({ item }) => {
                         return (
                            <View style={estilos.cardComBotao}>
-                              <CardPassageiro nome={item.nome} endereco={item.endereco} />
+                              <CardPassageiro {...item} />
                               <View style={estilos.fundoBotao}>
-                                 <TouchableOpacity style={estilos.btnExcluir} onPress={() => excluiPassageiro(item)}>
+                                 <TouchableOpacity style={estilos.btnExcluir} onPress={() => excluiPassageiro(item)} disabled={loading}>
                                     <Feather name="x" size={30} color="white" />
                                  </TouchableOpacity>
                               </View>
@@ -143,14 +162,20 @@ export default function CriarRota() {
                   </View>
                )}
             </View>
-            <View style={estilos.buttonContainer}>
-               <TouchableOpacity style={estilos.botao} disabled={loading} onPress={() => setModalVisible(true)}>
-                  <Texto style={estilos.textoBotao}>Adicionar Passageiro</Texto>
-               </TouchableOpacity>
-               <TouchableOpacity style={estilos.botao} disabled={loading} onPress={finalizarRota}>
-                  <Texto style={estilos.textoBotao}>Finalizar Rota</Texto>
-               </TouchableOpacity>
-            </View>
+            {loading ? (
+               <View style={estilos.listaVazia}>
+                  <ActivityIndicator style={{ justifyContent: 'center' }} size="large" color={cores.azulProfundo} />
+               </View>
+            ) : (
+               <View style={estilos.buttonContainer}>
+                  <TouchableOpacity style={estilos.botao} disabled={loading} onPress={() => setModalVisible(true)}>
+                     <Texto style={estilos.textoBotao}>Adicionar Passageiro</Texto>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={estilos.botao} disabled={loading} onPress={finalizarRota}>
+                     <Texto style={estilos.textoBotao}>Finalizar Rota</Texto>
+                  </TouchableOpacity>
+               </View>
+            )}
          </View>
          <Modal visible={modalVisible} transparent={true} onRequestClose={() => setModalVisible(false)}>
             <ModalRota handleClose={() => setModalVisible(false)} setNovoPassageiro={setNovoPassageiro} />

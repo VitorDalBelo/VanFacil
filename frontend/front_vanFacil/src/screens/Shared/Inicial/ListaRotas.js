@@ -1,13 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
-import api from '../../../services/api';
-import CardRota from '../../Shared/Inicial/CardRota';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { AuthContext } from '../../../context/Auth/AuthContext';
-import { toastApiError } from '../../../helpers/toast';
 
-export default function ListaRotas() {
+import cores from '../../../../assets/cores';
+import CardRota from '../../Shared/Inicial/CardRota';
+import Texto from '../../../components/Texto';
+import api from '../../../services/api';
+import { toastApiError } from '../../../helpers/toast';
+import { useNavigation } from '@react-navigation/native';
+
+export default function ListaRotas({ telaMotorista = true }) {
    const { user } = useContext(AuthContext);
    const [trips, setTrips] = useState([]);
+
+   const navigation = useNavigation();
+
+   useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+         getTrips();
+      });
+
+      return unsubscribe;
+   }, [navigation]);
+
    const getTrips = async () => {
       await api
          .get('/users/trips')
@@ -21,17 +36,38 @@ export default function ListaRotas() {
          });
    };
 
-   useEffect(() => {
-      getTrips();
-   }, []);
-
    return (
-      <FlatList
-         data={trips}
-         renderItem={({ item }) => {
-            return <CardRota {...item} telaMotorista={user.profile == 'driver'} />;
-         }}
-         keyExtractor={(trip) => trip.trip.trip_id}
-      />
+      <>
+         {trips.length != 0 ? (
+            <FlatList
+               data={trips}
+               renderItem={({ item }) => {
+                  return <CardRota {...item} telaMotorista={user.profile == 'driver'} />;
+               }}
+               keyExtractor={(trip) => trip.trip.trip_id}
+            />
+         ) : (
+            <View style={estilos.listaVazia}>
+               <Texto style={estilos.textoListaVazia}>Você não faz parte de nenhuma rota ainda!</Texto>
+               {telaMotorista ? (
+                  <Texto style={estilos.textoListaVazia}>Crie uma nova rota no botão abaixo!</Texto>
+               ) : (
+                  <Texto style={estilos.textoListaVazia}>Pesquise um motorista no botão abaixo!</Texto>
+               )}
+            </View>
+         )}
+      </>
    );
 }
+const estilos = StyleSheet.create({
+   listaVazia: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+   },
+   textoListaVazia: {
+      fontSize: 18,
+      color: cores.cinza,
+      marginBottom: 10,
+   },
+});
