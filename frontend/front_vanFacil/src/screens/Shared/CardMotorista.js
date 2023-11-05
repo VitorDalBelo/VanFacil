@@ -42,12 +42,11 @@ const estilos = StyleSheet.create({
       width: larguraCard,
       alignSelf: 'center',
       margin: 10,
+      backgroundColor: cores.branco,
       borderWidth: 2,
       borderColor: cores.azulProfundo,
       borderRadius: 10,
-      backgroundColor: cores.branco,
       overflow: 'hidden',
-      alignItems: 'baseline',
 
       // Android
       elevation: 4,

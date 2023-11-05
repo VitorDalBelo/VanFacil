@@ -25,9 +25,9 @@ function ListaPesquisa() {
    const navigation = useNavigation();
    const [listaMotoristas, setListaMotoristas] = React.useState([]);
    const [pesquisa, setPesquisa] = useState('');
-   const [listaResultados, setListaResultados] = useState([]);
 
    const [loading, setLoading] = React.useState(false);
+
    const getDrivers = async () => {
       setLoading(true);
       await api
@@ -63,11 +63,14 @@ function ListaPesquisa() {
                   return null;
                });
             if (motoristas) {
-               console.log('Motoristas: ', motoristas);
-            } else console.log('Sem motoristas');
+               setListaMotoristas(motoristas);
+               if (motoristas.length != 0) Keyboard.dismiss();
+            }
          }, 2000);
 
          return () => clearTimeout(pesquisaNome);
+      } else {
+         getDrivers();
       }
    }, [pesquisa]);
 
