@@ -5,7 +5,6 @@ import Texto from '../../components/Texto';
 
 import cores from '../../../assets/cores';
 import { useNavigation } from '@react-navigation/native';
-import useMotoristas from '../../hooks/useMotoristas';
 
 export default function MenuBar({ nomeTela, mostraBtnPerfil = true }) {
    return (
@@ -18,14 +17,13 @@ export default function MenuBar({ nomeTela, mostraBtnPerfil = true }) {
 
 function BotaoPerfil() {
    const navigation = useNavigation();
-   const motoristas = useMotoristas();
    const { photoUri, user } = React.useContext(AuthContext);
 
    const defineCaminho = () => {
       if (user.profile == 'driver') {
          return navigation.navigate('M_Perfil', { donoDoPerfil: true });
       } else {
-         return navigation.navigate('Perfil', { ...motoristas[1] });
+         return navigation.navigate('P_Perfil', { donoDoPerfil: true });
       }
    };
 

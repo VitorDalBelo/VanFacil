@@ -18,8 +18,7 @@ export default function Perfil() {
 
    const [loading, setLoading] = useState(false);
 
-   const [dadosMotorista, setDadosMotorista] = useState({});
-   const [dadosGerais, setDadosGerais] = useState({});
+   const [dadosPassageiro, setDadosPassageiro] = useState({});
    const [dadosProntos, setDadosProntos] = useState(false);
    const [photoUri, setPhotoUri] = useState(placeholder_photo);
 
@@ -28,12 +27,11 @@ export default function Perfil() {
 
       setLoading(true);
       await api
-         .get(`/users/drivers/driver/${id}`)
+         .get(`/users/passengers/passenger/${id}`)
          .then((resp) => {
-            setDadosMotorista(resp.data.driver);
-            setDadosGerais(resp.data.user);
-            if (resp.data.user.google_account) {
-               setPhotoUri({ uri: resp.data.user.photo });
+            setDadosPassageiro(resp.data);
+            if (resp.data.google_account) {
+               setPhotoUri({ uri: resp.data.photo });
             }
             setDadosProntos(true);
          })
@@ -58,7 +56,7 @@ export default function Perfil() {
 
    return (
       <>
-         <MenuBar nomeTela={'Perfil Motorista'} mostraBtnPerfil={!donoDoPerfil} />
+         <MenuBar nomeTela={'Perfil Passageiro'} mostraBtnPerfil={!donoDoPerfil} />
          {loading ? (
             <ActivityIndicator style={{ justifyContent: 'center', flex: 1 }} size="large" color={cores.azulProfundo} />
          ) : (
@@ -67,15 +65,11 @@ export default function Perfil() {
                   <View style={estilos.container}>
                      <View style={[estilos.topoPerfil, estilos.bordaAbaixo]}>
                         <Image source={photoUri} style={estilos.foto} />
-                        <Texto style={estilos.textoNome}>{dadosGerais.name}</Texto>
-                     </View>
-                     <View style={[estilos.infoContainer, estilos.bordaAbaixo]}>
-                        <Texto style={estilos.label}>Descrição</Texto>
-                        <Texto style={estilos.textoDesc}>{dadosMotorista.descricao}</Texto>
+                        <Texto style={estilos.textoNome}>{dadosPassageiro.name}</Texto>
                      </View>
                      <View style={[estilos.infoContainer, estilos.bordaAbaixo]}>
                         <Texto style={estilos.label}>Telefone</Texto>
-                        <Texto style={estilos.textoDados}>{dadosGerais.phone ? dadosGerais.phone : '(11) 99999-9999'}</Texto>
+                        <Texto style={estilos.textoDados}>{dadosPassageiro.phone ? dadosPassageiro.phone : '(11) 99999-9999'}</Texto>
                      </View>
                   </View>
                ) : (
@@ -128,15 +122,6 @@ const estilos = StyleSheet.create({
    },
    textoDados: {
       fontSize: 18,
-   },
-   textoDesc: {
-      paddingHorizontal: 10,
-      fontSize: 16,
-      textAlign: 'justify',
-      borderLeftWidth: 1,
-      borderRadius: 4,
-      borderRightWidth: 1,
-      borderColor: cores.cinza,
    },
    listaVazia: {
       alignItems: 'center',

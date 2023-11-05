@@ -13,6 +13,8 @@ import M_Rota from '../screens/Motorista/Rota';
 import M_RotaAtiva from '../screens/Motorista/RotaAtiva';
 
 import P_Inicial from '../screens/Passageiro/Inicial';
+import P_Perfil from '../screens/Passageiro/Perfil';
+
 import P_Pesquisa from '../screens/Passageiro/Pesquisa';
 import P_Rota from '../screens/Passageiro/Rota';
 import P_RotaAtiva from '../screens/Passageiro/RotaAtiva';
@@ -44,7 +46,9 @@ export default function AppRotas() {
                <Stack.Screen name="M_RotaAtiva" component={M_RotaAtiva} />
 
                <Stack.Screen name="P_Inicial" component={P_Inicial} />
+               <Stack.Screen name="P_Perfil" component={P_Perfil} />
                <Stack.Screen name="P_Pesquisa" component={P_Pesquisa} />
+
                <Stack.Screen name="P_Rota" component={P_Rota} />
                <Stack.Screen name="P_RotaAtiva" component={P_RotaAtiva} />
 
