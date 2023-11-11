@@ -30,8 +30,10 @@ export default function Perfil() {
          .get(`/users/passengers/passenger/${id}`)
          .then((resp) => {
             setDadosPassageiro(resp.data);
-            if (resp.data.google_account) {
-               setPhotoUri({ uri: resp.data.photo });
+            if (resp.data.photo != null) {
+               setPhotoUri(
+                  resp.data.google_account ? { uri: resp.data.photo } : { uri: `${process.env.EXPO_PUBLIC_BACKEND_URL}${resp.data.photo}` }
+               );
             }
             setDadosProntos(true);
          })
@@ -39,6 +41,7 @@ export default function Perfil() {
             setLoading(false);
          })
          .catch((e) => {
+            console.log(e);
             toastApiError(e);
          });
    };

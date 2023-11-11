@@ -32,8 +32,12 @@ export default function Perfil() {
          .then((resp) => {
             setDadosMotorista(resp.data.driver);
             setDadosGerais(resp.data.user);
-            if (resp.data.user.google_account) {
-               setPhotoUri({ uri: resp.data.user.photo });
+            if (resp.data.user.photo != null) {
+               setPhotoUri(
+                  resp.data.user.google_account
+                     ? { uri: resp.data.user.photo }
+                     : { uri: `${process.env.EXPO_PUBLIC_BACKEND_URL}${resp.data.user.photo}` }
+               );
             }
             setDadosProntos(true);
          })
@@ -132,7 +136,6 @@ const estilos = StyleSheet.create({
    textoDesc: {
       paddingHorizontal: 10,
       fontSize: 16,
-      textAlign: 'justify',
       borderLeftWidth: 1,
       borderRadius: 4,
       borderRightWidth: 1,
