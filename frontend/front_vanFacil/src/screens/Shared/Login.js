@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { TextInput } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 
 import * as Yup from 'yup';
 import toast from '../../helpers/toast';
@@ -92,7 +92,7 @@ export default function Login() {
             <Texto style={estilos.textoTitulo}>Login</Texto>
             <View style={estilos.linha}></View>
          </View>
-         <View style={estilos.formContainer}>
+         <ScrollView style={estilos.formContainer}>
             <TextInput
                editable={!loading}
                style={[estilos.input, estilos.textoInput]}
@@ -142,7 +142,7 @@ export default function Login() {
                   </>
                )}
             </View>
-         </View>
+         </ScrollView>
       </View>
    );
 }
@@ -180,7 +180,6 @@ const estilos = StyleSheet.create({
       height: alturaTela * 0.3,
       width: '100%',
       flex: 1,
-      justifyContent: 'center',
       paddingBottom: alturaTela * 0.2,
    },
    visibleIcon: {

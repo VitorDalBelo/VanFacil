@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 
 import Texto from '../../components/Texto';
@@ -6,7 +6,12 @@ import placeholder_photo from '../../../assets/placeholder_user_photo.png';
 import cores from '../../../assets/cores';
 
 export default function CardPesquisa({ photo, name, description, google_account, van_model, license_plate, aoPressionar }) {
-   const photoUri = google_account ? { uri: photo } : placeholder_photo;
+   const [photoUri, setPhotoUri] = useState(placeholder_photo);
+   useEffect(() => {
+      if (photo != null) {
+         setPhotoUri(google_account ? { uri: photo } : { uri: `${process.env.EXPO_PUBLIC_BACKEND_URL}${photo}` });
+      }
+   }, []);
 
    return (
       <TouchableOpacity style={estilos.cardPesquisa} onPress={aoPressionar}>
@@ -105,6 +110,6 @@ const estilos = StyleSheet.create({
    },
    descContainer: {
       padding: 10,
-      height: larguraCard * 0.33,
+      height: larguraCard * 0.35,
    },
 });

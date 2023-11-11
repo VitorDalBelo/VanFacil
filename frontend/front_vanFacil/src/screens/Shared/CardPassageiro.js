@@ -8,8 +8,9 @@ export default function CardPassageiro(props) {
    const [photoUri, setPhotoUri] = useState(placeholder_photo);
 
    useEffect(() => {
-      if (props.google_account && props.photo != null) {
-         setPhotoUri({ uri: props.photo });
+      console.log(props);
+      if (props.photo != null) {
+         setPhotoUri(props.google_account ? { uri: props.photo } : { uri: `${process.env.EXPO_PUBLIC_BACKEND_URL}${props.photo}` });
       }
    }, [props]);
 
