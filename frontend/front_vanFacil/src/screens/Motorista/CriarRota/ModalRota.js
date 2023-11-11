@@ -132,6 +132,7 @@ const estilos = StyleSheet.create({
    },
    textoListaVazia: {
       fontSize: 18,
+      textAlign: 'center',
       color: cores.cinza,
       marginBottom: 10,
    },

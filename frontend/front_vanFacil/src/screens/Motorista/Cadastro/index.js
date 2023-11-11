@@ -248,7 +248,7 @@ export default function CadastroMotorista() {
 
    const singupGoogle = () => {
       setLoading(true);
-      const requestPayload = { googleToken, phone, cnpj,descricao: desc,  van: { license_plate: placa, model: modelo } };
+      const requestPayload = { googleToken, phone, cnpj, descricao: desc, van: { license_plate: placa, model: modelo } };
       api.post('/auth/singup/google?profile=driver', requestPayload)
          .then(() => {
             navigation.navigate('Login');
@@ -267,7 +267,7 @@ export default function CadastroMotorista() {
    return (
       <View style={estilos.container}>
          <View style={estilos.tituloContainer}>
-            <Texto style={estilos.textoTitulo}>{step == 0 ? 'Motorista - Dados Pessoais' : 'Motorista - Informações da van'}</Texto>
+            <Texto style={estilos.textoTitulo}>{step == 0 ? 'Motorista\nDados Pessoais' : 'Motorista\nInformações da van'}</Texto>
             <View style={estilos.linha}></View>
          </View>
          <ScrollView style={estilos.formContainer}>
@@ -311,10 +311,11 @@ const estilos = StyleSheet.create({
    tituloContainer: {
       width: '100%',
       justifyContent: 'flex-start',
-      marginTop: alturaTela * 0.1,
+      marginTop: alturaTela * 0.06,
       alignItems: 'center',
    },
    textoTitulo: {
+      textAlign: 'center',
       fontSize: 24,
       fontWeight: 'bold',
       color: cores.cinzaEscuro,
@@ -327,7 +328,7 @@ const estilos = StyleSheet.create({
       marginTop: 10,
    },
    formContainer: {
-      paddingTop: alturaTela * 0.1,
+      paddingTop: alturaTela * 0.06,
    },
    buttonContainer: {
       width: '100%',

@@ -110,6 +110,6 @@ const estilos = StyleSheet.create({
    },
    descContainer: {
       padding: 10,
-      height: larguraCard * 0.33,
+      height: larguraCard * 0.35,
    },
 });

@@ -260,7 +260,7 @@ export default function CadastroPassageiro() {
    return (
       <View style={estilos.container}>
          <View style={estilos.tituloContainer}>
-            <Texto style={estilos.textoTitulo}>{step == 0 ? 'Passageiro - Dados Pessoais' : 'Passageiro - Endereço'}</Texto>
+            <Texto style={estilos.textoTitulo}>{step == 0 ? 'Passageiro\nDados Pessoais' : 'Passageiro\nEndereço'}</Texto>
             <View style={estilos.linha}></View>
          </View>
          <View style={estilos.formContainer}>
@@ -304,11 +304,12 @@ const estilos = StyleSheet.create({
    tituloContainer: {
       width: '100%',
       justifyContent: 'flex-start',
-      marginTop: alturaTela * 0.1,
+      marginTop: alturaTela * 0.06,
       alignItems: 'center',
    },
    textoTitulo: {
       fontSize: 24,
+      textAlign: 'center',
       fontWeight: 'bold',
       color: cores.cinzaEscuro,
    },
@@ -320,7 +321,7 @@ const estilos = StyleSheet.create({
       marginTop: 10,
    },
    formContainer: {
-      paddingTop: alturaTela * 0.1,
+      paddingTop: alturaTela * 0.005,
    },
    buttonContainer: {
       width: '100%',
