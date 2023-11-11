@@ -93,6 +93,7 @@ export default function useAuth() {
       async (error) => {
          const originalRequest = error.config;
          if (error?.response?.status === 401) {
+            console.log("aswd")
             if (!originalRequest._retry) {
                originalRequest._retry = true;
                const { data } = await api.post('auth/refresh');

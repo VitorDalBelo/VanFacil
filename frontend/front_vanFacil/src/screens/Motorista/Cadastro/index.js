@@ -228,8 +228,8 @@ export default function CadastroMotorista() {
          phone: phone,
          password: senha,
          cnpj: cnpj,
-         desc: desc,
-         van: { placa: placa, modelo: modelo },
+         descricao: desc,
+         van: { license_plate: placa, model: modelo },
       };
       api.post('auth/singup?profile=driver', requestPayload)
          .then(() => {
@@ -248,7 +248,7 @@ export default function CadastroMotorista() {
 
    const singupGoogle = () => {
       setLoading(true);
-      const requestPayload = { googleToken, phone, cnpj, desc, van: { placa: placa, modelo: modelo } };
+      const requestPayload = { googleToken, phone, cnpj,descricao: desc,  van: { license_plate: placa, model: modelo } };
       api.post('/auth/singup/google?profile=driver', requestPayload)
          .then(() => {
             navigation.navigate('Login');
