@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import Texto from '../../components/Texto';
 import MenuBar from '../Shared/MenuBar';
-import Mapa_teste from '../Shared/Rota/mapa_teste';
+import MapaRotaAtiva from '../Shared/Rota/MapaRotaAtiva';
 import CardPassageiro from '../Shared/CardPassageiro';
 
 import cores from '../../../assets/cores';
@@ -106,7 +106,7 @@ export default function RotaAtiva() {
       <>
          <View style={estilos.container}>
             <MenuBar nomeTela={'Rota Ativa Motorista'} mostraBtnPerfil={false} />
-            <Mapa_teste />
+            <MapaRotaAtiva />
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
                   <Texto style={estilos.textoDetalhes}>Passageiros restantes:</Texto>

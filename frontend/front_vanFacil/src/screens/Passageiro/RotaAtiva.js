@@ -5,7 +5,7 @@ import { Manager } from 'socket.io-client';
 
 import MenuBar from '../Shared/MenuBar';
 import Texto from '../../components/Texto';
-import MapaRotaInativa from '../Shared/Rota/MapaRotaInativa';
+import MapaRotaAtiva from '../Shared/Rota/MapaRotaAtiva';
 import CardPassageiro from '../Shared/CardPassageiro';
 import BotoesIdaVolta from './BotoesIdaVolta';
 
@@ -117,7 +117,7 @@ export default function RotaAtiva() {
       <>
          <MenuBar nomeTela={'Rota Ativa Passageiro'} mostraBtnPerfil={false} />
          <View style={estilos.container}>
-            <MapaRotaInativa />
+            <MapaRotaAtiva />
 
             <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
                <View style={[estilos.linhaDetalhe, estilos.bordaCima]}>
