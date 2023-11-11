@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import MenuBar from '../Shared/MenuBar';
@@ -81,27 +81,34 @@ function ListaPesquisa() {
             </View>
             <TextInput style={estilos.input} value={pesquisa} onChangeText={setPesquisa} placeholder="Digite o nome do(a) Motorista" />
          </View>
-         {listaMotoristas.length != 0 ? (
-            <FlatList
-               style={{ flex: 1 }}
-               data={listaMotoristas}
-               renderItem={({ item }) => {
-                  return (
-                     <CardMotorista
-                        {...item}
-                        aoPressionar={() => {
-                           navigation.navigate('M_Perfil', { ...item, donoDoPerfil: false });
-                           // console.log({ ...item });
-                        }}
-                     />
-                  );
-               }}
-               keyExtractor={({ name }) => name}
-            />
-         ) : (
+         {loading ? (
             <View style={estilos.listaVazia}>
-               <Texto style={estilos.textoListaVazia}>Nenhum resultado encontrado</Texto>
+               <ActivityIndicator style={{ justifyContent: 'center' }} size="large" color={cores.azulProfundo} />
             </View>
+         ) : (
+            <>
+               {listaMotoristas.length != 0 ? (
+                  <FlatList
+                     style={{ flex: 1 }}
+                     data={listaMotoristas}
+                     renderItem={({ item }) => {
+                        return (
+                           <CardMotorista
+                              {...item}
+                              aoPressionar={() => {
+                                 navigation.navigate('M_Perfil', { ...item, donoDoPerfil: false });
+                              }}
+                           />
+                        );
+                     }}
+                     keyExtractor={({ name }) => name}
+                  />
+               ) : (
+                  <View style={estilos.listaVazia}>
+                     <Texto style={estilos.textoListaVazia}>Nenhum resultado encontrado</Texto>
+                  </View>
+               )}
+            </>
          )}
       </View>
    );
