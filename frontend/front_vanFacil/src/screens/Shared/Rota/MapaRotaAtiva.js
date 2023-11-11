@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-export default function MapaRotaInativa() {
+export default function MapaRotaAtiva() {
    const [region, setRegion] = useState({
       latitude: -23.618257130791033,
       longitude: -46.578958189894266,
